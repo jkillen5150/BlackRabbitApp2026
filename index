@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Rabbit Landscaping - Get a Quote</title>
+    <!-- === IMPORTANT: Replace YOUR_SITE_KEY_HERE with your real reCAPTCHA v3 site key === -->
+    <script src="https://www.google.com/recaptcha/api.js?render=YOUR_SITE_KEY_HERE"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 200px;
+        }
+        h1 {
+            text-align: center;
+            color: #d32f2f;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            margin-bottom: 18px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        input[type="file"] {
+            padding: 6px 0;
+        }
+        button {
+            background-color: #d32f2f;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        button:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+        .contact-info {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 15px;
+        }
+        .contact-info a {
+            color: #d32f2f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .note {
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+            margin: 12px 0;
+        }
+        #status-message {
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        #progress-container {
+            display: none;
+            margin: 15px 0;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        #progress-bar {
+            height: 24px;
+            width: 0%;
+            background: linear-gradient(90deg, #4caf50, #81c784);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 0 0 3px rgba(0,0,0,0.5);
+        }
+        #progress-text {
+            margin-top: 6px;
+            text-align: center;
+            font-size: 13px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="logo.png" alt="Black Rabbit Landscaping Logo">
+        </div>
+        <h1>Get Your Free Quote</h1>
+        <p>Simple, Affordable, Reliable – Central Florida Lawn Care.<br>Call (407) 951-1663 or fill out the form below!</p>
+        
+        <form id="quote-form" action="https://formspree.io/f/mykdpzyz" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_subject" value="New Black Rabbit Landscaping Quote Request">
+            <input type="hidden" name="g-recaptcha-response" id="recaptcha-token">
+            
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" required>
+            
+            <label for="address">Property Address *</label>
+            <input type="text" id="address" name="address" required placeholder="Street, City, FL ZIP">
+            
+            <label for="service">Service Interested In *</label>
+            <select id="service" name="service" required>
+                <option value="">Please select...</option>
+                <option value="weekly-mowing">Weekly Lawn Mowing</option>
+                <option value="biweekly-mowing">Bi-weekly Mowing</option>
+                <option value="full-maintenance">Full Lawn Maintenance Package</option>
+                <option value="landscaping">Landscaping / Mulch / Planting</option>
+                <option value="trimming">Shrub & Tree Trimming</option>
+                <option value="other">Other / Custom Request</option>
+            </select>
+            
+            <label for="photos">Upload Photos of Your Yard (optional – helps us give a better quote!)</label>
+            <input type="file" id="photos" name="photos" accept="image/*" multiple>
+            <div class="note">You can select multiple images (JPG, PNG, etc.).</div>
+            
+            <div id="progress-container">
+                <div id="progress-bar">0%</div>
+            </div>
+            <div id="progress-text"></div>
+            
+            <label for="message">Details / Additional Notes</label>
+            <textarea id="message" name="message" rows="5" placeholder="Yard size? Frequency? Special requests? Describe photos if needed..."></textarea>
+            
+            <button type="submit" id="submit-btn">Send Quote Request</button>
+        </form>
+        
+        <div id="status-message"></div>
+        
+        <div class="contact-info">
+            <p>Or call/text directly: <a href="tel:+14079511663">(407) 951-1663</a></p>
+            <p>Follow us on <a href="https://www.facebook.com/blackrabbitlawn" target="_blank">Facebook</a></p>
+        </div>
+        
+        <div class="note">
+            Protected by Google reCAPTCHA • We'll usually respond within 24 hours.
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('quote-form');
+        const statusMessage = document.getElementById('status-message');
+        const submitBtn = document.getElementById('submit-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const recaptchaTokenField = document.getElementById('recaptcha-token');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            statusMessage.textContent = '';
+            statusMessage.className = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            grecaptcha.ready(function() {
+                grecaptcha.execute('YOUR_SITE_KEY_HERE', {action: 'submit_quote'}).then(function(token) {
+                    recaptchaTokenField.value = token;
+
+                    const formData = new FormData(form);
+                    const xhr = new XMLHttpRequest();
+
+                    progressBar.style.width = '0%';
+                    progressBar.textContent = '0%';
+                    progressText.textContent = '';
+                    progressContainer.style.display = 'none';
+
+                    if (document.getElementById('photos').files.length > 0) {
+                        progressContainer.style.display = 'block';
+                    }
+
+                    xhr.upload.addEventListener('progress', function(event) {
+                        if (event.lengthComputable) {
+                            const percent = Math.round((event.loaded / event.total) * 100);
+                            progressBar.style.width = percent + '%';
+                            progressBar.textContent = percent + '%';
+                            const loaded = (event.loaded / 1048576).toFixed(1);
+                            const total = (event.total / 1048576).toFixed(1);
+                            progressText.textContent = `Uploading ${loaded} MB of ${total} MB`;
+                        }
+                    });
+
+                    xhr.addEventListener('load', function() {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Send Quote Request';
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            statusMessage.textContent = 'Thank you! Your quote request has been sent. We\'ll get back to you soon.';
+                            statusMessage.className = 'success';
+                            form.reset();
+                            progressContainer.style.display = 'none';
+                            progressText.textContent = '';
+                        } else {
+                            statusMessage.textContent = 'Oops! Something went wrong. Please try again or call us.';
+                            statusMessage.className = 'error';
+                        }
+                    });
+
+                    xhr.addEventListener('error', function() {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Send Quote Request';
+                        statusMessage.textContent = 'Network error – please check your connection.';
+                        statusMessage.className = 'error';
+                        progressContainer.style.display = 'none';
+                    });
+
+                    xhr.open('POST', form.action);
+                    xhr.setRequestHeader('Accept', 'application/json');
+                    xhr.send(formData);
+                }).catch(function() {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Quote Request';
+                    statusMessage.textContent = 'reCAPTCHA verification failed. Please try again.';
+                    statusMessage.className = 'error';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
