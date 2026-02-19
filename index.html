@@ -197,80 +197,80 @@
     </div>
 
     <script>
-        const form = document.getElementById('quote-form');
-        const statusMessage = document.getElementById('status-message');
-        const submitBtn = document.getElementById('submit-btn');
-        const progressContainer = document.getElementById('progress-container');
-        const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
-        const recaptchaTokenField = document.getElementById('recaptcha-token');
+    const form = document.getElementById('quote-form');
+    const statusMessage = document.getElementById('status-message');
+    const submitBtn = document.getElementById('submit-btn');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const recaptchaTokenField = document.getElementById('recaptcha-token');
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            statusMessage.textContent = '';
-            statusMessage.className = '';
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        statusMessage.textContent = '';
+        statusMessage.className = '';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
 
-            grecaptcha.ready(function() {
-                grecaptcha.execute('6LdzM3EsAAAAAJCFIKo96XlSKdq8hRuXO5KgVeFj', {action: 'submit_quote'}).then(function(token) {
-                    recaptchaTokenField.value = token;
+        grecaptcha.ready(function() {
+            grecaptcha.execute('YOUR_REAL_SITE_KEY_HERE', {action: 'submit_quote'}).then(function(token) {
+                recaptchaTokenField.value = token;
 
-                    const formData = new FormData(form);
-                    const xhr = new XMLHttpRequest();
+                const formData = new FormData(form);
+                const xhr = new XMLHttpRequest();
 
-                    progressBar.style.width = '0%';
-                    progressBar.textContent = '0%';
-                    progressText.textContent = '';
-                    progressContainer.style.display = (document.getElementById('photos').files.length > 0) ? 'block' : 'none';
+                progressBar.style.width = '0%';
+                progressBar.textContent = '0%';
+                progressText.textContent = '';
+                progressContainer.style.display = (document.getElementById('photos').files.length > 0) ? 'block' : 'none';
 
-                    xhr.upload.addEventListener('progress', function(event) {
-                        if (event.lengthComputable) {
-                            const percent = Math.round((event.loaded / event.total) * 100);
-                            progressBar.style.width = percent + '%';
-                            progressBar.textContent = percent + '%';
-                            const loaded = (event.loaded / 1048576).toFixed(1);
-                            const total = (event.total / 1048576).toFixed(1);
-                            progressText.textContent = `Uploading ${loaded} MB of ${total} MB`;
-                        }
-                    });
+                xhr.upload.addEventListener('progress', function(event) {
+                    if (event.lengthComputable) {
+                        const percent = Math.round((event.loaded / event.total) * 100);
+                        progressBar.style.width = percent + '%';
+                        progressBar.textContent = percent + '%';
+                        const loaded = (event.loaded / 1048576).toFixed(1);
+                        const total = (event.total / 1048576).toFixed(1);
+                        progressText.textContent = `Uploading ${loaded} MB of ${total} MB`;
+                    }
+                });
 
-                    xhr.addEventListener('load', function() {
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Send Quote Request';
-                        if (xhr.status >= 200 && xhr.status < 300) {
-                            statusMessage.textContent = 'Thank you! Your quote request has been sent. We\'ll get back to you soon.';
-                            statusMessage.className = 'success';
-                            form.reset();
-                            progressContainer.style.display = 'none';
-                            progressText.textContent = '';
-                        } else {
-                            statusMessage.textContent = 'Oops! Something went wrong. Please try again or call us.';
-                            statusMessage.className = 'error';
-                        }
-                    });
-
-                    xhr.addEventListener('error', function() {
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Send Quote Request';
-                        statusMessage.textContent = 'Network error – please check your connection.';
-                        statusMessage.className = 'error';
-                        progressContainer.style.display = 'none';
-                    });
-
-                    xhr.open('POST', form.action);
-                    xhr.setRequestHeader('Accept', 'application/json');
-                    xhr.send(formData);
-                }).catch(function() {
+                xhr.addEventListener('load', function() {
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Send Quote Request';
-                    statusMessage.textContent = 'reCAPTCHA verification failed. Please try again.';
-                    statusMessage.className = 'error';
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        statusMessage.textContent = 'Thank you! Your quote request has been sent. We\'ll get back to you soon.';
+                        statusMessage.className = 'success';
+                        form.reset();
+                        progressContainer.style.display = 'none';
+                        progressText.textContent = '';
+                    } else {
+                        statusMessage.textContent = 'Oops! Something went wrong. Please try again or call us.';
+                        statusMessage.className = 'error';
+                    }
                 });
+
+                xhr.addEventListener('error', function() {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Quote Request';
+                    statusMessage.textContent = 'Network error – please check your connection.';
+                    statusMessage.className = 'error';
+                    progressContainer.style.display = 'none';
+                });
+
+                xhr.open('POST', form.action);
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.send(formData);
+            }).catch(function() {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Quote Request';
+                statusMessage.textContent = 'reCAPTCHA verification failed. Please try again.';
+                statusMessage.className = 'error';
             });
         });
-    </script>
-    <!-- Floating Call & WhatsApp Buttons -->
+    });
+</script>
+<!-- Floating Call & WhatsApp Buttons -->
 <a href="tel:+14079511663" 
    style="position: fixed; bottom: 80px; right: 20px; background: #d32f2f; color: white; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 1000; text-decoration: none;">
   📞
