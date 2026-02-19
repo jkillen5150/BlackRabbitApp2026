@@ -13,7 +13,7 @@
     <meta property="og:url" content="https://blackrabbitlawn.com">
     <meta property="og:type" content="website">
 
-    <script src="https://www.google.com/recaptcha/api.js?render=6LdzM3EsAAAAAJCFIKo96XlSKdq8hRuXO5KgVeFj"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LdzSHEsAAAAADJuYZmn0muNaKsZBd3nU4j6Cf-A"></script>
 
     <style>
         body {
@@ -238,7 +238,7 @@
             submitBtn.textContent = 'Sending...';
 
             grecaptcha.ready(function() {
-                grecaptcha.execute('6LdzM3EsAAAAAJCFIKo96XlSKdq8hRuXO5KgVeFj', {action: 'submit_quote'}).then(function(token) {
+                grecaptcha.execute('6LdzSHEsAAAAADJuYZmn0muNaKsZBd3nU4j6Cf-A', {action: 'submit_quote'}).then(function(token) {
                     recaptchaTokenField.value = token;
 
                     const formData = new FormData(form);
