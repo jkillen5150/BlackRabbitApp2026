@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- SEO-optimized title with main keywords + locations -->
     <title>Black Rabbit Landscaping | Free Lawn Mowing & Yard Care Quotes – Orlando, Altamonte Springs, Winter Park</title>
     
-    <!-- SEO meta description – high-intent keywords, call-to-action, locations -->
     <meta name="description" content="Get a free quote for lawn mowing, cut my grass, weekly lawn care, yard maintenance, grass cutting, and landscaping in Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, and Central Florida. Upload yard photos for accurate estimate. Simple, affordable, reliable. Call/text (407) 951-1663 now.">
     
-    <!-- Open Graph / social sharing (improves Facebook/Nextdoor shares) -->
     <meta property="og:title" content="Black Rabbit Landscaping – Free Lawn Mowing & Yard Care Quotes">
     <meta property="og:description" content="Affordable lawn mowing, grass cutting, and yard care in Orlando, Altamonte Springs, Winter Park, and Central Florida. Submit photos for your free quote fast.">
     <meta property="og:image" content="https://blackrabbitlawn.com/logo.jpg">
     <meta property="og:url" content="https://blackrabbitlawn.com">
     <meta property="og:type" content="website">
 
-    <!-- Your real reCAPTCHA v3 site key -->
     <script src="https://www.google.com/recaptcha/api.js?render=6LdzM3EsAAAAAJCFIKo96XlSKdq8hRuXO5KgVeFj"></script>
 
     <style>
@@ -41,16 +37,21 @@
         }
         .logo {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         .logo img {
-            max-width: 280px;
+            max-width: 320px;
+            width: 100%;
             height: auto;
             border-radius: 50%;
             object-fit: cover;
             background: #000;
-            border: 4px solid #d32f2f;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 6px solid #d32f2f;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        .logo img:hover {
+            transform: scale(1.05);
         }
         h1 {
             text-align: center;
@@ -130,19 +131,14 @@
             line-height: 24px;
             font-weight: bold;
         }
-        #status-message.success {
-            color: #2e7d32;
-            font-weight: bold;
+        #status-message.success, #status-message.error {
             text-align: center;
             margin: 20px 0;
             font-size: 1.2em;
-        }
-        #status-message.error {
-            color: #d32f2f;
             font-weight: bold;
-            text-align: center;
-            margin: 20px 0;
         }
+        #status-message.success { color: #2e7d32; }
+        #status-message.error { color: #d32f2f; }
         .contact-info {
             text-align: center;
             margin: 25px 0;
@@ -153,6 +149,61 @@
             text-decoration: none;
             font-weight: bold;
         }
+
+        /* Thank-you modal */
+        #thank-you-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .modal-logo img {
+            max-width: 180px;
+            border-radius: 50%;
+            border: 4px solid #d32f2f;
+            margin-bottom: 20px;
+        }
+        .modal-close {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .modal-close:hover {
+            background: #b71c1c;
+        }
+        .modal-buttons {
+            margin-top: 20px;
+        }
+        .modal-buttons a {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .call-btn { background: #d32f2f; color: white; }
+        .whatsapp-btn { background: #25D366; color: white; }
     </style>
 </head>
 <body>
@@ -161,15 +212,12 @@
             <img src="logo.jpg" alt="Black Rabbit Landscaping – Lawn Mowing & Yard Care Orlando">
         </div>
 
-        <!-- SEO-optimized H1 with keywords + locations -->
         <h1>Free Lawn Mowing & Yard Care Quotes – Orlando, Altamonte Springs, Winter Park</h1>
 
-        <!-- Tagline with keywords -->
         <p class="tagline">Simple, Affordable, Reliable Lawn Mowing, Grass Cutting & Yard Maintenance – Central Florida</p>
 
-        <!-- Intro paragraph with natural keyword usage -->
         <p style="text-align: center; margin-bottom: 25px;">
-            Need someone to cut your grass, mow your lawn, or provide weekly lawn care in Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, or anywhere in Central Florida? 
+            Need someone to cut your grass, mow your lawn, or provide weekly lawn care in Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, or Central Florida? 
             Get your free quote fast – upload yard photos for the most accurate estimate. Call/text (407) 951-1663 or fill out the form below.
         </p>
 
@@ -224,9 +272,25 @@
             <p>Follow us on <a href="https://www.facebook.com/blackrabbitlawn" target="_blank">Facebook</a></p>
         </div>
 
-        <!-- Footer with keywords for local SEO -->
         <div class="note" style="text-align: center;">
             Serving Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, Apopka & Central Florida • Lawn Mowing • Grass Cutting • Yard Care • Protected by Google reCAPTCHA • (407) 951-1663
+        </div>
+    </div>
+
+    <!-- Thank You Modal -->
+    <div id="thank-you-modal">
+        <div class="modal-content">
+            <div class="modal-logo">
+                <img src="logo.jpg" alt="Black Rabbit Landscaping">
+            </div>
+            <h2>Thank You!</h2>
+            <p>Your free lawn mowing / yard care quote request has been sent.<br>We’ll get back to you quickly (usually within 24 hours).</p>
+            <p>Questions? Call or text us right now:</p>
+            <div class="modal-buttons">
+                <a href="tel:+14079511663" class="call-btn">📞 Call (407) 951-1663</a>
+                <a href="https://wa.me/14079511663?text=Hi%20Black%20Rabbit!%20Just%20sent%20a%20quote%20request..." class="whatsapp-btn">💬 WhatsApp</a>
+            </div>
+            <button class="modal-close" onclick="document.getElementById('thank-you-modal').style.display='none'">Close</button>
         </div>
     </div>
 
@@ -238,6 +302,7 @@
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
         const recaptchaTokenField = document.getElementById('recaptcha-token');
+        const thankYouModal = document.getElementById('thank-you-modal');
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -271,10 +336,11 @@
 
                     xhr.addEventListener('load', function() {
                         submitBtn.disabled = false;
-                        submitBtn.textContent = 'Send Quote Request';
+                        submitBtn.textContent = 'Send Free Quote Request';
+
+                        // Show thank you modal on success (most Formspree responses are 200 even with redirect)
                         if (xhr.status >= 200 && xhr.status < 300) {
-                            statusMessage.textContent = 'Thank you! Your lawn mowing / yard care quote request has been sent. We\'ll get back to you soon.';
-                            statusMessage.className = 'success';
+                            thankYouModal.style.display = 'flex';
                             form.reset();
                             progressContainer.style.display = 'none';
                             progressText.textContent = '';
@@ -286,8 +352,8 @@
 
                     xhr.addEventListener('error', function() {
                         submitBtn.disabled = false;
-                        submitBtn.textContent = 'Send Quote Request';
-                        statusMessage.textContent = 'Network error – please check your connection.';
+                        submitBtn.textContent = 'Send Free Quote Request';
+                        statusMessage.textContent = 'Network error – please check your connection or call us directly.';
                         statusMessage.className = 'error';
                         progressContainer.style.display = 'none';
                     });
@@ -297,23 +363,12 @@
                     xhr.send(formData);
                 }).catch(function() {
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Send Quote Request';
+                    submitBtn.textContent = 'Send Free Quote Request';
                     statusMessage.textContent = 'reCAPTCHA verification failed. Please try again.';
                     statusMessage.className = 'error';
                 });
             });
         });
     </script>
-
-    <!-- Floating Call & WhatsApp Buttons -->
-    <a href="tel:+14079511663" 
-       style="position: fixed; bottom: 80px; right: 20px; background: #d32f2f; color: white; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 1000; text-decoration: none;">
-      📞
-    </a>
-
-    <a href="https://wa.me/14079511663?text=Hi%20Black%20Rabbit!%20I'd%20like%20a%20free%20lawn%20mowing%20or%20yard%20care%20quote%20in%20Orlando..." 
-       style="position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 28px; z-index: 1000; text-decoration: none;">
-      💬
-    </a>
 </body>
 </html>
