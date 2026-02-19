@@ -3,9 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Black Rabbit Landscaping - Get a Free Quote</title>
-    <!-- Replace BOTH instances below with your REAL reCAPTCHA v3 site key -->
+    <!-- SEO-optimized title with main keywords + locations -->
+    <title>Black Rabbit Landscaping | Free Lawn Mowing & Yard Care Quotes – Orlando, Altamonte Springs, Winter Park</title>
+    
+    <!-- SEO meta description – high-intent keywords, call-to-action, locations -->
+    <meta name="description" content="Get a free quote for lawn mowing, cut my grass, weekly lawn care, yard maintenance, grass cutting, and landscaping in Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, and Central Florida. Upload yard photos for accurate estimate. Simple, affordable, reliable. Call/text (407) 951-1663 now.">
+    
+    <!-- Open Graph / social sharing (improves Facebook/Nextdoor shares) -->
+    <meta property="og:title" content="Black Rabbit Landscaping – Free Lawn Mowing & Yard Care Quotes">
+    <meta property="og:description" content="Affordable lawn mowing, grass cutting, and yard care in Orlando, Altamonte Springs, Winter Park, and Central Florida. Submit photos for your free quote fast.">
+    <meta property="og:image" content="https://blackrabbitlawn.com/logo.jpg">
+    <meta property="og:url" content="https://blackrabbitlawn.com">
+    <meta property="og:type" content="website">
+
+    <!-- Your real reCAPTCHA v3 site key -->
     <script src="https://www.google.com/recaptcha/api.js?render=6LdzM3EsAAAAAJCFIKo96XlSKdq8hRuXO5KgVeFj"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,19 +44,24 @@
             margin-bottom: 25px;
         }
         .logo img {
-    max-width: 280px;
-    height: auto;
-    border-radius: 50%;          /* Makes it perfectly circular */
-    object-fit: cover;           /* Ensures the image fills the circle nicely */
-    background: #000;            /* Optional: black background in case of transparency gaps */
-    border: 4px solid #d32f2f;   /* Optional: red ring to match your branding/heart accent */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Optional: subtle shadow for pop */
-}
+            max-width: 280px;
+            height: auto;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #000;
+            border: 4px solid #d32f2f;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
         h1 {
             text-align: center;
             color: #d32f2f;
             margin-bottom: 10px;
             font-size: 2.2rem;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin: 20px 0 10px;
         }
         .tagline {
             text-align: center;
@@ -140,14 +158,25 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img src="logo.jpg" alt="Black Rabbit Landscaping Logo">
+            <img src="logo.jpg" alt="Black Rabbit Landscaping – Lawn Mowing & Yard Care Orlando">
         </div>
-        <h1>Get Your Free Quote</h1>
-        <p class="tagline">Simple, Affordable, Reliable – Central Florida Lawn Care</p>
-        <p style="text-align: center; margin-bottom: 25px;">Call or text (407) 951-1663 or fill this out – we respond fast!</p>
+
+        <!-- SEO-optimized H1 with keywords + locations -->
+        <h1>Free Lawn Mowing & Yard Care Quotes – Orlando, Altamonte Springs, Winter Park</h1>
+
+        <!-- Tagline with keywords -->
+        <p class="tagline">Simple, Affordable, Reliable Lawn Mowing, Grass Cutting & Yard Maintenance – Central Florida</p>
+
+        <!-- Intro paragraph with natural keyword usage -->
+        <p style="text-align: center; margin-bottom: 25px;">
+            Need someone to cut your grass, mow your lawn, or provide weekly lawn care in Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, or anywhere in Central Florida? 
+            Get your free quote fast – upload yard photos for the most accurate estimate. Call/text (407) 951-1663 or fill out the form below.
+        </p>
+
+        <h2>Request Your No-Obligation Lawn Service Quote Today</h2>
 
         <form id="quote-form" action="https://formspree.io/f/mykdpzyz" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="_subject" value="New Black Rabbit Landscaping Quote Request">
+            <input type="hidden" name="_subject" value="New Black Rabbit Landscaping Quote Request – Lawn Mowing / Yard Care">
             <input type="hidden" name="g-recaptcha-response" id="recaptcha-token">
 
             <label for="name">Full Name *</label>
@@ -159,23 +188,23 @@
             <label for="phone">Phone Number *</label>
             <input type="tel" id="phone" name="phone" required placeholder="(407) XXX-XXXX">
 
-            <label for="address">Property Address *</label>
+            <label for="address">Property Address * (Orlando, Altamonte Springs, Winter Park, etc.)</label>
             <input type="text" id="address" name="address" required placeholder="Street, City, FL ZIP">
 
             <label for="service">Service Interested In *</label>
             <select id="service" name="service" required>
                 <option value="">Please select...</option>
-                <option value="weekly-mowing">Weekly Lawn Mowing</option>
-                <option value="biweekly-mowing">Bi-weekly Mowing</option>
+                <option value="weekly-mowing">Weekly Lawn Mowing / Cut My Grass</option>
+                <option value="biweekly-mowing">Bi-weekly Mowing / Yard Care</option>
                 <option value="full-maintenance">Full Lawn Maintenance Package</option>
                 <option value="landscaping">Landscaping / Mulch / Planting</option>
                 <option value="trimming">Shrub & Tree Trimming</option>
-                <option value="other">Other / Custom Request</option>
+                <option value="other">Other / Custom Request (Sod, Cleanup, etc.)</option>
             </select>
 
-            <label for="photos">Upload Yard Photos (optional – helps for accurate quote!)</label>
+            <label for="photos">Upload Yard Photos (optional – helps us give accurate lawn mowing / yard care quotes!)</label>
             <input type="file" id="photos" name="photos" accept="image/*" multiple>
-            <div class="note">Select multiple JPG/PNG files if you want – drag & drop works.</div>
+            <div class="note">Select multiple JPG/PNG files – drag & drop works. Great for Orlando yard care estimates.</div>
 
             <div id="progress-container">
                 <div id="progress-bar">0%</div>
@@ -183,9 +212,9 @@
             <div id="progress-text" class="note"></div>
 
             <label for="message">Details / Additional Notes</label>
-            <textarea id="message" name="message" rows="5" placeholder="Yard size? How often? Problem areas (weeds, trees, bare spots)? Describe photos if uploaded..."></textarea>
+            <textarea id="message" name="message" rows="5" placeholder="Yard size? How often do you need mowing? Problem areas (weeds, trees, bare spots)? Tell us more about your Orlando / Altamonte Springs / Winter Park yard..."></textarea>
 
-            <button type="submit" id="submit-btn">Send Quote Request</button>
+            <button type="submit" id="submit-btn">Send Free Quote Request</button>
         </form>
 
         <div id="status-message"></div>
@@ -195,94 +224,96 @@
             <p>Follow us on <a href="https://www.facebook.com/blackrabbitlawn" target="_blank">Facebook</a></p>
         </div>
 
+        <!-- Footer with keywords for local SEO -->
         <div class="note" style="text-align: center;">
-            Protected by Google reCAPTCHA • We'll usually respond within 24 hours.
+            Serving Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, Apopka & Central Florida • Lawn Mowing • Grass Cutting • Yard Care • Protected by Google reCAPTCHA • (407) 951-1663
         </div>
     </div>
 
     <script>
-    const form = document.getElementById('quote-form');
-    const statusMessage = document.getElementById('status-message');
-    const submitBtn = document.getElementById('submit-btn');
-    const progressContainer = document.getElementById('progress-container');
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text');
-    const recaptchaTokenField = document.getElementById('recaptcha-token');
+        const form = document.getElementById('quote-form');
+        const statusMessage = document.getElementById('status-message');
+        const submitBtn = document.getElementById('submit-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const recaptchaTokenField = document.getElementById('recaptcha-token');
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        statusMessage.textContent = '';
-        statusMessage.className = '';
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            statusMessage.textContent = '';
+            statusMessage.className = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
 
-        grecaptcha.ready(function() {
-            grecaptcha.execute('YOUR_REAL_SITE_KEY_HERE', {action: 'submit_quote'}).then(function(token) {
-                recaptchaTokenField.value = token;
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6LdzM3EsAAAAAJCFIKo96XlSKdq8hRuXO5KgVeFj', {action: 'submit_quote'}).then(function(token) {
+                    recaptchaTokenField.value = token;
 
-                const formData = new FormData(form);
-                const xhr = new XMLHttpRequest();
+                    const formData = new FormData(form);
+                    const xhr = new XMLHttpRequest();
 
-                progressBar.style.width = '0%';
-                progressBar.textContent = '0%';
-                progressText.textContent = '';
-                progressContainer.style.display = (document.getElementById('photos').files.length > 0) ? 'block' : 'none';
+                    progressBar.style.width = '0%';
+                    progressBar.textContent = '0%';
+                    progressText.textContent = '';
+                    progressContainer.style.display = (document.getElementById('photos').files.length > 0) ? 'block' : 'none';
 
-                xhr.upload.addEventListener('progress', function(event) {
-                    if (event.lengthComputable) {
-                        const percent = Math.round((event.loaded / event.total) * 100);
-                        progressBar.style.width = percent + '%';
-                        progressBar.textContent = percent + '%';
-                        const loaded = (event.loaded / 1048576).toFixed(1);
-                        const total = (event.total / 1048576).toFixed(1);
-                        progressText.textContent = `Uploading ${loaded} MB of ${total} MB`;
-                    }
-                });
+                    xhr.upload.addEventListener('progress', function(event) {
+                        if (event.lengthComputable) {
+                            const percent = Math.round((event.loaded / event.total) * 100);
+                            progressBar.style.width = percent + '%';
+                            progressBar.textContent = percent + '%';
+                            const loaded = (event.loaded / 1048576).toFixed(1);
+                            const total = (event.total / 1048576).toFixed(1);
+                            progressText.textContent = `Uploading ${loaded} MB of ${total} MB`;
+                        }
+                    });
 
-                xhr.addEventListener('load', function() {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Send Quote Request';
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        statusMessage.textContent = 'Thank you! Your quote request has been sent. We\'ll get back to you soon.';
-                        statusMessage.className = 'success';
-                        form.reset();
-                        progressContainer.style.display = 'none';
-                        progressText.textContent = '';
-                    } else {
-                        statusMessage.textContent = 'Oops! Something went wrong. Please try again or call us.';
+                    xhr.addEventListener('load', function() {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Send Quote Request';
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            statusMessage.textContent = 'Thank you! Your lawn mowing / yard care quote request has been sent. We\'ll get back to you soon.';
+                            statusMessage.className = 'success';
+                            form.reset();
+                            progressContainer.style.display = 'none';
+                            progressText.textContent = '';
+                        } else {
+                            statusMessage.textContent = 'Oops! Something went wrong. Please try again or call us.';
+                            statusMessage.className = 'error';
+                        }
+                    });
+
+                    xhr.addEventListener('error', function() {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Send Quote Request';
+                        statusMessage.textContent = 'Network error – please check your connection.';
                         statusMessage.className = 'error';
-                    }
-                });
+                        progressContainer.style.display = 'none';
+                    });
 
-                xhr.addEventListener('error', function() {
+                    xhr.open('POST', form.action);
+                    xhr.setRequestHeader('Accept', 'application/json');
+                    xhr.send(formData);
+                }).catch(function() {
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Send Quote Request';
-                    statusMessage.textContent = 'Network error – please check your connection.';
+                    statusMessage.textContent = 'reCAPTCHA verification failed. Please try again.';
                     statusMessage.className = 'error';
-                    progressContainer.style.display = 'none';
                 });
-
-                xhr.open('POST', form.action);
-                xhr.setRequestHeader('Accept', 'application/json');
-                xhr.send(formData);
-            }).catch(function() {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Send Quote Request';
-                statusMessage.textContent = 'reCAPTCHA verification failed. Please try again.';
-                statusMessage.className = 'error';
             });
         });
-    });
-</script>
-<!-- Floating Call & WhatsApp Buttons -->
-<a href="tel:+14079511663" 
-   style="position: fixed; bottom: 80px; right: 20px; background: #d32f2f; color: white; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 1000; text-decoration: none;">
-  📞
-</a>
+    </script>
 
-<a href="https://wa.me/14079511663?text=Hi%20Black%20Rabbit!%20I'd%20like%20a%20free%20lawn%20quote%20for%20my%20yard..." 
-   style="position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 28px; z-index: 1000; text-decoration: none;">
-  💬
-</a>
+    <!-- Floating Call & WhatsApp Buttons -->
+    <a href="tel:+14079511663" 
+       style="position: fixed; bottom: 80px; right: 20px; background: #d32f2f; color: white; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 1000; text-decoration: none;">
+      📞
+    </a>
+
+    <a href="https://wa.me/14079511663?text=Hi%20Black%20Rabbit!%20I'd%20like%20a%20free%20lawn%20mowing%20or%20yard%20care%20quote%20in%20Orlando..." 
+       style="position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 28px; z-index: 1000; text-decoration: none;">
+      💬
+    </a>
 </body>
 </html>
