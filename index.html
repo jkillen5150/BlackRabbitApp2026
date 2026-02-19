@@ -1,75 +1,289 @@
-<!-- Inside <body> – replace your <form> section -->
-<form id="quote-form" action="https://formspree.io/f/mykdpzyz" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="_subject" value="New Black Rabbit Landscaping Quote Request – Lawn Mowing / Yard Care">
-    <input type="hidden" name="_next" value="/thankyou.html">  <!-- This tells Formspree to redirect here on success -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Rabbit Landscaping | Free Lawn Mowing & Yard Care Quotes – Orlando, Altamonte Springs, Winter Park</title>
+    
+    <meta name="description" content="Get a free quote for lawn mowing, cut my grass, weekly lawn care, yard maintenance, grass cutting, and landscaping in Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, and Central Florida. Upload yard photos for accurate estimate. Simple, affordable, reliable. Call/text (407) 951-1663 now.">
+    
+    <meta property="og:title" content="Black Rabbit Landscaping – Free Lawn Mowing & Yard Care Quotes">
+    <meta property="og:description" content="Affordable lawn mowing, grass cutting, and yard care in Orlando, Altamonte Springs, Winter Park, and Central Florida. Submit photos for your free quote fast.">
+    <meta property="og:image" content="https://blackrabbitlawn.com/logo.jpg">
+    <meta property="og:url" content="https://blackrabbitlawn.com">
+    <meta property="og:type" content="website">
 
-    <!-- All your form fields stay the same -->
-    <!-- ... name, email, phone, address, service, photos, message ... -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LdzM3EsAAAAAJCFIKo96XlSKdq8hRuXO5KgVeFj"></script>
 
-    <button type="submit" id="submit-btn">Send Free Quote Request</button>
-</form>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            max-width: 620px;
+            width: 100%;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo img {
+            max-width: 320px;
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #000;
+            border: 6px solid #d32f2f;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+        h1 {
+            text-align: center;
+            color: #d32f2f;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin: 20px 0 10px;
+        }
+        .tagline {
+            text-align: center;
+            font-style: italic;
+            color: #555;
+            margin: 0 0 20px;
+            font-size: 1.1rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            margin-bottom: 20px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            padding: 8px 0;
+        }
+        button {
+            background-color: #d32f2f;
+            color: #fff;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        button:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+        .note {
+            font-size: 0.9em;
+            color: #666;
+            margin: 8px 0 20px;
+        }
+        #progress-container {
+            background: #eee;
+            border-radius: 6px;
+            height: 24px;
+            margin: 15px 0;
+            overflow: hidden;
+            display: none;
+        }
+        #progress-bar {
+            background: #d32f2f;
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s;
+            text-align: center;
+            color: white;
+            line-height: 24px;
+            font-weight: bold;
+        }
+        .contact-info {
+            text-align: center;
+            margin: 25px 0;
+            font-size: 1.1em;
+        }
+        .contact-info a {
+            color: #d32f2f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="logo.jpg" alt="Black Rabbit Landscaping – Lawn Mowing & Yard Care Orlando">
+        </div>
 
-<!-- Keep the floating buttons -->
+        <h1>Free Lawn Mowing & Yard Care Quotes – Orlando, Altamonte Springs, Winter Park</h1>
 
-<!-- Simplified script (removes modal, keeps progress bar and reset) -->
-<script>
-    const form = document.getElementById('quote-form');
-    const submitBtn = document.getElementById('submit-btn');
-    const progressContainer = document.getElementById('progress-container');
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text');
-    const recaptchaTokenField = document.getElementById('recaptcha-token');
+        <p class="tagline">Simple, Affordable, Reliable Lawn Mowing, Grass Cutting & Yard Maintenance – Central Florida</p>
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
+        <p style="text-align: center; margin-bottom: 25px;">
+            Need someone to cut your grass, mow your lawn, or provide weekly lawn care in Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, or Central Florida? 
+            Get your free quote fast – upload yard photos for the most accurate estimate. Call/text (407) 951-1663 or fill out the form below.
+        </p>
 
-        grecaptcha.ready(function() {
-            grecaptcha.execute('6LdzM3EsAAAAAJCFIKo96XlSKdq8hRuXO5KgVeFj', {action: 'submit_quote'}).then(function(token) {
-                recaptchaTokenField.value = token;
+        <h2>Request Your No-Obligation Lawn Service Quote Today</h2>
 
-                const formData = new FormData(form);
-                const xhr = new XMLHttpRequest();
+        <form id="quote-form" action="https://formspree.io/f/mykdpzyz" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_subject" value="New Black Rabbit Landscaping Quote Request – Lawn Mowing / Yard Care">
+            <!-- Redirect to thank-you page on success -->
+            <input type="hidden" name="_next" value="/thankyou.html">
 
-                progressBar.style.width = '0%';
-                progressBar.textContent = '0%';
-                progressText.textContent = '';
-                progressContainer.style.display = (document.getElementById('photos').files.length > 0) ? 'block' : 'none';
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" required autofocus>
 
-                xhr.upload.addEventListener('progress', function(event) {
-                    if (event.lengthComputable) {
-                        const percent = Math.round((event.loaded / event.total) * 100);
-                        progressBar.style.width = percent + '%';
-                        progressBar.textContent = percent + '%';
-                        const loaded = (event.loaded / 1048576).toFixed(1);
-                        const total = (event.total / 1048576).toFixed(1);
-                        progressText.textContent = `Uploading ${loaded} MB of ${total} MB`;
-                    }
-                });
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required>
 
-                xhr.addEventListener('load', function() {
-                    // Don't need to handle success here – Formspree will redirect to thankyou.html
-                    // But reset button just in case
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" required placeholder="(407) XXX-XXXX">
+
+            <label for="address">Property Address * (Orlando, Altamonte Springs, Winter Park, etc.)</label>
+            <input type="text" id="address" name="address" required placeholder="Street, City, FL ZIP">
+
+            <label for="service">Service Interested In *</label>
+            <select id="service" name="service" required>
+                <option value="">Please select...</option>
+                <option value="weekly-mowing">Weekly Lawn Mowing / Cut My Grass</option>
+                <option value="biweekly-mowing">Bi-weekly Mowing / Yard Care</option>
+                <option value="full-maintenance">Full Lawn Maintenance Package</option>
+                <option value="landscaping">Landscaping / Mulch / Planting</option>
+                <option value="trimming">Shrub & Tree Trimming</option>
+                <option value="other">Other / Custom Request (Sod, Cleanup, etc.)</option>
+            </select>
+
+            <label for="photos">Upload Yard Photos (optional – helps us give accurate lawn mowing / yard care quotes!)</label>
+            <input type="file" id="photos" name="photos" accept="image/*" multiple>
+            <div class="note">Select multiple JPG/PNG files – drag & drop works. Great for Orlando yard care estimates.</div>
+
+            <div id="progress-container">
+                <div id="progress-bar">0%</div>
+            </div>
+            <div id="progress-text" class="note"></div>
+
+            <label for="message">Details / Additional Notes</label>
+            <textarea id="message" name="message" rows="5" placeholder="Yard size? How often do you need mowing? Problem areas (weeds, trees, bare spots)? Tell us more about your Orlando / Altamonte Springs / Winter Park yard..."></textarea>
+
+            <button type="submit" id="submit-btn">Send Free Quote Request</button>
+        </form>
+
+        <div class="contact-info">
+            <p>Prefer to talk? <a href="tel:+14079511663">Call/Text: (407) 951-1663</a></p>
+            <p>Follow us on <a href="https://www.facebook.com/blackrabbitlawn" target="_blank">Facebook</a></p>
+        </div>
+
+        <div class="note" style="text-align: center;">
+            Serving Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, Apopka & Central Florida • Lawn Mowing • Grass Cutting • Yard Care • Protected by Google reCAPTCHA • (407) 951-1663
+        </div>
+    </div>
+
+    <!-- Floating Call & WhatsApp Buttons -->
+    <a href="tel:+14079511663" 
+       style="position: fixed; bottom: 80px; right: 20px; background: #d32f2f; color: white; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 1000; text-decoration: none;">
+      📞
+    </a>
+
+    <a href="https://wa.me/14079511663?text=Hi%20Black%20Rabbit!%20I'd%20like%20a%20free%20lawn%20mowing%20or%20yard%20care%20quote%20in%20Orlando..." 
+       style="position: fixed; bottom: 20px; right: 20px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 28px; z-index: 1000; text-decoration: none;">
+      💬
+    </a>
+
+    <script>
+        const form = document.getElementById('quote-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const recaptchaTokenField = document.getElementById('recaptcha-token');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6LdzM3EsAAAAAJCFIKo96XlSKdq8hRuXO5KgVeFj', {action: 'submit_quote'}).then(function(token) {
+                    recaptchaTokenField.value = token;
+
+                    const formData = new FormData(form);
+                    const xhr = new XMLHttpRequest();
+
+                    progressBar.style.width = '0%';
+                    progressBar.textContent = '0%';
+                    progressText.textContent = '';
+                    progressContainer.style.display = (document.getElementById('photos').files.length > 0) ? 'block' : 'none';
+
+                    xhr.upload.addEventListener('progress', function(event) {
+                        if (event.lengthComputable) {
+                            const percent = Math.round((event.loaded / event.total) * 100);
+                            progressBar.style.width = percent + '%';
+                            progressBar.textContent = percent + '%';
+                            const loaded = (event.loaded / 1048576).toFixed(1);
+                            const total = (event.total / 1048576).toFixed(1);
+                            progressText.textContent = `Uploading ${loaded} MB of ${total} MB`;
+                        }
+                    });
+
+                    xhr.addEventListener('load', function() {
+                        // Formspree will redirect to /thankyou.html automatically
+                        // Button reset is just for safety
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Send Free Quote Request';
+                    });
+
+                    xhr.addEventListener('error', function() {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Send Free Quote Request';
+                        alert('Network error – please check your connection or call us directly at (407) 951-1663.');
+                        progressContainer.style.display = 'none';
+                    });
+
+                    xhr.open('POST', form.action);
+                    xhr.setRequestHeader('Accept', 'application/json');
+                    xhr.send(formData);
+                }).catch(function() {
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Send Free Quote Request';
+                    alert('reCAPTCHA verification failed. Please try again.');
                 });
-
-                xhr.addEventListener('error', function() {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Send Free Quote Request';
-                    alert('Network error – please check your connection or call us directly at (407) 951-1663.');
-                    progressContainer.style.display = 'none';
-                });
-
-                xhr.open('POST', form.action);
-                xhr.setRequestHeader('Accept', 'application/json');
-                xhr.send(formData);
-            }).catch(function() {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Send Free Quote Request';
-                alert('reCAPTCHA verification failed. Please try again.');
             });
         });
-    });
-</script>
+    </script>
+</body>
+</html>
