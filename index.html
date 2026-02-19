@@ -3,94 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Black Rabbit Landscaping - Get a Quote</title>
-    <!-- === IMPORTANT: Replace YOUR_SITE_KEY_HERE with your real reCAPTCHA v3 site key === -->
-    <script src="https://www.google.com/recaptcha/api.js?render=6Lekf3AsAAAAAE79EMWe2yzGVovRtDCNKLNDx9de"></script>
+    <title>Black Rabbit Landscaping - Get a Free Quote</title>
+    <!-- Replace with YOUR REAL reCAPTCHA v3 site key -->
+    <script src="https://www.google.com/recaptcha/api.js?render=YOUR_REAL_RECAPTCHA_SITE_KEY_HERE"></script>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-
-.container {
-    background-color: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    max-width: 600px;
-    width: 100%;
-}
-
-.logo {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.logo img {
-    max-width: 220px;  /* Slightly bigger for impact */
-    height: auto;
-    /* No filter needed – let the original colors shine */
-}
-    /* Optional variations if full invert looks too harsh: */
-    /* filter: invert(88%) hue-rotate(180deg); */
-    /* filter: invert(1) brightness(2); */
-}
-
-h1 {
-    text-align: center;
-    color: #d32f2f;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    margin-bottom: 6px;
-    font-weight: bold;
-}
-
-input, textarea, select {
-    margin-bottom: 18px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-input[type="file"] {
-    padding: 6px 0;
-}
-
-button {
-    background-color: #d32f2f;
-    color: #fff;
-    padding: 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-button:hover {
-    background-color: #b71c1c;
-}
-
-button:disabled {
-    background-color: #999;
-    cursor: not-allowed;
-}
-
-/* Rest of your styles (status messages, progress bar, etc.) can go he
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            max-width: 620px;
+            width: 100%;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .logo img {
+            max-width: 280px;
+            height: auto;
+            /* No filter – your logo.png is perfect as-is */
+        }
+        h1 {
+            text-align: center;
+            color: #d32f2f;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        .tagline {
+            text-align: center;
+            font-style: italic;
+            color: #555;
+            margin: 0 0 20px;
+            font-size: 1.1rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            margin-bottom: 20px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            padding: 8px 0;
+        }
+        button {
+            background-color: #d32f2f;
+            color: #fff;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        button:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+        .note {
+            font-size: 0.9em;
+            color: #666;
+            margin: 8px 0 20px;
+        }
+        #progress-container {
+            background: #eee;
+            border-radius: 6px;
+            height: 24px;
+            margin: 15px 0;
+            overflow: hidden;
+            display: none;
+        }
+        #progress-bar {
+            background: #d32f2f;
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s;
+            text-align: center;
+            color: white;
+            line-height: 24px;
+            font-weight: bold;
+        }
+        #status-message.success {
+            color: #2e7d32;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+        #status-message.error {
+            color: #d32f2f;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .contact-info {
+            text-align: center;
+            margin: 25px 0;
+            font-size: 1.1em;
+        }
+        .contact-info a {
+            color: #d32f2f;
+            text-decoration: none;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -99,24 +139,25 @@ button:disabled {
             <img src="logo.png" alt="Black Rabbit Landscaping Logo">
         </div>
         <h1>Get Your Free Quote</h1>
-        <p>Simple, Affordable, Reliable – Central Florida Lawn Care.<br>Call (407) 951-1663 or fill out the form below!</p>
-        
+        <p class="tagline">Simple, Affordable, Reliable – Central Florida Lawn Care</p>
+        <p style="text-align: center; margin-bottom: 25px;">Call or text (407) 951-1663 or fill this out – we respond fast!</p>
+
         <form id="quote-form" action="https://formspree.io/f/mykdpzyz" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="_subject" value="New Black Rabbit Landscaping Quote Request">
             <input type="hidden" name="g-recaptcha-response" id="recaptcha-token">
-            
+
             <label for="name">Full Name *</label>
-            <input type="text" id="name" name="name" required>
-            
+            <input type="text" id="name" name="name" required autofocus>
+
             <label for="email">Email Address *</label>
             <input type="email" id="email" name="email" required>
-            
+
             <label for="phone">Phone Number *</label>
-            <input type="tel" id="phone" name="phone" required>
-            
+            <input type="tel" id="phone" name="phone" required placeholder="(407) XXX-XXXX">
+
             <label for="address">Property Address *</label>
             <input type="text" id="address" name="address" required placeholder="Street, City, FL ZIP">
-            
+
             <label for="service">Service Interested In *</label>
             <select id="service" name="service" required>
                 <option value="">Please select...</option>
@@ -127,30 +168,30 @@ button:disabled {
                 <option value="trimming">Shrub & Tree Trimming</option>
                 <option value="other">Other / Custom Request</option>
             </select>
-            
-            <label for="photos">Upload Photos of Your Yard (optional – helps us give a better quote!)</label>
+
+            <label for="photos">Upload Yard Photos (optional – helps for accurate quote!)</label>
             <input type="file" id="photos" name="photos" accept="image/*" multiple>
-            <div class="note">You can select multiple images (JPG, PNG, etc.).</div>
-            
+            <div class="note">Select multiple JPG/PNG files if you want – drag & drop works.</div>
+
             <div id="progress-container">
                 <div id="progress-bar">0%</div>
             </div>
-            <div id="progress-text"></div>
-            
+            <div id="progress-text" class="note"></div>
+
             <label for="message">Details / Additional Notes</label>
-            <textarea id="message" name="message" rows="5" placeholder="Yard size? Frequency? Special requests? Describe photos if needed..."></textarea>
-            
+            <textarea id="message" name="message" rows="5" placeholder="Yard size? How often? Problem areas (weeds, trees, bare spots)? Describe photos if uploaded..."></textarea>
+
             <button type="submit" id="submit-btn">Send Quote Request</button>
         </form>
-        
+
         <div id="status-message"></div>
-        
+
         <div class="contact-info">
-            <p>Or call/text directly: <a href="tel:+14079511663">(407) 951-1663</a></p>
+            <p>Prefer to talk? <a href="tel:+14079511663">Call/Text: (407) 951-1663</a></p>
             <p>Follow us on <a href="https://www.facebook.com/blackrabbitlawn" target="_blank">Facebook</a></p>
         </div>
-        
-        <div class="note">
+
+        <div class="note" style="text-align: center;">
             Protected by Google reCAPTCHA • We'll usually respond within 24 hours.
         </div>
     </div>
@@ -172,7 +213,7 @@ button:disabled {
             submitBtn.textContent = 'Sending...';
 
             grecaptcha.ready(function() {
-                grecaptcha.execute('YOUR_SITE_KEY_HERE', {action: 'submit_quote'}).then(function(token) {
+                grecaptcha.execute('YOUR_REAL_RECAPTCHA_SITE_KEY_HERE', {action: 'submit_quote'}).then(function(token) {
                     recaptchaTokenField.value = token;
 
                     const formData = new FormData(form);
@@ -181,11 +222,7 @@ button:disabled {
                     progressBar.style.width = '0%';
                     progressBar.textContent = '0%';
                     progressText.textContent = '';
-                    progressContainer.style.display = 'none';
-
-                    if (document.getElementById('photos').files.length > 0) {
-                        progressContainer.style.display = 'block';
-                    }
+                    progressContainer.style.display = (document.getElementById('photos').files.length > 0) ? 'block' : 'none';
 
                     xhr.upload.addEventListener('progress', function(event) {
                         if (event.lengthComputable) {
