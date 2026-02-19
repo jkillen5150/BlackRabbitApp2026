@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Black Rabbit Landscaping - Get a Quote</title>
     <!-- === IMPORTANT: Replace YOUR_SITE_KEY_HERE with your real reCAPTCHA v3 site key === -->
-    <script src="https://www.google.com/recaptcha/api.js?render=YOUR_SITE_KEY_HERE"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lekf3AsAAAAAE79EMWe2yzGVovRtDCNKLNDx9de"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
