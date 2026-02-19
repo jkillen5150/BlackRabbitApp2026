@@ -13,8 +13,6 @@
     <meta property="og:url" content="https://blackrabbitlawn.com">
     <meta property="og:type" content="website">
 
-    <script src="https://www.google.com/recaptcha/api.js?render=6LdzSHEsAAAAADJuYZmn0muNaKsZBd3nU4j6Cf-A"></script>
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -209,7 +207,7 @@
         </div>
 
         <div class="note" style="text-align: center;">
-            Serving Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, Apopka & Central Florida • Lawn Mowing • Grass Cutting • Yard Care • Protected by Google reCAPTCHA • (407) 951-1663
+            Serving Orlando, Altamonte Springs, Winter Park, Clermont, Winter Garden, Apopka & Central Florida • Lawn Mowing • Grass Cutting • Yard Care • (407) 951-1663
         </div>
     </div>
 
@@ -230,59 +228,50 @@
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
-        const recaptchaTokenField = document.getElementById('recaptcha-token');
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending...';
 
-            grecaptcha.ready(function() {
-                grecaptcha.execute('6LdzSHEsAAAAADJuYZmn0muNaKsZBd3nU4j6Cf-A', {action: 'submit_quote'}).then(function(token) {
-                    recaptchaTokenField.value = token;
+            const formData = new FormData(form);
+            const xhr = new XMLHttpRequest();
 
-                    const formData = new FormData(form);
-                    const xhr = new XMLHttpRequest();
+            progressBar.style.width = '0%';
+            progressBar.textContent = '0%';
+            progressText.textContent = '';
+            progressContainer.style.display = (document.getElementById('photos').files.length > 0) ? 'block' : 'none';
 
-                    progressBar.style.width = '0%';
-                    progressBar.textContent = '0%';
-                    progressText.textContent = '';
-                    progressContainer.style.display = (document.getElementById('photos').files.length > 0) ? 'block' : 'none';
-
-                    xhr.upload.addEventListener('progress', function(event) {
-                        if (event.lengthComputable) {
-                            const percent = Math.round((event.loaded / event.total) * 100);
-                            progressBar.style.width = percent + '%';
-                            progressBar.textContent = percent + '%';
-                            const loaded = (event.loaded / 1048576).toFixed(1);
-                            const total = (event.total / 1048576).toFixed(1);
-                            progressText.textContent = `Uploading ${loaded} MB of ${total} MB`;
-                        }
-                    });
-
-                    xhr.addEventListener('load', function() {
-                        // Formspree will redirect to /thankyou.html automatically
-                        // Button reset is just for safety
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Send Free Quote Request';
-                    });
-
-                    xhr.addEventListener('error', function() {
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Send Free Quote Request';
-                        alert('Network error – please check your connection or call us directly at (407) 951-1663.');
-                        progressContainer.style.display = 'none';
-                    });
-
-                    xhr.open('POST', form.action);
-                    xhr.setRequestHeader('Accept', 'application/json');
-                    xhr.send(formData);
-                }).catch(function() {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Send Free Quote Request';
-                    alert('reCAPTCHA verification failed. Please try again.');
-                });
+            xhr.upload.addEventListener('progress', function(event) {
+                if (event.lengthComputable) {
+                    const percent = Math.round((event.loaded / event.total) * 100);
+                    progressBar.style.width = percent + '%';
+                    progressBar.textContent = percent + '%';
+                    const loaded = (event.loaded / 1048576).toFixed(1);
+                    const total = (event.total / 1048576).toFixed(1);
+                    progressText.textContent = `Uploading ${loaded} MB of ${total} MB`;
+                }
             });
+
+            xhr.addEventListener('load', function() {
+                // Formspree will redirect via _next – fallback timeout in case
+                setTimeout(() => {
+                    window.location.href = '/thankyou.html';
+                }, 1500); // 1.5s safety redirect
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Free Quote Request';
+            });
+
+            xhr.addEventListener('error', function() {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Free Quote Request';
+                alert('Network error – please check your connection or call (407) 951-1663 directly.');
+                progressContainer.style.display = 'none';
+            });
+
+            xhr.open('POST', form.action);
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.send(formData);
         });
     </script>
 </body>
