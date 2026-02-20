@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Black Rabbit Landscaping | Lawn Care, Gardens, Tree Service – Seminole/Orange County</title>
-    <meta name="description" content="Lawn care, gardens, tree service in Seminole County and Orange County. Free quotes. Upload yard photos. Call/text (407) 951-1663.">
-    <meta property="og:title" content="Black Rabbit Landscaping – Lawn Care, Gardens, Tree Service">
-    <meta property="og:description" content="Lawn care, gardens and tree service in Seminole County and Orange County.">
+    <title>Black Rabbit Landscaping | 🌾 Lawn Care, 🥕🥬 Gardens, 🌴🌳 Tree Services – Seminole/Orange County</title>
+    <meta name="description" content="Lawn care, gardens, tree services in Seminole County and Orange County. Free quotes. Upload yard photos. Call/text (407) 951-1663.">
+    <meta property="og:title" content="Black Rabbit Landscaping – Lawn Care, Gardens, Tree Services">
+    <meta property="og:description" content="Lawn care, gardens and tree services in Seminole County and Orange County.">
     <meta property="og:image" content="https://blackrabbitlawn.com/Black Rabbit Logo Nu.jpg">
     <meta property="og:url" content="https://blackrabbitlawn.com">
     <meta property="og:type" content="website">
@@ -35,9 +35,9 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img src="Black Rabbit Logo Nu.jpg" alt="Black Rabbit Landscaping – Lawn Care, Gardens, Tree Service Seminole/Orange County">
+            <img src="Black Rabbit Logo Nu.jpg" alt="Black Rabbit Landscaping – Lawn Care, Gardens, Tree Services Seminole/Orange County">
         </div>
-        <h1>Lawn Care, Gardens, Tree Service – Seminole/Orange County</h1>
+        <h1>🌾 Lawn Care, 🥕🥬 Gardens, 🌴🌳 Tree Services – Seminole/Orange County</h1>
         <h2>Request a Quote</h2>
         <form id="quote-form" action="https://formspree.io/f/mgolloka" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="_subject" value="New Black Rabbit Landscaping Quote Request">
@@ -55,7 +55,7 @@
                 <option value="">Please select...</option>
                 <option value="lawn-care">🌾 Lawn Care / Mowing</option>
                 <option value="gardens">🥕🥬 Gardens</option>
-                <option value="tree-service">🌴🌳 Tree Service / Trimming</option>
+                <option value="tree-service">🌴🌳 Tree Services / Trimming</option>
                 <option value="landscaping">Landscaping / Mulch / Planting</option>
                 <option value="other">Other</option>
             </select>
@@ -77,7 +77,7 @@
     </div>
     <a href="sms:+14079511663?body=Hello%20Black%20Rabbit!" style="position:fixed;bottom:160px;right:20px;background:#d32f2f;color:white;width:60px;height:60px;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;z-index:1000;text-decoration:none;">✉️</a>
     <a href="tel:+14079511663" style="position:fixed;bottom:90px;right:20px;background:#FFC107;color:white;width:60px;height:60px;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;z-index:1000;text-decoration:none;">📞</a>
-    <a href="https://wa.me/14079511663?text=Hello%20Black%20Rabbit!" style="position:fixed;bottom:20px;right:20px;background:#25D366;color:white;width:60px;height:60px;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:32px;z-index:1000;text-decoration:none;">📱</a>
+    <a href="https://wa.me/14079511663?text=Hello%20Black%20Rabbit!" style="position:fixed;bottom:20px;right:20px;background:#25D366;color:white;width:60px;height:60px;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:32px;z-index:1000;text-decoration:none;">💬</a>
     <script>
         const form=document.getElementById('quote-form'),submitBtn=document.getElementById('submit-btn'),progressContainer=document.getElementById('progress-container'),progressBar=document.getElementById('progress-bar'),progressText=document.getElementById('progress-text');form.addEventListener('submit',function(e){e.preventDefault();submitBtn.disabled=true;submitBtn.textContent='Sending...';const formData=new FormData(form),xhr=new XMLHttpRequest();progressBar.style.width='0%';progressBar.textContent='0%';progressText.textContent='';progressContainer.style.display=(document.getElementById('photos').files.length>0)?'block':'none';xhr.upload.addEventListener('progress',function(event){if(event.lengthComputable){const percent=Math.round((event.loaded/event.total)*100);progressBar.style.width=percent+'%';progressBar.textContent=percent+'%';const loaded=(event.loaded/1048576).toFixed(1),total=(event.total/1048576).toFixed(1);progressText.textContent=`Uploading ${loaded} MB of ${total} MB`}});xhr.addEventListener('load',function(){setTimeout(()=>{window.location.href='/thankyou.html'},1500);submitBtn.disabled=false;submitBtn.textContent='Send Free Quote Request'});xhr.addEventListener('error',function(){submitBtn.disabled=false;submitBtn.textContent='Send Free Quote Request';alert('Network error – please check your connection or call (407) 951-1663 directly.');progressContainer.style.display='none'});xhr.open('POST',form.action);xhr.setRequestHeader('Accept','application/json');xhr.send(formData)});
     </script>
