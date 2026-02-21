@@ -1,0 +1,164 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    max-width: 620px;
+    width: 100%;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo img {
+    max-width: 320px;
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #000;
+    border: 6px solid #d32f2f;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+}
+
+h1 {
+    text-align: center;
+    color: #d32f2f;
+    margin-bottom: 10px;
+    font-size: 2.2rem;
+    line-height: 1.4;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin: 20px 0 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input, textarea, select {
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+    min-height: 48px;
+}
+
+input[type="file"] {
+    padding: 8px 0;
+}
+
+button {
+    background: #d32f2f;
+    color: #fff;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background 0.3s;
+    min-height: 56px;
+}
+
+button:hover {
+    background: #b71c1c;
+}
+
+button:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.note {
+    font-size: 0.9em;
+    color: #666;
+    margin: 8px 0 20px;
+}
+
+#progress-container {
+    background: #eee;
+    border-radius: 6px;
+    height: 24px;
+    margin: 15px 0;
+    overflow: hidden;
+    display: none;
+}
+
+#progress-bar {
+    background: #d32f2f;
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s;
+    text-align: center;
+    color: white;
+    line-height: 24px;
+    font-weight: bold;
+}
+
+.contact-info {
+    text-align: center;
+    margin: 25px 0;
+    font-size: 1.1em;
+}
+
+.contact-info a {
+    color: #d32f2f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Floating action buttons */
+.fab {
+    position: fixed;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    z-index: 1000;
+    text-decoration: none;
+}
+
+.fab.sms  { bottom: 160px; background: #d32f2f; color: white; }
+.fab.call  { bottom: 90px;  background: #FFC107; color: white; }
+.fab.whatsapp { bottom: 20px; background: #25D366; color: white; font-size: 32px; }
+
+@media (max-width: 480px) {
+    .container { padding: 20px 15px; }
+    h1 { font-size: 1.8rem; }
+}
