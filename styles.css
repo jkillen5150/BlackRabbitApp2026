@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', Arial, sans-serif;
     background: #f4f4f4 url('IMG_9650.jpeg') center/cover no-repeat fixed;
     color: #333;
     margin: 0;
@@ -45,7 +45,7 @@ body::before {
     border-radius: 50%;
     object-fit: cover;
     background: #000;
-    border: 6px solid #d32f2f;
+    border: 6px solid #0A4D3C;
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     transition: transform 0.3s ease;
 }
@@ -56,7 +56,7 @@ body::before {
 
 h1 {
     text-align: center;
-    color: #d32f2f;
+    color: #0A4D3C;
     margin-bottom: 10px;
     font-size: 2.2rem;
     line-height: 1.4;
@@ -93,7 +93,7 @@ input[type="file"] {
 }
 
 button {
-    background: #d32f2f;
+    background: #0A4D3C;
     color: #fff;
     padding: 14px;
     border: none;
@@ -106,7 +106,7 @@ button {
 }
 
 button:hover {
-    background: #b71c1c;
+    background: #063D2E;
 }
 
 button:disabled {
@@ -130,7 +130,7 @@ button:disabled {
 }
 
 #progress-bar {
-    background: #d32f2f;
+    background: #0A4D3C;
     height: 100%;
     width: 0%;
     transition: width 0.4s;
@@ -147,7 +147,7 @@ button:disabled {
 }
 
 .contact-info a {
-    color: #d32f2f;
+    color: #0A4D3C;
     text-decoration: none;
     font-weight: bold;
 }
@@ -168,7 +168,7 @@ button:disabled {
     text-decoration: none;
 }
 
-.fab.sms  { bottom: 160px; background: #d32f2f; color: white; }
+.fab.sms  { bottom: 160px; background: #0A4D3C; color: white; }
 .fab.call  { bottom: 90px;  background: #FFC107; color: white; }
 .fab.whatsapp { bottom: 20px; background: #25D366; color: white; font-size: 32px; }
 
