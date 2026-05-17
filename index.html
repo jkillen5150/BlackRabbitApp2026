@@ -4,28 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Black Rabbit Landscaping | Yelm • Rainier WA</title>
-    <meta name="description" content="Lawn care, gardens, tree services in Yelm and Rainier WA. Simple. Affordable. Reliable. Call/text (407) 951-1663.">
+    <meta name="description" content="Lawn care, gardens, tree services in Yelm and Rainier WA. Simple. Affordable. Reliable.">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
     <style>
         body { margin: 0; font-family: 'Montserrat', sans-serif; background: #f8f5f0; color: #333; }
         
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('IMG_9642.jpeg') center/cover no-repeat;
+            background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('IMG_9650.jpeg') center/cover no-repeat;
             color: white;
-            padding: 60px 20px 50px;
+            padding: 70px 20px 60px;
             text-align: center;
             position: relative;
         }
         
         .logo-circle {
-            width: 220px;
-            height: 220px;
+            width: 240px;
+            height: 240px;
             border-radius: 50%;
-            border: 8px solid #fff;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            margin: 0 auto 20px;
+            border: 14px solid #2e5a2e;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            margin: 0 auto 25px;
             overflow: hidden;
+            background: white;
         }
         
         .logo-circle img {
@@ -34,31 +34,31 @@
             object-fit: cover;
         }
         
-        .hero h1 { font-size: 2.2rem; margin: 0 0 8px; font-weight: 700; }
-        .hero p { font-size: 1.1rem; margin: 0; opacity: 0.95; }
+        .hero h1 { font-size: 2.4rem; margin: 0 0 8px; font-weight: 700; }
+        .hero p { font-size: 1.15rem; margin: 0; opacity: 0.95; }
         
         .service-request {
             max-width: 620px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 45px 25px;
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-            margin-top: -30px;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+            margin-top: -40px;
             position: relative;
             z-index: 10;
         }
         
-        .service-request h2 { text-align: center; font-size: 1.9rem; margin-bottom: 8px; color: #2e5a2e; }
+        .service-request h2 { text-align: center; font-size: 2rem; margin-bottom: 10px; color: #2e5a2e; }
         
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #444; }
+        .form-group { margin-bottom: 22px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
         
         .form-group input, .form-group textarea {
             width: 100%;
-            padding: 14px 16px;
+            padding: 15px 18px;
             border: 2px solid #ddd;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             box-sizing: border-box;
         }
@@ -71,15 +71,15 @@
         .urgency-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
         }
         
         .urgency-btn {
-            padding: 14px 10px;
+            padding: 16px 12px;
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 700;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             background: #2e5a2e;
             color: white;
             cursor: pointer;
@@ -88,52 +88,52 @@
         
         .urgency-btn.active {
             background: #1e3d1e;
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.4);
         }
         
         .submit-btn {
             background: #2e5a2e;
             color: white;
             border: none;
-            padding: 18px;
+            padding: 19px;
             font-size: 18px;
             font-weight: 700;
-            border-radius: 12px;
+            border-radius: 14px;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 12px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(46,90,46,0.4);
+            box-shadow: 0 6px 20px rgba(46,90,46,0.45);
         }
         
         .contact-bar {
             text-align: center;
-            padding: 30px 20px;
+            padding: 35px 20px;
             background: #f8f5f0;
         }
         
         .fab {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
+            bottom: 22px;
+            right: 22px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            font-size: 27px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
             text-decoration: none;
             z-index: 100;
         }
         
-        .fab.sms { background: #25D366; color: white; bottom: 90px; }
+        .fab.sms { background: #25D366; color: white; bottom: 95px; }
         .fab.call { background: #2e5a2e; color: white; }
     </style>
 </head>
 <body>
 
-    <!-- HERO with Misty PNW Background + Circular Logo -->
+    <!-- HERO with IMG_9650 background + circular logo -->
     <header class="hero">
         <div class="logo-circle">
             <img src="Black Rabbit Logo Nu.jpg" alt="Black Rabbit Landscaping Logo">
@@ -145,7 +145,7 @@
     <!-- SERVICE REQUEST FORM -->
     <section class="service-request">
         <h2>Request Service Now</h2>
-        <p style="text-align: center; color: #555; margin-bottom: 28px;">Most people just need their lawn handled fast. Tell me what you need.</p>
+        <p style="text-align: center; color: #555; margin-bottom: 30px;">Most people just need their lawn handled fast. Tell me what you need.</p>
 
         <form action="https://api.web3forms.com/submit" method="POST">
             <input type="hidden" name="access_key" value="6467d992-e261-48c0-ae1e-2bc4b6cc557d">
@@ -180,13 +180,13 @@
 
             <button type="submit" class="submit-btn">Send Request</button>
             
-            <p style="text-align: center; font-size: 0.9em; color: #666; margin-top: 16px;">I'll text you back within a few hours.</p>
+            <p style="text-align: center; font-size: 0.9em; color: #666; margin-top: 18px;">I'll text you back within a few hours.</p>
         </form>
     </section>
 
     <!-- Contact Bar -->
     <div class="contact-bar">
-        <p style="margin: 0 0 6px;"><strong>Call/Text:</strong> <a href="tel:+14079511663" style="color:#2e5a2e; font-weight:700;">(407) 951-1663</a></p>
+        <p style="margin: 0 0 8px;"><strong>Call/Text:</strong> <a href="tel:+14079511663" style="color:#2e5a2e; font-weight:700;">(407) 951-1663</a></p>
         <p style="margin: 0;"><a href="https://www.facebook.com/blackrabbitlawn" target="_blank" style="color:#2e5a2e;">Facebook</a></p>
     </div>
 
