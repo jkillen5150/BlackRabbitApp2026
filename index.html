@@ -14,51 +14,56 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
- <!-- NEW SERVICE REQUEST FORM - Black Rabbit Lawn -->
-<h2>Request Service Now</h2>
-<p style="margin-bottom: 1.5rem; color: #555;">Most people just need their lawn handled fast. Tell me what you need.</p>
 
-<form action="https://api.web3forms.com/submit" method="POST" class="service-form">
-    <input type="hidden" name="access_key" value="6467d992-e261-48c0-ae1e-2bc4b6cc557d">
-    <input type="hidden" name="subject" value="New Black Rabbit Service Request">
-    <input type="hidden" name="_next" value="/thankyou.html">
+    <!-- NEW SERVICE REQUEST FORM -->
+    <section class="service-request">
+        <h2>Request Service Now</h2>
+        <p style="margin-bottom: 1.5rem; color: #555;">Most people just need their lawn handled fast. Tell me what you need.</p>
 
-    <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" name="name" required>
+        <form action="https://api.web3forms.com/submit" method="POST" class="service-form">
+            <input type="hidden" name="access_key" value="6467d992-e261-48c0-ae1e-2bc4b6cc557d">
+            <input type="hidden" name="subject" value="New Black Rabbit Service Request">
+            <input type="hidden" name="_next" value="/thankyou.html">
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number <span style="color:#c00;">*</span></label>
+                <input type="tel" id="phone" name="phone" required placeholder="(360) 555-1234">
+            </div>
+
+            <div class="form-group">
+                <label>How soon do you need service?</label>
+                <div class="urgency-buttons">
+                    <button type="button" class="urgency-btn" data-value="Today / Emergency">🚨 Today / Emergency</button>
+                    <button type="button" class="urgency-btn" data-value="This Week">This Week</button>
+                    <button type="button" class="urgency-btn" data-value="Next Week">Next Week</button>
+                    <button type="button" class="urgency-btn" data-value="Just getting a quote">Just a Quote</button>
+                </div>
+                <input type="hidden" name="urgency" id="urgency-field">
+            </div>
+
+            <div class="form-group">
+                <label>What's going on with your yard?</label>
+                <textarea id="message" name="message" rows="4" placeholder="Lawn is getting tall, company coming this weekend..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Send Request</button>
+            
+            <p style="font-size: 0.9em; color: #666; margin-top: 1rem;">I'll text you back within a few hours.</p>
+        </form>
+    </section>
+
+    <!-- Contact Info -->
+    <div class="contact-info">
+        <p>Call/Text: <a href="tel:+14079511663">(407) 951-1663</a></p>
+        <p><a href="https://www.facebook.com/blackrabbitlawn" target="_blank">Facebook</a></p>
     </div>
 
-    <div class="form-group">
-        <label for="phone">Phone Number <span style="color:#c00;">*</span></label>
-        <input type="tel" id="phone" name="phone" required placeholder="(360) 555-1234">
-    </div>
-
-    <div class="form-group">
-        <label>How soon do you need service?</label>
-        <div class="urgency-buttons">
-            <button type="button" class="urgency-btn" data-value="Today / Emergency">🚨 Today / Emergency</button>
-            <button type="button" class="urgency-btn" data-value="This Week">This Week</button>
-            <button type="button" class="urgency-btn" data-value="Next Week">Next Week</button>
-            <button type="button" class="urgency-btn" data-value="Just getting a quote">Just a Quote</button>
-        </div>
-        <input type="hidden" name="urgency" id="urgency-field">
-    </div>
-
-    <div class="form-group">
-        <label>What's going on with your yard?</label>
-        <textarea id="message" name="message" rows="4" placeholder="Lawn is getting tall, company coming this weekend..."></textarea>
-    </div>
-
-    <button type="submit" class="submit-btn">Send Request</button>
-    
-    <p style="font-size: 0.9em; color: #666; margin-top: 1rem;">I'll text you back within a few hours.</p>
-</form>
-        <div class="contact-info">
-            <p>Call/Text: <a href="tel:+14079511663">(407) 951-1663</a></p>
-            <p><a href="https://www.facebook.com/blackrabbitlawn" target="_blank">Facebook</a></p>
-        </div>
-    </div>
-
+    <!-- Floating Action Buttons -->
     <a href="sms:+14079511663?body=Hello%20Black%20Rabbit!" class="fab sms">✉️</a>
     <a href="tel:+14079511663" class="fab call">📞</a>
     <a href="https://wa.me/14079511663?text=Hello%20Black%20Rabbit!" class="fab whatsapp">💬</a>
