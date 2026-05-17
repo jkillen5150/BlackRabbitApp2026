@@ -14,43 +14,45 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <img src="IMG_9642.jpeg" alt="Black Rabbit Landscaping – Yelm Rainier Lawn Care Gardens Tree Services" loading="lazy">
+ <!-- NEW SERVICE REQUEST FORM - Black Rabbit Lawn -->
+<h2>Request Service Now</h2>
+<p style="margin-bottom: 1.5rem; color: #555;">Most people just need their lawn handled fast. Tell me what you need.</p>
+
+<form action="https://api.web3forms.com/submit" method="POST" class="service-form">
+    <input type="hidden" name="access_key" value="6467d992-e261-48c0-ae1e-2bc4b6cc557d">
+    <input type="hidden" name="subject" value="New Black Rabbit Service Request">
+    <input type="hidden" name="_next" value="/thankyou.html">
+
+    <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Phone Number <span style="color:#c00;">*</span></label>
+        <input type="tel" id="phone" name="phone" required placeholder="(360) 555-1234">
+    </div>
+
+    <div class="form-group">
+        <label>How soon do you need service?</label>
+        <div class="urgency-buttons">
+            <button type="button" class="urgency-btn" data-value="Today / Emergency">🚨 Today / Emergency</button>
+            <button type="button" class="urgency-btn" data-value="This Week">This Week</button>
+            <button type="button" class="urgency-btn" data-value="Next Week">Next Week</button>
+            <button type="button" class="urgency-btn" data-value="Just getting a quote">Just a Quote</button>
         </div>
-        <h1>🌾 Lawn Care<br>🥕 Gardens<br>🌳 Tree Services<br>Yelm / Rainier WA</h1>
-        <h2>Request a Quote</h2>
-        <form id="quote-form" action="https://formspree.io/f/mgolloka" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="_subject" value="New Black Rabbit Landscaping Quote Request">
-            <input type="hidden" name="_next" value="/thankyou.html">
-            <label for="name">Full Name *</label>
-            <input type="text" id="name" name="name" required autofocus>
-            <label for="email">Email Address *</label>
-            <input type="email" id="email" name="email" required>
-            <label for="phone">Phone Number *</label>
-            <input type="tel" id="phone" name="phone" required placeholder="(407) XXX-XXXX">
-            <label for="address">Property Address * (Yelm or Rainier area)</label>
-            <input type="text" id="address" name="address" required placeholder="Street, City, WA ZIP">
-            <label for="service">Service Interested In *</label>
-            <select id="service" name="service" required>
-                <option value="">Please select...</option>
-                <option value="lawn-care">🌾 Lawn Care / Mowing</option>
-                <option value="gardens">🥕 Gardens</option>
-                <option value="tree-service">🌳 Tree Services / Trimming</option>
-                <option value="landscaping">Landscaping / Mulch / Planting</option>
-                <option value="other">Other</option>
-            </select>
-            <label for="photos">Upload Yard Photos (optional)</label>
-            <input type="file" id="photos" name="photos" accept="image/*" multiple capture="environment">
-            <div class="note">Select multiple JPG/PNG files.</div>
-            <div id="progress-container">
-                <div id="progress-bar">0%</div>
-            </div>
-            <div id="progress-text" class="note"></div>
-            <label for="message">Details / Additional Notes</label>
-            <textarea id="message" name="message" rows="5" placeholder="Tell us about your yard..."></textarea>
-            <button type="submit" id="submit-btn">Send Free Quote Request</button>
-        </form>
+        <input type="hidden" name="urgency" id="urgency-field">
+    </div>
+
+    <div class="form-group">
+        <label>What's going on with your yard?</label>
+        <textarea id="message" name="message" rows="4" placeholder="Lawn is getting tall, company coming this weekend..."></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn">Send Request</button>
+    
+    <p style="font-size: 0.9em; color: #666; margin-top: 1rem;">I'll text you back within a few hours.</p>
+</form>
         <div class="contact-info">
             <p>Call/Text: <a href="tel:+14079511663">(407) 951-1663</a></p>
             <p><a href="https://www.facebook.com/blackrabbitlawn" target="_blank">Facebook</a></p>
