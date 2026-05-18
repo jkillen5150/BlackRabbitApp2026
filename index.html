@@ -10,7 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        body { margin: 0; font-family: 'Montserrat', sans-serif; background: #f8f5f0; color: #333; }
+        body { 
+            margin: 0; 
+            font-family: 'Montserrat', sans-serif; 
+            background: #f8f5f0; 
+            color: #333; 
+            line-height: 1.5;
+        }
         
         .hero {
             background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('IMG_9650.jpeg') center/cover no-repeat;
@@ -20,7 +26,8 @@
         }
         
         .logo-circle {
-            width: 240px; height: 240px;
+            width: 240px;
+            height: 240px;
             border-radius: 50%;
             border: 4px solid #2e5a2e;
             box-shadow: 0 15px 40px rgba(0,0,0,0.5);
@@ -37,7 +44,7 @@
         .service-request {
             max-width: 620px;
             margin: 0 auto;
-            padding: 45px 25px;
+            padding: 50px 30px;           /* Increased padding */
             background: white;
             border-radius: 20px;
             box-shadow: 0 12px 40px rgba(0,0,0,0.1);
@@ -49,22 +56,35 @@
         .service-request h2 { 
             text-align: center; 
             font-size: 2rem; 
-            margin-bottom: 6px; 
+            margin-bottom: 12px; 
             color: #2e5a2e; 
             cursor: pointer;
         }
         
-        .service-request h2:hover { text-decoration: underline; }
+        .service-request p { 
+            text-align: center; 
+            color: #555; 
+            margin-bottom: 35px; 
+        }
         
-        .form-group { margin-bottom: 22px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
+        .form-group { 
+            margin-bottom: 28px; 
+        }
+        
+        .form-group label { 
+            display: block; 
+            font-weight: 600; 
+            margin-bottom: 8px; 
+            color: #444; 
+        }
         
         .form-group input, .form-group textarea {
             width: 100%;
-            padding: 15px 18px;
+            padding: 16px 18px;
             border: 2px solid #ddd;
             border-radius: 12px;
             font-size: 16px;
+            box-sizing: border-box;
         }
         
         .form-group input:focus, .form-group textarea:focus {
@@ -75,7 +95,8 @@
         .urgency-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 14px;
+            margin-top: 8px;
         }
         
         .urgency-btn {
@@ -91,7 +112,6 @@
         
         .urgency-btn.active {
             background: #1e3d1e;
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.4);
         }
         
         .submit-btn {
@@ -103,14 +123,14 @@
             font-weight: 700;
             border-radius: 14px;
             width: 100%;
-            margin-top: 12px;
+            margin-top: 15px;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(46,90,46,0.45);
         }
         
         .contact-bar {
             text-align: center;
-            padding: 35px 20px;
+            padding: 40px 20px;
             background: #f8f5f0;
         }
         
@@ -132,13 +152,6 @@
         
         .fab.sms { background: #25D366; color: white; bottom: 95px; }
         .fab.call { background: #2e5a2e; color: white; }
-        
-        .sms-note {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 8px;
-        }
     </style>
 </head>
 <body>
@@ -153,14 +166,12 @@
     </header>
 
     <!-- SERVICE REQUEST FORM -->
-    <section class="service-request" id="service-form">
-        <!-- CLICKABLE HEADING - NOW SCROLLS TO FORM -->
+    <section class="service-request">
         <a href="#service-form" style="text-decoration: none; color: inherit;">
             <h2>Request Service Now</h2>
         </a>
         
-        <p style="text-align: center; color: #555; margin-bottom: 8px;">Most people just need their lawn handled fast.</p>
-        <p class="sms-note">Or tap the chat button below to send a quick text</p>
+        <p>Most people just need their lawn handled fast.<br>Or tap the chat button below to send a quick text</p>
 
         <form action="https://api.web3forms.com/submit" method="POST">
             <input type="hidden" name="access_key" value="6467d992-e261-48c0-ae1e-2bc4b6cc557d">
@@ -172,54 +183,4 @@
                 <input type="text" name="name" required>
             </div>
 
-            <div class="form-group">
-                <label>Phone Number <span style="color:#c00;">*</span></label>
-                <input type="tel" name="phone" required placeholder="(360) 555-1234">
-            </div>
-
-            <div class="form-group">
-                <label>How soon do you need service?</label>
-                <div class="urgency-buttons">
-                    <button type="button" class="urgency-btn" data-value="Today / Emergency">🚨 Today / Emergency</button>
-                    <button type="button" class="urgency-btn" data-value="This Week">This Week</button>
-                    <button type="button" class="urgency-btn" data-value="Next Week">Next Week</button>
-                    <button type="button" class="urgency-btn" data-value="Just getting a quote">Just a Quote</button>
-                </div>
-                <input type="hidden" name="urgency" id="urgency-field">
-            </div>
-
-            <div class="form-group">
-                <label>What's going on with your yard?</label>
-                <textarea name="message" rows="4" placeholder="Lawn is getting tall, company coming this weekend..."></textarea>
-            </div>
-
-            <button type="submit" class="submit-btn">Send Request</button>
-            
-            <p style="text-align: center; font-size: 0.9em; color: #666; margin-top: 18px;">I'll text you back within a few hours.</p>
-        </form>
-    </section>
-
-    <!-- Contact Bar -->
-    <div class="contact-bar">
-        <p style="margin: 0 0 8px;"><strong>Call/Text:</strong> <a href="tel:+14079511663" style="color:#2e5a2e; font-weight:700;">(407) 951-1663</a></p>
-        <p style="margin: 0;"><a href="https://www.facebook.com/blackrabbitlawn" target="_blank" style="color:#2e5a2e;">Facebook</a></p>
-    </div>
-
-    <!-- Floating Buttons -->
-    <a href="sms:+14079511663?body=Hello,%20Black%20Rabbit%20Landscaping%F0%9F%99%82%0APlease%20provide%20me%20with%20a%20quote%20for%20service%20%40%20%5BYour%20property%20address%5D.%0AThank%20you!%F0%9F%99%8F%F0%9F%8F%BB%20%0A%5BFirst%20or%20full%20name%5D" class="fab sms">💬</a>
-    <a href="tel:+14079511663" class="fab call">📞</a>
-
-    <script src="script.js"></script>
-    <script>
-        // Urgency button logic
-        document.querySelectorAll('.urgency-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                document.getElementById('urgency-field').value = this.dataset.value;
-            });
-        });
-    </script>
-</body>
-</html>
-    
+            <div class="form
