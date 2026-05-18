@@ -183,5 +183,33 @@
                 <input type="text" name="name" required>
             </div>
 
-            <div class="form
+            <div class="form-group">
+                <label>Phone Number <span style="color:#c00;">*</span></label>
+                <input type="tel" name="phone" required placeholder="(360) 555-1234">
+            </div>
+
+            <div class="form-group">
+                <label>How soon do you need service?</label>
+                <div class="urgency-buttons">
+                    <button type="button" class="urgency-btn" data-value="Today / Emergency">🚨 Today / Emergency</button>
+                    <button type="button" class="urgency-btn" data-value="This Week">This Week</button>
+                    <button type="button" class="urgency-btn" data-value="Next Week">Next Week</button>
+                    <button type="button" class="urgency-btn" data-value="Just getting a quote">Just a Quote</button>
+                </div>
+                <input type="hidden" name="urgency" id="urgency-field">
+            </div>
+
+            <div class="form-group">
+                <label>What's going on with your yard?</label>
+                <textarea name="message" rows="4" placeholder="Lawn is getting tall, company coming this weekend..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Send Request</button>
             
+            <p style="text-align: center; font-size: 0.9em; color: #666; margin-top: 20px;">I'll text you back within a few hours.</p>
+        </form>
+    </section>
+
+    <!-- Contact Bar -->
+    <div class="contact-bar">
+        <p style="margin: 0 0 8px;"><strong>Call/Text:</strong> <a href="tel:+14079511663" style="color:#2e5a2e; font-weight:700;">(407) 951-1663</
