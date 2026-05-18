@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Black Rabbit Landscaping | Lawn Care, Gardens & Tree Services in Yelm WA 98597</title>
-    <meta name="description" content="Professional lawn care, garden maintenance, and tree services in Yelm, Rainier, and Olympia WA. Simple. Affordable. Reliable. Call/text (407) 951-1663 for fast service.">
-    <meta name="keywords" content="lawn care Yelm WA, lawn mowing Yelm, garden maintenance Rainier WA, tree trimming Yelm 98597, landscaping Yelm Washington, Black Rabbit Landscaping">
+    <title>Black Rabbit Landscaping | Lawn Care Yelm WA 98597</title>
+    <meta name="description" content="Professional lawn care, gardens & tree services in Yelm, Rainier & Olympia WA. Simple. Affordable. Reliable.">
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     
@@ -18,12 +17,10 @@
             color: white;
             padding: 70px 20px 60px;
             text-align: center;
-            position: relative;
         }
         
         .logo-circle {
-            width: 240px;
-            height: 240px;
+            width: 240px; height: 240px;
             border-radius: 50%;
             border: 4px solid #2e5a2e;
             box-shadow: 0 15px 40px rgba(0,0,0,0.5);
@@ -32,11 +29,7 @@
             background: white;
         }
         
-        .logo-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
         
         .hero h1 { font-size: 2.4rem; margin: 0 0 8px; font-weight: 700; }
         .hero p { font-size: 1.15rem; margin: 0; opacity: 0.95; }
@@ -56,14 +49,12 @@
         .service-request h2 { 
             text-align: center; 
             font-size: 2rem; 
-            margin-bottom: 10px; 
+            margin-bottom: 6px; 
             color: #2e5a2e; 
             cursor: pointer;
         }
         
-        .service-request h2:hover {
-            text-decoration: underline;
-        }
+        .service-request h2:hover { text-decoration: underline; }
         
         .form-group { margin-bottom: 22px; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; }
@@ -74,7 +65,6 @@
             border: 2px solid #ddd;
             border-radius: 12px;
             font-size: 16px;
-            box-sizing: border-box;
         }
         
         .form-group input:focus, .form-group textarea:focus {
@@ -97,7 +87,6 @@
             background: #2e5a2e;
             color: white;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
         
         .urgency-btn.active {
@@ -143,11 +132,18 @@
         
         .fab.sms { background: #25D366; color: white; bottom: 95px; }
         .fab.call { background: #2e5a2e; color: white; }
+        
+        .sms-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- HERO with IMG_9650 background + circular logo -->
+    <!-- HERO -->
     <header class="hero">
         <div class="logo-circle">
             <img src="Black Rabbit Logo Nu.jpg" alt="Black Rabbit Landscaping Logo">
@@ -157,13 +153,14 @@
     </header>
 
     <!-- SERVICE REQUEST FORM -->
-    <section class="service-request">
-        <!-- CLICKABLE HEADING -->
-        <a href="sms:+14079511663?body=Hello,%20Black%20Rabbit%20Landscaping%F0%9F%99%82%0APlease%20provide%20me%20with%20a%20quote%20for%20service%20%40%20%5BYour%20property%20address%5D.%0AThank%20you!%F0%9F%99%8F%F0%9F%8F%BB%20%0A%5BFirst%20or%20full%20name%5D" style="text-decoration: none; color: inherit;">
+    <section class="service-request" id="service-form">
+        <!-- CLICKABLE HEADING - NOW SCROLLS TO FORM -->
+        <a href="#service-form" style="text-decoration: none; color: inherit;">
             <h2>Request Service Now</h2>
         </a>
         
-        <p style="text-align: center; color: #555; margin-bottom: 30px;">Most people just need their lawn handled fast. Tell me what you need.</p>
+        <p style="text-align: center; color: #555; margin-bottom: 8px;">Most people just need their lawn handled fast.</p>
+        <p class="sms-note">Or tap the chat button below to send a quick text</p>
 
         <form action="https://api.web3forms.com/submit" method="POST">
             <input type="hidden" name="access_key" value="6467d992-e261-48c0-ae1e-2bc4b6cc557d">
@@ -214,6 +211,7 @@
 
     <script src="script.js"></script>
     <script>
+        // Urgency button logic
         document.querySelectorAll('.urgency-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('active'));
@@ -224,3 +222,4 @@
     </script>
 </body>
 </html>
+    
