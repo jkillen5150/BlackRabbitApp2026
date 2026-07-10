@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>Black Rabbit Landscaping | Lawn Care Yelm WA 98597</title>
-    <meta name="description" content="Professional lawn care, gardens & tree services in Yelm, Rainier & Olympia WA. Simple. Affordable. Reliable.">
+    <meta name="description" content="Professional lawn care, gardens & tree services in Yelm, Rainier & Olympia WA. Simple. Affordable. Reliable. Get a fast quote.">
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     
@@ -154,87 +154,9 @@
         
         .fab.sms { background: #25D366; color: white; bottom: 95px; }
         .fab.call { background: #2e5a2e; color: white; }
-
-        /* Marketplace bridge (points at black-rabbit-services app — not a rebuild) */
-        .br-marketplace {
-            max-width: 720px;
-            margin: 32px auto 48px;
-            padding: 0 20px;
-        }
-        .br-marketplace-card {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
-            padding: 36px 28px;
-            text-align: center;
-        }
-        .br-marketplace-card h2 {
-            margin: 0 0 10px;
-            color: #2e5a2e;
-            font-size: 1.75rem;
-        }
-        .br-marketplace-card p {
-            margin: 0 0 22px;
-            color: #555;
-            line-height: 1.5;
-        }
-        .br-cta-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-        }
-        .br-cta {
-            display: inline-block;
-            background: #2e5a2e;
-            color: #fff !important;
-            text-decoration: none;
-            font-weight: 700;
-            padding: 14px 18px;
-            border-radius: 12px;
-            min-width: 140px;
-        }
-        .br-cta.secondary {
-            background: #fff;
-            color: #2e5a2e !important;
-            border: 2px solid #2e5a2e;
-        }
-        .br-embed-wrap {
-            margin-top: 28px;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 2px solid #e5e0d6;
-            background: #f8f5f0;
-        }
-        .br-embed-wrap iframe {
-            width: 100%;
-            min-height: 720px;
-            border: 0;
-            display: block;
-            background: #fff;
-        }
-        .br-embed-toggle {
-            margin-top: 18px;
-            background: transparent;
-            border: none;
-            color: #2e5a2e;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: underline;
-            font-size: 0.95rem;
-        }
     </style>
 </head>
 <body>
-
-    <!--
-      Marketplace app URL (black-rabbit-services).
-      While developing, use your Codespace Expo URL.
-      In production, use https://app.blackrabbitlawn.com after DNS + deploy.
-    -->
-    <script>
-      window.BR_APP_URL = 'https://zany-doodle-7v495j96jw7r3wr9r-8081.app.github.dev';
-    </script>
 
     <!-- HERO -->
     <header class="hero">
@@ -244,21 +166,19 @@
         <h1>Black Rabbit Landscaping</h1>
         <p>Yelm • Rainier • Olympia Area</p>
         <div class="hero-ctas">
-            <a class="hero-cta primary" data-br-path="/" href="#service-form">Post a free job</a>
-            <a class="hero-cta ghost" data-br-path="/chat" href="#marketplace">Ask Grok</a>
+            <a class="hero-cta primary" href="#service-form">Request a Quote</a>
         </div>
     </header>
 
-    <!-- SERVICE REQUEST FORM (kept — still works as email lead capture) -->
+    <!-- SERVICE REQUEST FORM -->
     <section class="service-request" id="service-form">
         <a href="#service-form" style="text-decoration: none; color: inherit;">
             <h2>Request Service Now</h2>
         </a>
         
         <p style="text-align: center; color: #555; margin-bottom: 35px;">
-            Most people just need their lawn handled fast.<br>
-            Prefer the free job board? <a href="#marketplace" style="color:#2e5a2e;font-weight:700;">Use the marketplace below</a>
-            or tap the chat button to send a quick text.
+            Professional lawn care, gardens &amp; tree services.<br>
+            Get a fast, no-obligation quote for the Yelm, Rainier &amp; Olympia area.
         </p>
 
         <form action="https://api.web3forms.com/submit" method="POST">
@@ -274,6 +194,11 @@
             <div class="form-group">
                 <label>Phone Number <span style="color:#c00;">*</span></label>
                 <input type="tel" name="phone" required placeholder="(360) 555-1234">
+            </div>
+
+            <div class="form-group">
+                <label>Property Address</label>
+                <input type="text" name="address" placeholder="123 Main St, Yelm WA 98597">
             </div>
 
             <div class="form-group">
@@ -298,42 +223,10 @@
         </form>
     </section>
 
-    <!-- MARKETPLACE BRIDGE → black-rabbit-services (no full site rebuild) -->
-    <section class="br-marketplace" id="marketplace" aria-label="Black Rabbit marketplace">
-      <div class="br-marketplace-card">
-        <h2>Free local job board</h2>
-        <p>
-          Post a lawn job, browse pros, or ask Grok — same Black Rabbit brand,
-          new open marketplace. Links open the app hosted from the
-          <strong>black-rabbit-services</strong> repo.
-        </p>
-
-        <div class="br-cta-row">
-          <a class="br-cta" data-br-path="/" href="#">Post a free job</a>
-          <a class="br-cta secondary" data-br-path="/pros" href="#">Find a pro</a>
-          <a class="br-cta secondary" data-br-path="/chat" href="#">Ask Grok</a>
-        </div>
-
-        <button type="button" class="br-embed-toggle" id="br-embed-toggle">
-          Or open the app right here ↓
-        </button>
-
-        <div class="br-embed-wrap" id="br-embed-wrap" hidden>
-          <iframe
-            id="br-app-frame"
-            title="Black Rabbit Services"
-            loading="lazy"
-            allow="clipboard-write"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
-        </div>
-      </div>
-    </section>
-
     <!-- Contact Bar -->
     <div class="contact-bar">
         <p style="margin: 0 0 8px;"><strong>Call/Text:</strong> <a href="tel:+14079511663" style="color:#2e5a2e; font-weight:700;">(407) 951-1663</a></p>
-        </div>
+    </div>
 
     <!-- Floating Buttons -->
     <a href="sms:+14079511663?body=Hello,%20Black%20Rabbit%20Landscaping%F0%9F%99%82%0APlease%20provide%20me%20with%20a%20quote%20for%20service%20%40%20%5BYour%20property%20address%5D.%0AThank%20you!%F0%9F%99%8F%F0%9F%8F%BB%20%0A%5BFirst%20or%20full%20name%5D" class="fab sms">💬</a>
@@ -347,43 +240,6 @@
                 document.getElementById('urgency-field').value = this.dataset.value;
             });
         });
-
-        (function () {
-            var BR_APP_URL = window.BR_APP_URL || 'https://app.blackrabbitlawn.com';
-
-            function join(base, path) {
-                return String(base).replace(/\/$/, '') + path;
-            }
-
-            document.querySelectorAll('[data-br-path]').forEach(function (a) {
-                var path = a.getAttribute('data-br-path') || '/';
-                a.href = join(BR_APP_URL, path);
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-            });
-
-            var toggle = document.getElementById('br-embed-toggle');
-            var wrap = document.getElementById('br-embed-wrap');
-            var frame = document.getElementById('br-app-frame');
-            var loaded = false;
-
-            if (toggle && wrap && frame) {
-                toggle.addEventListener('click', function () {
-                    var open = wrap.hasAttribute('hidden');
-                    if (open) {
-                        if (!loaded) {
-                            frame.src = join(BR_APP_URL, '/');
-                            loaded = true;
-                        }
-                        wrap.removeAttribute('hidden');
-                        toggle.textContent = 'Hide embedded app ↑';
-                    } else {
-                        wrap.setAttribute('hidden', '');
-                        toggle.textContent = 'Or open the app right here ↓';
-                    }
-                });
-            }
-        })();
     </script>
 </body>
 </html>
