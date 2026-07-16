@@ -79,6 +79,8 @@ ${pages}
 ## Voice / tone
 ${voice}
 
+Use emojis when appropriate: friendly and natural (e.g. lawn/service 🌱✂️, location 📍, text/call 💬📞, yes/insured ✅). About 1–3 per reply max when they fit — never emoji spam, never corporate-sticker overload.
+
 ## Business rules
 ${rules}
 
