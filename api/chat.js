@@ -25,26 +25,44 @@ function loadKnowledge() {
   return knowledgeCache;
 }
 
-/** User is clearly asking for a phone / how to reach Jerry */
+/**
+ * Any request for contact / a phone number whatsoever.
+ * Broad on purpose — if they want a number, Jerry's is the only one.
+ */
 function isAskingForNumber(text) {
-  const t = String(text || '').toLowerCase();
+  const t = String(text || '')
+    .toLowerCase()
+    .replace(/[’']/g, "'");
   if (!t.trim()) return false;
-  // direct number asks
+
+  // Explicit phone / number language
   if (
-    /\b(phone|number|cell|mobile|call|text|sms|contact|reach|dial)\b/.test(t) &&
-    /\b(jerry|you|your|business|black rabbit|him|owner)\b/.test(t)
-  ) {
-    return true;
-  }
-  if (
-    /\b(what('?s| is)|got|have|give|need|want|can i get|what'?s)\b.{0,40}\b(number|phone)\b/.test(
+    /\b(phone(\s*number)?|cell(\s*phone)?|mobile(\s*number)?|telephone|contact\s*number|call\s*number)\b/.test(
       t
     )
   ) {
     return true;
   }
-  if (/\b(how (do i|can i|to) (call|text|contact|reach))\b/.test(t)) return true;
-  if (/\b(jerry'?s?\s+number|your\s+number|phone\s+number)\b/.test(t)) return true;
+  if (/\b(phone|number|cell|mobile|tel)\b/.test(t) && /\b(what|whats|what's|got|have|give|need|want|send|share|drop|list|is|are)\b/.test(t)) {
+    return true;
+  }
+  if (/\b(your|the|a|his|jerry'?s?)\s+number\b/.test(t)) return true;
+  if (/\bnumber\b/.test(t) && /\b(text|call|contact|reach|phone)\b/.test(t)) return true;
+
+  // Contact / reach / how to get in touch
+  if (/\b(contact\s*(info|information|details)?|get\s*in\s*touch|reach\s*(you|him|jerry|out)?)\b/.test(t)) {
+    return true;
+  }
+  if (/\bhow (do i|can i|to) (call|text|contact|reach|get (a )?hold)\b/.test(t)) return true;
+  if (/\b(call|text|sms)\s+(me\s+)?(you|jerry|him|the\s+owner)?\b/.test(t) && t.length < 80) {
+    // short "can I text you" / "call me" style
+    if (/\b(can i|how|want to|need to|should i|please|number)\b/.test(t) || /^(call|text)\b/.test(t.trim())) {
+      return true;
+    }
+  }
+  if (/\b(where can i (call|text|reach)|who do i (call|text))\b/.test(t)) return true;
+  if (/\b(connect me|put me through|transfer me)\b/.test(t)) return true;
+
   return false;
 }
 
