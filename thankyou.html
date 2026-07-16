@@ -1,84 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You – Black Rabbit Landscaping</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-            max-width: 500px;
-            width: 100%;
-        }
-        .logo img {
-            max-width: 220px;
-            border-radius: 50%;
-            border: 6px solid #d32f2f;
-            margin-bottom: 25px;
-        }
-        h1 {
-            color: #d32f2f;
-            margin-bottom: 15px;
-        }
-        p {
-            font-size: 1.2rem;
-            margin: 15px 0;
-        }
-        .buttons {
-            margin-top: 30px;
-        }
-        .buttons a {
-            display: inline-block;
-            margin: 10px;
-            padding: 14px 28px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        .call-btn { background: #d32f2f; color: white; }
-        .whatsapp-btn { background: #25D366; color: white; }
-        .back-link {
-            margin-top: 30px;
-            font-size: 1rem;
-        }
-        .back-link a {
-            color: #d32f2f;
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You | Black Rabbit Landscaping</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <style>
+    .thanks-card {
+      max-width: 520px;
+      margin: 40px auto 60px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+      padding: 36px 28px;
+      text-align: center;
+    }
+    .thanks-card img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #2e5a2e;
+      margin: 0 auto 18px;
+    }
+    .thanks-card h1 { color: #2e5a2e; margin: 0 0 12px; }
+    .thanks-card p { color: #444; margin: 0 0 12px; }
+    .thanks-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 22px; }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <div class="logo">
-            <img src="IMG_9642.jpeg" alt="Black Rabbit Landscaping">
-        </div>
-        <h1>Thank You!</h1>
-        <p>Your free lawn mowing / yard care quote request has been sent successfully.</p>
-        <p>We’ll get back to you quickly – usually within 24 hours.</p>
-        <p>Questions? Reach out right now:</p>
-        <div class="buttons">
-            <a href="tel:+14079511663" class="call-btn">📞 Call (407) 951-1663</a>
-            <a href="https://wa.me/14079511663?text=Hi%20Black%20Rabbit!%20Just%20sent%20my%20quote%20request..." class="whatsapp-btn">💬 WhatsApp</a>
-        </div>
-        <div class="back-link">
-            <a href="/">Back to Quote Form</a>
-        </div>
+<body data-page="home">
+  <div id="site-nav-mount"></div>
+
+  <header class="page-hero">
+    <h1>Request received</h1>
+    <p>We’ll get back to you soon — usually within 24 hours.</p>
+  </header>
+
+  <div class="thanks-card">
+    <img src="Black Rabbit Logo Nu.jpg" alt="Black Rabbit Landscaping">
+    <h1>Thank you!</h1>
+    <p>Your service request was sent successfully.</p>
+    <p>Questions right now? Call or text Jerry:</p>
+    <div class="thanks-actions">
+      <a class="btn btn-solid" href="tel:+14079511663">📞 (407) 951-1663</a>
+      <a class="btn btn-outline" href="sms:+14079511663?body=Hey%20Black%20Rabbit!">💬 Text</a>
+      <a class="btn btn-outline" href="index.html">← Back home</a>
     </div>
+  </div>
+
+  <footer class="site-footer">
+    <p><a href="portfolio.html">Portfolio</a> · <a href="service-area.html">Service map</a> · <a href="testimonials.html">Testimonials</a></p>
+  </footer>
+
+  <script src="js/site-common.js"></script>
 </body>
 </html>

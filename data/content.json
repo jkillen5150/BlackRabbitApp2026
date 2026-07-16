@@ -1,0 +1,197 @@
+{
+  "reviews": [
+    {
+      "id": "rev-william-beasley",
+      "name": "William Beasley",
+      "location": "",
+      "rating": 5,
+      "text": "Always on time and always puts amazing work in. Really nice and very genuine. Really really great service!",
+      "source": "Google",
+      "date": "2026-07-02",
+      "featured": true
+    },
+    {
+      "id": "rev-sarah-mcginty",
+      "name": "Sarah McGinty",
+      "location": "",
+      "rating": 5,
+      "text": "This gentleman came out super quick to work on our lawn. He went above and beyond. He made my place look great. He also worked within my budget. Overall this was a great experience.",
+      "source": "Google",
+      "date": "2026-07-02",
+      "featured": true
+    },
+    {
+      "id": "rev-carolyn-deford",
+      "name": "Carolyn DeFord",
+      "location": "",
+      "rating": 5,
+      "text": "My partner has a broken wrist and I have a broken ankle, so keeping up with the yard just wasn’t possible. After a few…",
+      "source": "Google",
+      "date": "2026-06-25",
+      "featured": true
+    },
+    {
+      "id": "rev-patty-deford",
+      "name": "Patty Deford",
+      "location": "",
+      "rating": 5,
+      "text": "Jerry was a God send to this disabled, widow who lives on SSDI.. I had yet to find a yard service I could afford but he…",
+      "source": "Google",
+      "date": "2026-06-25",
+      "featured": true
+    },
+    {
+      "id": "rev-caden-cress",
+      "name": "Caden Cress",
+      "location": "",
+      "rating": 5,
+      "text": "Jerry is the best! Very professional and kind. Highly recommend",
+      "source": "Google",
+      "date": "2026-06-11",
+      "featured": true
+    },
+    {
+      "id": "rev-beren-gezen",
+      "name": "Beren Gezen",
+      "location": "",
+      "rating": 5,
+      "text": "Jerry always did a great job with our lawn. Flexible, knowledgeable, and he took the time to ensure I was happy with the result. Highly recommend.",
+      "source": "Google",
+      "date": "2026-06-04",
+      "featured": true
+    },
+    {
+      "id": "rev-marcia-hulbert",
+      "name": "Marcia Hulbert",
+      "location": "",
+      "rating": 5,
+      "text": "Black Rabbit is one of the best landscaping businesses I have ever dealt with. He always did everything I wanted and he did it beautifully. I was so sad when he left Florida and moved to Washington.",
+      "source": "Google",
+      "date": "2026-06-04",
+      "featured": true
+    },
+    {
+      "id": "rev-john-tombone",
+      "name": "John Tombone",
+      "location": "",
+      "rating": 5,
+      "text": "Wonderful lawncare service! Attention to detail is there, and very personable! Would totally recommend!",
+      "source": "Google",
+      "date": "2026-06-04",
+      "featured": true
+    },
+    {
+      "id": "rev-vito-capri",
+      "name": "Vito Capri",
+      "location": "",
+      "rating": 5,
+      "text": "Best lawn people hands down. This guy even had my wife happy with the lawn which nobody else has been able to do. Very professional as well, highly recommend!",
+      "source": "Google",
+      "date": "2026-06-04",
+      "featured": true
+    },
+    {
+      "id": "rev-holly-cooper",
+      "name": "Holly Cooper",
+      "location": "",
+      "rating": 5,
+      "text": "I used Black Rabbit Landscaping for 6 years for my home in central Florida. I was always 100% satisfied with Jerry’s…",
+      "source": "Google",
+      "date": "2026-06-04",
+      "featured": true
+    },
+    {
+      "id": "rev-dominique-motta",
+      "name": "Dominique Motta",
+      "location": "",
+      "rating": 5,
+      "text": "These guys get the job DONE!!!!! Have always been reliable and professional. On top of them providing monthly cuts, they have also just cleaned up a giant amount of leaves/debris for me at a reasonable price. If you’re a homeowner or landlord these should be your go to guys for keeping your lawn shining. Thank you guys so much for all the hard work!!",
+      "source": "Google",
+      "date": "2026-03-26",
+      "featured": true
+    }
+  ],
+
+  "portfolio": [
+    {
+      "id": "port-001",
+      "title": "Fresh cut & clean edges",
+      "location": "Rainier, WA",
+      "description": "Full mow, edge, and bag — ready for a Sunday morning reveal.",
+      "image": "IMG_9650.jpeg",
+      "date": "2026-07-11"
+    },
+    {
+      "id": "port-002",
+      "title": "Property curb appeal",
+      "location": "Yelm, WA",
+      "description": "Lawn care and detailing for a clean, sell-ready look.",
+      "image": "IMG_9642.jpeg",
+      "date": "2026-06-01"
+    }
+  ],
+  "pins": [
+    {
+      "id": "pin-yelm-hq",
+      "label": "Yelm service area",
+      "address": "Yelm, WA 98597",
+      "lat": 46.942,
+      "lng": -122.6046,
+      "city": "Yelm",
+      "note": "Primary service hub — add client street addresses anytime in Admin."
+    },
+    {
+      "id": "pin-rainier",
+      "label": "Rainier jobs",
+      "address": "Rainier, WA",
+      "lat": 46.8882,
+      "lng": -122.6885,
+      "city": "Rainier",
+      "note": "Active service area"
+    },
+    {
+      "id": "pin-lacey",
+      "label": "Lacey jobs",
+      "address": "Lacey, WA",
+      "lat": 47.0343,
+      "lng": -122.8232,
+      "city": "Lacey",
+      "note": "Active service area"
+    },
+    {
+      "id": "pin-roy",
+      "label": "Roy jobs",
+      "address": "Roy, WA",
+      "lat": 47.0043,
+      "lng": -122.5401,
+      "city": "Roy",
+      "note": "Active service area"
+    },
+    {
+      "id": "pin-olympia",
+      "label": "Olympia area",
+      "address": "Olympia, WA",
+      "lat": 47.0379,
+      "lng": -122.9007,
+      "city": "Olympia",
+      "note": "Olympia & greater Thurston County"
+    },
+    {
+      "id": "pin-thurston",
+      "label": "Thurston County coverage",
+      "address": "Thurston County, WA",
+      "lat": 46.92,
+      "lng": -122.75,
+      "city": "Thurston County",
+      "note": "County-wide lawn, garden & tree services"
+    }
+  ],
+  "serviceAreas": [
+    { "name": "Yelm", "lat": 46.942, "lng": -122.6046 },
+    { "name": "Rainier", "lat": 46.8882, "lng": -122.6885 },
+    { "name": "Lacey", "lat": 47.0343, "lng": -122.8232 },
+    { "name": "Roy", "lat": 47.0043, "lng": -122.5401 },
+    { "name": "Olympia", "lat": 47.0379, "lng": -122.9007 },
+    { "name": "Thurston County", "lat": 46.92, "lng": -122.75 }
+  ]
+}

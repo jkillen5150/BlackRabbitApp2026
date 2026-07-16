@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Black Rabbit Landscaping</title>
+  <meta name="robots" content="noindex">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body data-page="login">
+  <div id="site-nav-mount"></div>
+
+  <div class="admin-shell">
+    <div class="admin-header">
+      <div>
+        <h1>Admin dashboard</h1>
+        <p style="margin:4px 0 0;color:#666;">Signed in as <strong id="admin-who">…</strong></p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <button type="button" class="btn btn-outline" id="btn-export">Export content.json</button>
+        <button type="button" class="btn btn-outline" id="btn-reset">Reset to defaults</button>
+        <button type="button" class="btn btn-solid" id="btn-logout">Log out</button>
+      </div>
+    </div>
+
+    <div class="note-banner">
+      Edits save in this browser (local storage) and update the live pages for visitors on <em>this same device</em>.
+      Use <strong>Export content.json</strong>, replace <code>data/content.json</code> in the repo, and redeploy so everyone sees your updates.
+      Photo uploads under ~2.5MB are stored as data URLs; larger shots should be hosted and linked by URL.
+    </div>
+
+    <!-- Reviews -->
+    <section class="admin-panel">
+      <h2>⭐ Reviews / testimonials</h2>
+      <form id="form-review">
+        <div class="admin-row">
+          <div class="form-group">
+            <label>Name</label>
+            <input name="name" required placeholder="Sarah M.">
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input name="location" placeholder="Yelm, WA">
+          </div>
+        </div>
+        <div class="admin-row">
+          <div class="form-group">
+            <label>Rating</label>
+            <select name="rating">
+              <option value="5" selected>5 stars</option>
+              <option value="4">4 stars</option>
+              <option value="3">3 stars</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Source</label>
+            <select name="source">
+              <option value="Google">Google</option>
+              <option value="Customer" selected>Customer</option>
+              <option value="Facebook">Facebook</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-row">
+          <div class="form-group">
+            <label>Date</label>
+            <input name="date" type="date">
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:8px;">
+            <label style="display:flex;gap:8px;align-items:center;font-weight:600;">
+              <input name="featured" type="checkbox" checked> Show on homepage carousel
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Review text</label>
+          <textarea name="text" rows="3" required placeholder="Paste the Google review text here…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-solid">Add review</button>
+      </form>
+      <h3>Current reviews</h3>
+      <ul class="admin-list" id="list-reviews"></ul>
+    </section>
+
+    <!-- Portfolio -->
+    <section class="admin-panel">
+      <h2>📸 Portfolio photos</h2>
+      <form id="form-portfolio">
+        <div class="admin-row">
+          <div class="form-group">
+            <label>Title</label>
+            <input name="title" required placeholder="Spring cleanup — Rainier">
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input name="location" placeholder="Rainier, WA">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea name="description" rows="2" placeholder="What you did on this job…"></textarea>
+        </div>
+        <div class="admin-row">
+          <div class="form-group">
+            <label>Upload photo</label>
+            <input name="photo" type="file" accept="image/*">
+          </div>
+          <div class="form-group">
+            <label>Or image URL / path</label>
+            <input name="imageUrl" placeholder="IMG_9650.jpeg or https://…">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-solid">Add portfolio item</button>
+      </form>
+      <h3>Current portfolio</h3>
+      <ul class="admin-list" id="list-portfolio"></ul>
+    </section>
+
+    <!-- Map pins -->
+    <section class="admin-panel">
+      <h2>📍 Map pins (past clients &amp; areas)</h2>
+      <p style="color:#666;font-size:0.9rem;margin-top:0;">
+        Enter a full street address and leave lat/lng blank — we’ll geocode it.
+        Or paste coordinates from Google Maps (right‑click → coordinates).
+      </p>
+      <form id="form-pin">
+        <div class="admin-row">
+          <div class="form-group">
+            <label>Label</label>
+            <input name="label" required placeholder="Monthly mow — Smith">
+          </div>
+          <div class="form-group">
+            <label>City</label>
+            <input name="city" placeholder="Yelm">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <input name="address" placeholder="123 Main St, Yelm, WA 98597">
+        </div>
+        <div class="admin-row">
+          <div class="form-group">
+            <label>Latitude (optional)</label>
+            <input name="lat" type="number" step="any" placeholder="46.942">
+          </div>
+          <div class="form-group">
+            <label>Longitude (optional)</label>
+            <input name="lng" type="number" step="any" placeholder="-122.6046">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Note</label>
+          <input name="note" placeholder="Weekly service, sold home package, etc.">
+        </div>
+        <button type="submit" class="btn btn-solid">Add pin</button>
+      </form>
+      <h3>Current pins</h3>
+      <ul class="admin-list" id="list-pins"></ul>
+    </section>
+  </div>
+
+  <script src="js/content-store.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/site-common.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

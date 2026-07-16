@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testimonials | Black Rabbit Landscaping</title>
+  <meta name="description" content="Customer reviews for Black Rabbit Landscaping — lawn care in Yelm, Rainier, Lacey, Roy & Thurston County WA.">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body data-page="testimonials">
+  <div id="site-nav-mount"></div>
+
+  <header class="page-hero">
+    <h1>Testimonials</h1>
+    <p>Real client feedback from lawns and landscapes across Thurston County.</p>
+  </header>
+
+  <section class="section">
+    <div class="reviews-grid" id="testimonials-grid"></div>
+    <p style="text-align:center;margin-top:28px;">
+      <a class="btn btn-solid" href="index.html#service-form">Request a quote</a>
+    </p>
+  </section>
+
+  <footer class="site-footer">
+    <p><a href="index.html">← Home</a> · <a href="index.html#service-form">Request a quote</a></p>
+  </footer>
+
+  <script src="js/content-store.js"></script>
+  <script src="js/site-common.js"></script>
+  <script>
+    async function render() {
+      const data = await BRContent.load();
+      const grid = document.getElementById('testimonials-grid');
+      const list = data.reviews || [];
+      if (!list.length) {
+        grid.innerHTML = '<div class="empty-state">No testimonials yet. Add them from the admin panel.</div>';
+        return;
+      }
+      grid.innerHTML = list.map((r) => BRContent.renderReviewCard(r, true)).join('');
+    }
+    document.addEventListener('DOMContentLoaded', render);
+    window.addEventListener('br:content-updated', render);
+  </script>
+</body>
+</html>

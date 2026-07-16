@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account | Black Rabbit Landscaping</title>
+  <meta name="robots" content="noindex">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body data-page="login">
+  <div id="site-nav-mount"></div>
+
+  <div class="customer-dash">
+    <div class="card">
+      <h1 style="margin:0 0 6px;color:#2e5a2e;font-size:1.4rem;">Welcome, <span id="cust-name">Customer</span></h1>
+      <p style="margin:0;color:#666;" id="cust-email"></p>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 10px;color:#2e5a2e;font-size:1.1rem;">Request service</h2>
+      <p style="margin:0 0 14px;color:#555;">Need a cut, cleanup, or quote? Jump to the request form or text Jerry directly.</p>
+      <a class="btn btn-solid" href="index.html#service-form">Request a quote</a>
+      <a class="btn btn-outline" href="tel:+14079511663" style="margin-left:8px;">Call / text</a>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 10px;color:#2e5a2e;font-size:1.1rem;">Explore the site</h2>
+      <p style="margin:0;">
+        <a href="portfolio.html">Portfolio</a> ·
+        <a href="testimonials.html">Testimonials</a> ·
+        <a href="service-area.html">Service map</a>
+      </p>
+    </div>
+
+    <button type="button" class="btn btn-outline" id="cust-logout">Log out</button>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/site-common.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const s = BRAuth.getSession();
+      if (!s || s.role !== 'customer') {
+        window.location.href = 'login.html';
+        return;
+      }
+      document.getElementById('cust-name').textContent = s.name || 'Customer';
+      document.getElementById('cust-email').textContent = s.email || '';
+      document.getElementById('cust-logout').addEventListener('click', () => {
+        BRAuth.logout();
+        window.location.href = 'login.html';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio | Black Rabbit Landscaping</title>
+  <meta name="description" content="Lawn care and landscaping portfolio — Black Rabbit serving Yelm, Rainier, Lacey, Roy & Olympia WA.">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body data-page="portfolio">
+  <div id="site-nav-mount"></div>
+
+  <header class="page-hero">
+    <h1>Portfolio</h1>
+    <p>Fresh cuts, clean edges, curb-appeal jobs across the South Sound.</p>
+  </header>
+
+  <section class="section">
+    <div class="portfolio-grid" id="portfolio-grid"></div>
+  </section>
+
+  <footer class="site-footer">
+    <p><a href="index.html">← Home</a> · Admin can upload photos via <a href="login.html?role=admin">Login</a></p>
+  </footer>
+
+  <script src="js/content-store.js"></script>
+  <script src="js/site-common.js"></script>
+  <script>
+    async function render() {
+      const data = await BRContent.load();
+      const grid = document.getElementById('portfolio-grid');
+      const list = data.portfolio || [];
+      if (!list.length) {
+        grid.innerHTML = '<div class="empty-state">No portfolio photos yet. Upload them in Admin.</div>';
+        return;
+      }
+      grid.innerHTML = list.map((p) => `
+        <article class="portfolio-card">
+          <img src="${BRContent.escapeAttr(p.image)}" alt="${BRContent.escapeAttr(p.title || 'Job photo')}" loading="lazy">
+          <div class="body">
+            <h3>${BRContent.escapeHtml(p.title || 'Project')}</h3>
+            <div class="loc">${BRContent.escapeHtml(p.location || '')}${p.date ? ' · ' + BRContent.escapeHtml(BRContent.formatDate(p.date)) : ''}</div>
+            <p>${BRContent.escapeHtml(p.description || '')}</p>
+          </div>
+        </article>
+      `).join('');
+    }
+    document.addEventListener('DOMContentLoaded', render);
+    window.addEventListener('br:content-updated', render);
+  </script>
+</body>
+</html>

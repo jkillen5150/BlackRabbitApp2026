@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Black Rabbit Landscaping</title>
+  <meta name="description" content="Customer and admin login for Black Rabbit Landscaping.">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body data-page="login">
+  <div id="site-nav-mount"></div>
+
+  <header class="page-hero">
+    <h1>Account Login</h1>
+    <p>Customers can save an account. Admin manages reviews, portfolio photos, and map pins.</p>
+  </header>
+
+  <div class="auth-card">
+    <div class="tabs">
+      <button type="button" id="tab-customer" class="active">Customer</button>
+      <button type="button" id="tab-admin">Admin</button>
+    </div>
+
+    <div id="auth-msg" class="auth-msg" role="status"></div>
+
+    <div id="panel-customer">
+      <div id="customer-login-block">
+        <h2>Customer sign in</h2>
+        <form id="form-customer-login">
+          <div class="form-group">
+            <label for="c-email">Email</label>
+            <input id="c-email" name="email" type="email" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="c-pass">Password</label>
+            <input id="c-pass" name="password" type="password" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="submit-btn">Sign in</button>
+        </form>
+        <p style="text-align:center;margin-top:16px;font-size:0.9rem;">
+          New here? <a href="#" id="show-register">Create an account</a>
+        </p>
+      </div>
+
+      <div id="customer-register-block" hidden>
+        <h2>Create customer account</h2>
+        <form id="form-customer-register">
+          <div class="form-group">
+            <label for="r-name">Full name</label>
+            <input id="r-name" name="name" type="text" required>
+          </div>
+          <div class="form-group">
+            <label for="r-email">Email</label>
+            <input id="r-email" name="email" type="email" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="r-pass">Password (6+ characters)</label>
+            <input id="r-pass" name="password" type="password" required minlength="6" autocomplete="new-password">
+          </div>
+          <button type="submit" class="submit-btn">Create account</button>
+        </form>
+        <p style="text-align:center;margin-top:16px;font-size:0.9rem;">
+          Already have an account? <a href="#" id="show-login">Sign in</a>
+        </p>
+      </div>
+    </div>
+
+    <div id="panel-admin" hidden>
+      <h2>Admin sign in</h2>
+      <form id="form-admin-login">
+        <div class="form-group">
+          <label for="a-user">Username</label>
+          <input id="a-user" name="username" type="text" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="a-pass">Password</label>
+          <input id="a-pass" name="password" type="password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="submit-btn">Admin login</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p><a href="index.html">← Back to site</a></p>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/site-common.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
