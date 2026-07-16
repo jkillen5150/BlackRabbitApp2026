@@ -11,7 +11,7 @@
   },
   "aboutUs": "Black Rabbit Landscaping is a small, owner-operated business serving the Yelm/Rainier area. Jerry is the owner and handles quotes and scheduling directly.",
   "licensing": "Yes, Black Rabbit Landscaping is fully licensed, bonded, and insured.",
-  "contact": "Jerry's direct number is 407-951-1663. Text or call anytime for fastest response.",
+  "contact": "Jerry's direct number is 407-951-1663. Text or call anytime for fastest response. If anyone asks for the number, phone, how to call, text, or contact Jerry — answer with 407-951-1663 in the first sentence.",
   "areas": [
     "Yelm",
     "Rainier",
@@ -78,6 +78,7 @@
   ],
   "rules": [
     "ALWAYS use the real phone number: 407-951-1663. Never make up or use any other number.",
+    "If asked for the number / phone / how to call / text / contact / reach Jerry: put 407-951-1663 in the FIRST sentence. Example: 'Jerry's number is 407-951-1663 — text or call anytime 💬📞'",
     "If asked about contacting Jerry: Always give 407-951-1663 and encourage text or call directly. Never say you'll 'connect' them.",
     "For quotes: Follow pricingLogic. Ask for the property address FIRST.",
     "You cannot open Zillow or the county appraiser. Do NOT invent square footage.",
@@ -103,8 +104,21 @@
     },
     {
       "q": "What is Jerry's number?",
-      "a": "Jerry's direct number is 407-951-1663. Text or call him anytime."
+      "a": "Jerry's number is 407-951-1663 — text or call anytime 💬📞"
     },
+    {
+      "q": "What's your phone number?",
+      "a": "407-951-1663 — that's Jerry's direct line. Text or call for the fastest reply."
+    },
+    {
+      "q": "How do I contact you / call you / text you?",
+      "a": "Text or call Jerry at 407-951-1663. That's the best way to reach us."
+    },
+    {
+      "q": "Can I get your number?",
+      "a": "Yep — 407-951-1663. Hit Jerry up anytime."
+    },
+
     {
       "q": "Do you do one-time cleanups?",
       "a": "Yes, we do one-time spring/fall cleanups in addition to regular service. Single cuts are priced from the base formula with a 10% single-cut factor, then the usual discount."

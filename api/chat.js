@@ -10,6 +10,9 @@ import { join } from 'path';
 
 let knowledgeCache = null;
 
+const JERRY_PHONE = '407-951-1663';
+const JERRY_PHONE_DIGITS = '4079511663';
+
 function loadKnowledge() {
   if (knowledgeCache) return knowledgeCache;
   try {
@@ -20,6 +23,43 @@ function loadKnowledge() {
     knowledgeCache = null;
   }
   return knowledgeCache;
+}
+
+/** User is clearly asking for a phone / how to reach Jerry */
+function isAskingForNumber(text) {
+  const t = String(text || '').toLowerCase();
+  if (!t.trim()) return false;
+  // direct number asks
+  if (
+    /\b(phone|number|cell|mobile|call|text|sms|contact|reach|dial)\b/.test(t) &&
+    /\b(jerry|you|your|business|black rabbit|him|owner)\b/.test(t)
+  ) {
+    return true;
+  }
+  if (
+    /\b(what('?s| is)|got|have|give|need|want|can i get|what'?s)\b.{0,40}\b(number|phone)\b/.test(
+      t
+    )
+  ) {
+    return true;
+  }
+  if (/\b(how (do i|can i|to) (call|text|contact|reach))\b/.test(t)) return true;
+  if (/\b(jerry'?s?\s+number|your\s+number|phone\s+number)\b/.test(t)) return true;
+  return false;
+}
+
+function replyHasJerryPhone(text) {
+  const digits = String(text || '').replace(/\D/g, '');
+  return digits.includes(JERRY_PHONE_DIGITS);
+}
+
+/** If they asked for the number and the model forgot it, force it in */
+function ensurePhoneInReply(userMessage, reply) {
+  if (!isAskingForNumber(userMessage)) return reply;
+  if (replyHasJerryPhone(reply)) return reply;
+  const line = `Jerry's number is ${JERRY_PHONE} — text or call anytime 💬📞`;
+  if (!reply || !String(reply).trim()) return line;
+  return `${line}\n\n${reply}`;
 }
 
 function buildSystemPrompt(k) {
@@ -58,7 +98,12 @@ Website: ${k.business.website}.
 ## CRITICAL — Jerry's only real phone number
 ${phone}
 ALWAYS use this exact number. Never invent, guess, or substitute any other phone number.
-You cannot place calls or "connect" people to Jerry. When they want contact: give ${phone} and tell them to text or call.
+You cannot place calls or "connect" people to Jerry.
+
+NUMBER REQUESTS (highest priority):
+If the user asks for a phone number, "your number", "Jerry's number", how to call/text/contact/reach you, or anything similar:
+→ First sentence MUST include the digits ${phone} (example: "Jerry's number is ${phone} — text or call anytime 💬📞").
+Do not dodge, do not say you'll connect them, do not send them only to a form without also giving the number.
 
 ## Contact
 ${contact}
@@ -128,7 +173,7 @@ ${reviews}
 
 ## Hard rules
 1. Phone number is ALWAYS ${phone} — no other number, ever.
-2. If they ask for Jerry's number or to get connected: give ${phone}; do not pretend to transfer/connect.
+2. Number/phone/call/text/contact questions: put ${phone} in the first sentence. Never skip it.
 3. For quotes: ask address first; use pricing logic only with real sq ft numbers the user (or Jerry) provides — never invent Zillow/assessor data.
 4. Ballpark only without sq ft: $25–$80 per cut; most weekly visits ~$40–$50. Label estimates clearly.
 5. If asked about licensed / bonded / insured: YES — fully licensed, bonded, and insured.
@@ -226,6 +271,15 @@ export default async function handler(req, res) {
     if (!xaiResponse.ok) {
       console.error('xAI Error:', data);
       throw new Error(data.error?.message || 'API error');
+    }
+
+    // Hard guarantee: number questions always include 407-951-1663
+    const raw =
+      data?.choices?.[0]?.message?.content ||
+      data?.choices?.[0]?.message?.content?.[0]?.text ||
+      '';
+    if (typeof raw === 'string' && data?.choices?.[0]?.message) {
+      data.choices[0].message.content = ensurePhoneInReply(message, raw);
     }
 
     res.status(200).json(data);
