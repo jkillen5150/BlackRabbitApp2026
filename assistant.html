@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Ask Black Rabbit AI | Lawn Care Help</title>
+  <meta name="description" content="Chat with Black Rabbit AI about lawn care, service areas, and how to get a quote in Yelm, Rainier, Lacey & Thurston County.">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body data-page="assistant" class="assistant-page">
+  <div id="site-nav-mount"></div>
+
+  <main class="assistant-shell">
+    <header class="assistant-top">
+      <div>
+        <h1>Black Rabbit AI</h1>
+        <p>Quick answers about services &amp; areas. For prices &amp; booking, text Jerry or request a quote.</p>
+      </div>
+      <div class="assistant-top-actions">
+        <a class="btn btn-solid" href="index.html#service-form">Get a quote</a>
+        <a class="btn btn-outline" href="sms:+14079511663?body=Hey%20Black%20Rabbit!">Text Jerry</a>
+      </div>
+    </header>
+
+    <div class="assistant-chat" id="assistant-chat">
+      <div class="assistant-messages" id="chat-messages" role="log" aria-live="polite">
+        <div class="msg msg-bot">
+          <div class="msg-bubble">
+            Hey — I’m Black Rabbit AI. Ask about lawn care, cleanups, or whether we cover your town (Yelm, Rainier, Lacey, Roy, Olympia, Thurston County). For a real price, Jerry’s still the move: quote form or text.
+          </div>
+        </div>
+      </div>
+
+      <div class="assistant-suggestions" id="suggestions">
+        <button type="button" data-q="Do you serve my area in Thurston County?">Service area?</button>
+        <button type="button" data-q="What lawn services do you offer?">Services</button>
+        <button type="button" data-q="How do I get a quote or schedule a mow?">Get a quote</button>
+        <button type="button" data-q="How fast can you come out?">How soon?</button>
+      </div>
+
+      <form class="assistant-composer" id="chat-form">
+        <label class="sr-only" for="chat-input">Message</label>
+        <input id="chat-input" type="text" enterkeyhint="send" autocomplete="off" placeholder="Ask about lawn care…">
+        <button type="submit" class="btn btn-solid" id="chat-send">Send</button>
+      </form>
+      <p class="assistant-disclaimer">AI helper — not a booking system. Call/text <a href="tel:+14079511663">(407) 951-1663</a> for the real deal.</p>
+    </div>
+  </main>
+
+  <script src="js/site-common.js"></script>
+  <script src="js/assistant.js"></script>
+</body>
+</html>
