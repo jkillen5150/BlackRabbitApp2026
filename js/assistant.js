@@ -1,17 +1,75 @@
 /**
  * Full-page Black Rabbit AI chat (mobile-first)
- * Prefers same-origin /api/chat (one Vercel project). Falls back to the
- * legacy proxy only if same-origin isn't available yet.
+ * Prefers same-origin /api/chat. Client-side phone enforcement so
+ * "connect you to Jerry" loops never ship without 407-951-1663.
  */
 (function () {
   const history = [];
+  const JERRY_PHONE = '407-951-1663';
+  const JERRY_DIGITS = '4079511663';
+  const PHONE_LINE = `Jerry's number is ${JERRY_PHONE} — text or call anytime 💬📞`;
 
   function endpoints() {
     if (window.BR_CHAT_API) return [window.BR_CHAT_API];
-    return [
-      '/api/chat',
-      'https://br-chat-proxy.vercel.app/api/chat' // legacy until domain is fully on Vercel
-    ];
+    // Same project first; legacy proxy only as last resort
+    return ['/api/chat', 'https://br-chat-proxy.vercel.app/api/chat'];
+  }
+
+  function normalize(text) {
+    return String(text || '')
+      .toLowerCase()
+      .replace(/[’']/g, "'");
+  }
+
+  function isContactIntent(text) {
+    const t = normalize(text);
+    if (!t.trim()) return false;
+    if (/\bconnect(\s+me)?\b/.test(t)) return true;
+    if (/\b(put me through|transfer me|get me (to )?jerry)\b/.test(t)) return true;
+    if (/\b(phone|cell|mobile|telephone)\b/.test(t)) return true;
+    if (/\b(contact\s*(info|information|details)?)\b/.test(t)) return true;
+    if (/\b(your|the|a|his|jerry'?s?)\s+number\b/.test(t)) return true;
+    if (/\bnumber\b/.test(t) && /\b(what|whats|what's|got|have|give|need|want|send|share|call|text|phone)\b/.test(t)) {
+      return true;
+    }
+    if (/\b(how (do i|can i|to) (call|text|contact|reach)|get in touch|reach (you|him|jerry))\b/.test(t)) {
+      return true;
+    }
+    if (/\b(who do i (call|text)|where can i (call|text|reach))\b/.test(t)) return true;
+    if (/^(yes|yeah|yep|sure|ok|okay|please|do it)[!.,\s]*$/.test(t.trim())) return true;
+    if (/^(yes|yeah|yep|sure|ok)\b.{0,40}\b(connect|jerry|call|text|number)\b/.test(t)) return true;
+    return false;
+  }
+
+  function hasPhone(text) {
+    return String(text || '').replace(/\D/g, '').includes(JERRY_DIGITS);
+  }
+
+  /** Fix dumb proxy / model loops on the client so the number always shows */
+  function enforcePhone(userText, reply) {
+    let out = String(reply || '').trim();
+
+    out = out.replace(/\s*would you like me to connect you to jerry[^.?!]*[.?!]?\s*/gi, ' ');
+    out = out.replace(
+      /\s*(i'?ll|i will|let me|sure[,.]?\s*i'?ll)\s+(get you\s+)?connected[^.?!]*[.?!]?\s*/gi,
+      ' '
+    );
+    out = out.replace(/\s*connect(ing)? you (with|to) jerry[^.?!]*[.?!]?\s*/gi, ' ');
+    out = out.replace(/\s{2,}/g, ' ').trim();
+
+    if (isContactIntent(userText)) {
+      return `${PHONE_LINE} That's Jerry — fastest way to get a quote or book. This chat can't place the call 😁`;
+    }
+
+    if (!hasPhone(out) && /connect you to jerry|get you connected|would you like me to connect/i.test(String(reply || ''))) {
+      return out ? `${out}\n\n${PHONE_LINE}` : PHONE_LINE;
+    }
+
+    if (!hasPhone(out) && /connect/i.test(out) && /jerry/i.test(out)) {
+      return `${out}\n\n${PHONE_LINE}`;
+    }
+
+    return out || reply || PHONE_LINE;
   }
 
   function escapeHtml(s) {
@@ -43,7 +101,6 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        // HTML 404 from static host → try next endpoint
         const type = res.headers.get('content-type') || '';
         if (!res.ok && res.status === 404) {
           lastErr = new Error('404 ' + url);
@@ -75,6 +132,15 @@
     if (input) input.value = '';
     scrollBottom();
 
+    // Instant local answer — never wait on a dumb "I'll connect you" loop
+    if (isContactIntent(clean)) {
+      const reply = `${PHONE_LINE} That's Jerry — fastest way to get a quote or book. This chat can't place the call 😁`;
+      messages.appendChild(bubble('bot', reply));
+      history.push({ role: 'assistant', content: reply });
+      scrollBottom();
+      return;
+    }
+
     const thinking = bubble('bot', 'Thinking…', 'msg-thinking');
     messages.appendChild(thinking);
     scrollBottom();
@@ -85,16 +151,20 @@
         message: clean,
         history: history.slice(0, -1)
       });
-      const reply =
+      let reply =
         data.choices?.[0]?.message?.content ||
-        "Sorry, I'm having trouble right now. Text Jerry at (407) 951-1663!";
+        `Sorry, I'm having trouble right now. Text Jerry at ${JERRY_PHONE}!`;
+      reply = enforcePhone(clean, reply);
       thinking.remove();
       messages.appendChild(bubble('bot', reply));
       history.push({ role: 'assistant', content: reply });
     } catch {
       thinking.remove();
       messages.appendChild(
-        bubble('bot', 'Couldn’t reach the assistant. Text Jerry at (407) 951-1663 — he’s fastest.')
+        bubble(
+          'bot',
+          `Couldn’t reach the assistant 😅 Text Jerry at ${JERRY_PHONE} — he’s fastest.`
+        )
       );
     } finally {
       if (sendBtn) sendBtn.disabled = false;
@@ -118,7 +188,6 @@
       send(btn.dataset.q);
     });
 
-    // Avoid iOS zoom weirdness focus jump when possible
     setTimeout(() => input?.blur(), 0);
   });
 })();
