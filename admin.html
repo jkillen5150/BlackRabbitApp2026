@@ -119,25 +119,33 @@
 
     <!-- Map pins -->
     <section class="admin-panel">
-      <h2>📍 Map pins (past clients &amp; areas)</h2>
+      <h2>📍 Map pins</h2>
       <p style="color:#666;font-size:0.9rem;margin-top:0;">
-        Enter a full street address and leave lat/lng blank — we’ll geocode it.
-        Or paste coordinates from Google Maps (right‑click → coordinates).
+        <strong>City pins</strong> stay on the main towns. <strong>Client / job pins</strong> are privacy-safe by default:
+        we geocode if needed, then jitter the point ~0.5–1 km and <em>never store the street address</em> on the public site —
+        only city + approximate coords.
       </p>
       <form id="form-pin">
         <div class="admin-row">
           <div class="form-group">
-            <label>Label</label>
-            <input name="label" required placeholder="Monthly mow — Smith">
+            <label>Pin type</label>
+            <select name="type">
+              <option value="client" selected>Past job (approximate)</option>
+              <option value="city">City / service area</option>
+            </select>
           </div>
           <div class="form-group">
             <label>City</label>
-            <input name="city" placeholder="Yelm">
+            <input name="city" placeholder="Yelm" required>
           </div>
         </div>
         <div class="form-group">
-          <label>Address</label>
-          <input name="address" placeholder="123 Main St, Yelm, WA 98597">
+          <label>Label (public)</label>
+          <input name="label" placeholder="Past service · Yelm area">
+        </div>
+        <div class="form-group">
+          <label>Address (admin only — used to place pin, then discarded for client pins)</label>
+          <input name="address" placeholder="Optional: full address for geocoding only">
         </div>
         <div class="admin-row">
           <div class="form-group">
@@ -150,8 +158,8 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Note</label>
-          <input name="note" placeholder="Weekly service, sold home package, etc.">
+          <label>Note (public — keep vague)</label>
+          <input name="note" placeholder="Lawn care · approximate area">
         </div>
         <button type="submit" class="btn btn-solid">Add pin</button>
       </form>

@@ -25,7 +25,7 @@
       "name": "Carolyn DeFord",
       "location": "",
       "rating": 5,
-      "text": "My partner has a broken wrist and I have a broken ankle, so keeping up with the yard just wasn’t possible. After a few…",
+      "text": "My partner has a broken wrist and I have a broken ankle, so keeping up with the yard just wasn\u2019t possible. After a few\u2026",
       "source": "Google",
       "date": "2026-06-25",
       "featured": true
@@ -35,7 +35,7 @@
       "name": "Patty Deford",
       "location": "",
       "rating": 5,
-      "text": "Jerry was a God send to this disabled, widow who lives on SSDI.. I had yet to find a yard service I could afford but he…",
+      "text": "Jerry was a God send to this disabled, widow who lives on SSDI.. I had yet to find a yard service I could afford but he\u2026",
       "source": "Google",
       "date": "2026-06-25",
       "featured": true
@@ -95,7 +95,7 @@
       "name": "Holly Cooper",
       "location": "",
       "rating": 5,
-      "text": "I used Black Rabbit Landscaping for 6 years for my home in central Florida. I was always 100% satisfied with Jerry’s…",
+      "text": "I used Black Rabbit Landscaping for 6 years for my home in central Florida. I was always 100% satisfied with Jerry\u2019s\u2026",
       "source": "Google",
       "date": "2026-06-04",
       "featured": true
@@ -105,19 +105,18 @@
       "name": "Dominique Motta",
       "location": "",
       "rating": 5,
-      "text": "These guys get the job DONE!!!!! Have always been reliable and professional. On top of them providing monthly cuts, they have also just cleaned up a giant amount of leaves/debris for me at a reasonable price. If you’re a homeowner or landlord these should be your go to guys for keeping your lawn shining. Thank you guys so much for all the hard work!!",
+      "text": "These guys get the job DONE!!!!! Have always been reliable and professional. On top of them providing monthly cuts, they have also just cleaned up a giant amount of leaves/debris for me at a reasonable price. If you\u2019re a homeowner or landlord these should be your go to guys for keeping your lawn shining. Thank you guys so much for all the hard work!!",
       "source": "Google",
       "date": "2026-03-26",
       "featured": true
     }
   ],
-
   "portfolio": [
     {
       "id": "port-001",
       "title": "Fresh cut & clean edges",
       "location": "Rainier, WA",
-      "description": "Full mow, edge, and bag — ready for a Sunday morning reveal.",
+      "description": "Full mow, edge, and bag \u2014 ready for a Sunday morning reveal.",
       "image": "IMG_9650.jpeg",
       "date": "2026-07-11"
     },
@@ -133,16 +132,18 @@
   "pins": [
     {
       "id": "pin-yelm-hq",
-      "label": "Yelm service area",
-      "address": "Yelm, WA 98597",
+      "type": "city",
+      "label": "Yelm",
+      "address": "Yelm, WA",
       "lat": 46.942,
       "lng": -122.6046,
       "city": "Yelm",
-      "note": "Primary service hub — add client street addresses anytime in Admin."
+      "note": "Primary service area"
     },
     {
       "id": "pin-rainier",
-      "label": "Rainier jobs",
+      "type": "city",
+      "label": "Rainier",
       "address": "Rainier, WA",
       "lat": 46.8882,
       "lng": -122.6885,
@@ -151,7 +152,8 @@
     },
     {
       "id": "pin-lacey",
-      "label": "Lacey jobs",
+      "type": "city",
+      "label": "Lacey",
       "address": "Lacey, WA",
       "lat": 47.0343,
       "lng": -122.8232,
@@ -160,7 +162,8 @@
     },
     {
       "id": "pin-roy",
-      "label": "Roy jobs",
+      "type": "city",
+      "label": "Roy",
       "address": "Roy, WA",
       "lat": 47.0043,
       "lng": -122.5401,
@@ -169,7 +172,8 @@
     },
     {
       "id": "pin-olympia",
-      "label": "Olympia area",
+      "type": "city",
+      "label": "Olympia",
       "address": "Olympia, WA",
       "lat": 47.0379,
       "lng": -122.9007,
@@ -178,20 +182,135 @@
     },
     {
       "id": "pin-thurston",
-      "label": "Thurston County coverage",
+      "type": "city",
+      "label": "Thurston County",
       "address": "Thurston County, WA",
       "lat": 46.92,
       "lng": -122.75,
       "city": "Thurston County",
       "note": "County-wide lawn, garden & tree services"
+    },
+    {
+      "id": "pin-job-01",
+      "type": "client",
+      "label": "Past service \u00b7 Lacey area",
+      "address": "Lacey area",
+      "lat": 46.982,
+      "lng": -122.82,
+      "city": "Lacey",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-02",
+      "type": "client",
+      "label": "Past service \u00b7 Yelm area",
+      "address": "Yelm area",
+      "lat": 46.959,
+      "lng": -122.588,
+      "city": "Yelm",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-03",
+      "type": "client",
+      "label": "Past service \u00b7 Yelm area",
+      "address": "Yelm area",
+      "lat": 46.936,
+      "lng": -122.606,
+      "city": "Yelm",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-04",
+      "type": "client",
+      "label": "Past service \u00b7 Yelm area",
+      "address": "Yelm area",
+      "lat": 46.936,
+      "lng": -122.604,
+      "city": "Yelm",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-05",
+      "type": "client",
+      "label": "Past service \u00b7 Yelm area",
+      "address": "Yelm area",
+      "lat": 46.953,
+      "lng": -122.578,
+      "city": "Yelm",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-06",
+      "type": "client",
+      "label": "Past service \u00b7 Lacey area",
+      "address": "Lacey area",
+      "lat": 46.99,
+      "lng": -122.797,
+      "city": "Lacey",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-07",
+      "type": "client",
+      "label": "Past service \u00b7 Yelm area",
+      "address": "Yelm area",
+      "lat": 46.935,
+      "lng": -122.605,
+      "city": "Yelm",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-08",
+      "type": "client",
+      "label": "Past service \u00b7 Lacey area",
+      "address": "Lacey area",
+      "lat": 46.992,
+      "lng": -122.808,
+      "city": "Lacey",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-09",
+      "type": "client",
+      "label": "Past service \u00b7 Roy area",
+      "address": "Roy area",
+      "lat": 46.948,
+      "lng": -122.553,
+      "city": "Roy",
+      "note": "Approximate location"
     }
   ],
   "serviceAreas": [
-    { "name": "Yelm", "lat": 46.942, "lng": -122.6046 },
-    { "name": "Rainier", "lat": 46.8882, "lng": -122.6885 },
-    { "name": "Lacey", "lat": 47.0343, "lng": -122.8232 },
-    { "name": "Roy", "lat": 47.0043, "lng": -122.5401 },
-    { "name": "Olympia", "lat": 47.0379, "lng": -122.9007 },
-    { "name": "Thurston County", "lat": 46.92, "lng": -122.75 }
+    {
+      "name": "Yelm",
+      "lat": 46.942,
+      "lng": -122.6046
+    },
+    {
+      "name": "Rainier",
+      "lat": 46.8882,
+      "lng": -122.6885
+    },
+    {
+      "name": "Lacey",
+      "lat": 47.0343,
+      "lng": -122.8232
+    },
+    {
+      "name": "Roy",
+      "lat": 47.0043,
+      "lng": -122.5401
+    },
+    {
+      "name": "Olympia",
+      "lat": 47.0379,
+      "lng": -122.9007
+    },
+    {
+      "name": "Thurston County",
+      "lat": 46.92,
+      "lng": -122.75
+    }
   ]
 }

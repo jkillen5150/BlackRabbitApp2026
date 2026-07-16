@@ -1,9 +1,63 @@
 /**
- * Leaflet service-area + client pin map
+ * Leaflet service-area map
+ * - City pins: main towns we serve (exact city centers OK)
+ * - Client pins: approximate only — never show street addresses publicly
  */
 (function () {
   let map;
   let layerGroup;
+
+  function isCity(p) {
+    return (p.type || 'city') === 'city';
+  }
+
+  function cityIcon() {
+    return L.divIcon({
+      className: '',
+      html: `<div style="
+        width:28px;height:28px;background:#2e5a2e;
+        border:3px solid #fff;border-radius:50% 50% 50% 0;
+        transform:rotate(-45deg);
+        box-shadow:0 2px 8px rgba(0,0,0,.35);
+      "></div>`,
+      iconSize: [28, 28],
+      iconAnchor: [14, 28],
+      popupAnchor: [0, -28]
+    });
+  }
+
+  function clientIcon() {
+    return L.divIcon({
+      className: '',
+      html: `<div style="
+        width:14px;height:14px;background:#d97706;
+        border:2px solid #fff;border-radius:50%;
+        box-shadow:0 2px 6px rgba(0,0,0,.3);
+      "></div>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+      popupAnchor: [0, -10]
+    });
+  }
+
+  function publicLabel(p) {
+    if (isCity(p)) return p.label || p.city || 'Service area';
+    return p.label || (p.city ? `Past service · ${p.city} area` : 'Past service (approx.)');
+  }
+
+  /** Never expose street-level address for client pins */
+  function publicDetail(p) {
+    if (isCity(p)) {
+      return {
+        line: p.address || p.city || '',
+        note: p.note || ''
+      };
+    }
+    return {
+      line: p.city ? `${p.city} area` : 'Approximate location',
+      note: p.note || 'Approximate — exact address not shown'
+    };
+  }
 
   async function init() {
     const el = document.getElementById('service-map');
@@ -24,38 +78,41 @@
     const data = await BRContent.load();
     const pins = data.pins || [];
     const areas = data.serviceAreas || [];
+    const listCities = document.getElementById('pin-list-cities');
+    const listJobs = document.getElementById('pin-list-jobs');
     const listEl = document.getElementById('pin-list');
     const legendEl = document.getElementById('map-legend');
 
     layerGroup.clearLayers();
 
-    const rabbitIcon = L.divIcon({
-      className: '',
-      html: `<div style="
-        width:28px;height:28px;background:#2e5a2e;
-        border:3px solid #fff;border-radius:50% 50% 50% 0;
-        transform:rotate(-45deg);
-        box-shadow:0 2px 8px rgba(0,0,0,.35);
-      "></div>`,
-      iconSize: [28, 28],
-      iconAnchor: [14, 28],
-      popupAnchor: [0, -28]
-    });
-
     const bounds = [];
+    const cities = pins.filter(isCity);
+    const clients = pins.filter((p) => !isCity(p));
 
-    pins.forEach((p) => {
+    cities.forEach((p) => {
       if (p.lat == null || p.lng == null) return;
-      const m = L.marker([p.lat, p.lng], { icon: rabbitIcon }).addTo(layerGroup);
+      const detail = publicDetail(p);
+      const m = L.marker([p.lat, p.lng], { icon: cityIcon(), zIndexOffset: 200 }).addTo(layerGroup);
       m.bindPopup(
-        `<strong>${BRContent.escapeHtml(p.label || p.city || 'Job site')}</strong><br>
-         ${BRContent.escapeHtml(p.address || '')}<br>
-         <em>${BRContent.escapeHtml(p.note || '')}</em>`
+        `<strong>${BRContent.escapeHtml(publicLabel(p))}</strong><br>
+         ${BRContent.escapeHtml(detail.line)}<br>
+         <em>${BRContent.escapeHtml(detail.note)}</em>`
       );
       bounds.push([p.lat, p.lng]);
     });
 
-    // Soft circles for named service towns (if no exact pin)
+    clients.forEach((p) => {
+      if (p.lat == null || p.lng == null) return;
+      const detail = publicDetail(p);
+      const m = L.marker([p.lat, p.lng], { icon: clientIcon(), zIndexOffset: 100 }).addTo(layerGroup);
+      m.bindPopup(
+        `<strong>${BRContent.escapeHtml(publicLabel(p))}</strong><br>
+         ${BRContent.escapeHtml(detail.line)}<br>
+         <em>${BRContent.escapeHtml(detail.note)}</em>`
+      );
+      bounds.push([p.lat, p.lng]);
+    });
+
     areas.forEach((a) => {
       if (a.lat == null || a.lng == null) return;
       L.circle([a.lat, a.lng], {
@@ -72,34 +129,45 @@
     }
 
     if (legendEl) {
-      const names = [...new Set([
-        ...areas.map((a) => a.name),
-        ...pins.map((p) => p.city).filter(Boolean)
-      ])];
-      legendEl.innerHTML = names
-        .map((n) => `<span class="map-chip">📍 ${BRContent.escapeHtml(n)}</span>`)
+      legendEl.innerHTML = `
+        <span class="map-chip">📍 Towns we serve</span>
+        <span class="map-chip" style="border-color:#d97706;color:#b45309;">● Past jobs (approx.)</span>
+      `;
+    }
+
+    function listHtml(items, emptyMsg) {
+      if (!items.length) {
+        return `<div class="empty-state">${emptyMsg}</div>`;
+      }
+      return items
+        .map((p) => {
+          const detail = publicDetail(p);
+          const dotClass = isCity(p) ? 'pin-dot' : 'pin-dot pin-dot-client';
+          return `
+          <div class="pin-list-item">
+            <div class="${dotClass}" aria-hidden="true"></div>
+            <div>
+              <h4>${BRContent.escapeHtml(publicLabel(p))}</h4>
+              <p>${BRContent.escapeHtml(detail.line)}</p>
+              ${detail.note ? `<p>${BRContent.escapeHtml(detail.note)}</p>` : ''}
+            </div>
+          </div>`;
+        })
         .join('');
     }
 
-    if (listEl) {
-      if (!pins.length) {
-        listEl.innerHTML =
-          '<div class="empty-state">No pins yet. Log in as admin and add client addresses on the map.</div>';
-      } else {
-        listEl.innerHTML = pins
-          .map(
-            (p) => `
-          <div class="pin-list-item">
-            <div class="pin-dot" aria-hidden="true"></div>
-            <div>
-              <h4>${BRContent.escapeHtml(p.label || p.city || 'Client')}</h4>
-              <p>${BRContent.escapeHtml(p.address || '')}</p>
-              ${p.note ? `<p>${BRContent.escapeHtml(p.note)}</p>` : ''}
-            </div>
-          </div>`
-          )
-          .join('');
-      }
+    if (listCities) {
+      listCities.innerHTML = listHtml(cities, 'No city pins yet.');
+    }
+    if (listJobs) {
+      listJobs.innerHTML = listHtml(
+        clients,
+        'No approximate job pins yet — paste towns or addresses privately and we’ll add fuzzy pins only.'
+      );
+    }
+    // Fallback single list if page still has old markup
+    if (listEl && !listCities) {
+      listEl.innerHTML = listHtml(pins, 'No pins yet.');
     }
   }
 

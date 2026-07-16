@@ -84,11 +84,14 @@ function wireForms() {
     let lat = parseFloat(fd.get('lat'));
     let lng = parseFloat(fd.get('lng'));
     const address = String(fd.get('address') || '').trim();
+    const city = String(fd.get('city') || '').trim();
+    const type = String(fd.get('type') || 'client');
+    const isClient = type !== 'city';
 
-    // If no coords, try Nominatim geocode (OpenStreetMap)
-    if ((Number.isNaN(lat) || Number.isNaN(lng)) && address) {
+    // Geocode only as a placement aid; street never stored for client pins
+    if ((Number.isNaN(lat) || Number.isNaN(lng)) && (address || city)) {
       try {
-        const q = encodeURIComponent(address + ', Washington, USA');
+        const q = encodeURIComponent((address || city) + ', Washington, USA');
         const res = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${q}`,
           { headers: { Accept: 'application/json' } }
@@ -104,19 +107,36 @@ function wireForms() {
     }
 
     if (Number.isNaN(lat) || Number.isNaN(lng)) {
-      alert('Could not place pin. Enter lat/lng or a full address we can geocode.');
+      alert('Could not place pin. Enter lat/lng, a city, or an address we can geocode.');
       return;
     }
+
+    // Privacy: fuzzy offset (~0.4–0.9 km) so pins aren't house-accurate
+    if (isClient) {
+      const jitter = () => (Math.random() - 0.5) * 0.016; // ~±0.8 km at this latitude
+      lat = Math.round((lat + jitter()) * 1000) / 1000; // ~100m precision max
+      lng = Math.round((lng + jitter()) * 1000) / 1000;
+    }
+
+    const publicLabel =
+      String(fd.get('label') || '').trim() ||
+      (isClient
+        ? city
+          ? `Past service · ${city} area`
+          : 'Past service (approx.)'
+        : city || 'Service area');
 
     const data = await BRContent.load();
     data.pins.unshift({
       id: BRContent.uid('pin'),
-      label: String(fd.get('label') || '').trim() || 'Client job',
-      address,
+      type: isClient ? 'client' : 'city',
+      label: publicLabel,
+      // Never persist street-level address for client/job pins
+      address: isClient ? (city ? `${city} area` : 'Approximate area') : address || city,
       lat,
       lng,
-      city: String(fd.get('city') || '').trim(),
-      note: String(fd.get('note') || '').trim()
+      city,
+      note: String(fd.get('note') || '').trim() || (isClient ? 'Approximate location' : '')
     });
     BRContent.save(data);
     e.target.reset();
@@ -189,8 +209,9 @@ function renderPins(list) {
       (p) => `
     <li>
       <div>
-        <strong>${BRContent.escapeHtml(p.label)}</strong><br>
-        <span style="color:#666">${BRContent.escapeHtml(p.address || '')} (${p.lat?.toFixed?.(4)}, ${p.lng?.toFixed?.(4)})</span>
+        <strong>${BRContent.escapeHtml(p.label)}</strong>
+        <span style="color:#888;font-size:0.8rem;"> · ${BRContent.escapeHtml(p.type || 'city')}</span><br>
+        <span style="color:#666">${BRContent.escapeHtml(p.city || p.address || '')} (${p.lat?.toFixed?.(3)}, ${p.lng?.toFixed?.(3)})</span>
       </div>
       <div class="actions">
         <button type="button" data-del-pin="${BRContent.escapeAttr(p.id)}" class="btn-danger">Delete</button>
