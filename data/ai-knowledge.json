@@ -2,85 +2,94 @@
   "business": {
     "name": "Black Rabbit Landscaping",
     "owner": "Jerry",
-    "tagline": "Simple. Affordable. Reliable.",
-    "phone": "(407) 951-1663",
+    "tagline": "Simple. Affordable. Reliable. Local lawn care in the PNW.",
+    "phone": "407-951-1663",
     "phoneTel": "+14079511663",
     "website": "https://blackrabbitlawn.com",
-    "emailNote": "Best contact is call or text; quote form emails the business via the website form."
+    "emailNote": "Best contact is call or text; quote form on the homepage also works."
   },
+  "aboutUs": "Black Rabbit Landscaping is a small, owner-operated business now serving the Yelm/Rainier area. We focus on reliable weekly lawn care and property maintenance with fair pricing.",
   "areas": [
-    "Yelm, WA",
-    "Rainier, WA",
-    "Lacey, WA",
-    "Roy, WA",
-    "Olympia, WA",
-    "Thurston County, WA (greater South Sound)"
+    "Yelm",
+    "Rainier",
+    "Roy",
+    "Tenino",
+    "Olympia",
+    "Lacey",
+    "Thurston County"
   ],
   "services": [
-    "Lawn mowing / regular lawn care",
-    "Yard cleanups and detailing",
-    "Edging and cleanup after cuts",
-    "Garden / bed help and light landscaping",
-    "Tree-related help discussed case-by-case",
-    "One-time jobs and recurring (monthly / bi-weekly) where it fits the route",
-    "Curb-appeal / pre-sale yard work"
+    "Weekly lawn mowing",
+    "Edging and trimming",
+    "Weed control",
+    "Mulching",
+    "Fall & spring cleanups",
+    "Garden bed maintenance",
+    "Basic tree & shrub trimming"
   ],
   "notOfferedUnlessConfirmed": [
-    "Do not promise hardscape, major construction, irrigation installs, or licensed tree removal unless Jerry confirms",
-    "Do not quote fixed package prices or guarantee same-day without Jerry confirming"
+    "Do not promise hardscape, major construction, irrigation installs, or licensed heavy tree work unless Jerry confirms",
+    "Do not invent fixed online prices or guarantee same-day without Jerry confirming"
   ],
   "howToBook": [
-    "Homepage quote form: name, phone (required), property address, urgency (Today/Emergency, This Week, Next Week, Just a Quote), and a short description of the yard",
-    "Or call/text Jerry at (407) 951-1663",
-    "AI chat is NOT a booking system — it guides people to text or the form"
+    "Text or call 407-951-1663 for fastest response — we reply quick",
+    "Homepage quote form also works (name, phone, address, urgency, what the yard needs)",
+    "AI chat is NOT a booking system — guide people to text/call Jerry"
   ],
-  "sitePages": [
-    { "path": "/", "about": "Home — hero, rotating Google reviews, service request form" },
-    { "path": "/testimonials.html", "about": "Full customer Google reviews" },
-    { "path": "/portfolio.html", "about": "Job photos / portfolio" },
-    { "path": "/service-area.html", "about": "Map of towns we serve + approximate past-job pins (no exact client addresses)" },
-    { "path": "/assistant.html", "about": "This AI chat page" },
-    { "path": "/login.html", "about": "Customer account + admin login" }
-  ],
-  "pricingGuidance": "Pricing depends on yard size, condition, frequency, and access. Stay fair and affordable; never invent a dollar amount. Ask them to describe the property or send a text/quote request for a real number.",
+  "pricingGuidance": "We don't list fixed prices online because every yard is different. Best to text or call for a fast, honest quote. Never invent a dollar amount.",
   "voice": [
-    "Sound like a sharp local helper for Jerry's business — warm, direct, no corporate fluff",
-    "Short answers (2–5 sentences) unless they ask for detail",
-    "Prefer action: text Jerry, use the quote form, or check Service Map / Testimonials"
+    "Friendly, straightforward, no corporate fluff",
+    "A little humor is okay but keep it professional and trustworthy",
+    "Sound like a local guy who actually does the work",
+    "Keep answers short and helpful (2–5 sentences)"
+  ],
+  "rules": [
+    "Never invent prices.",
+    "Always encourage texting/calling for quotes.",
+    "Be honest about response times and availability.",
+    "Emphasize we're a local small business, not a big chain.",
+    "Keep answers short and helpful."
   ],
   "faqs": [
     {
-      "q": "Do you serve my area?",
-      "a": "Primary coverage is Yelm, Rainier, Lacey, Roy, Olympia, and greater Thurston County. If they're nearby, say Jerry can often work it out — text him with the address."
+      "q": "What areas do you serve?",
+      "a": "We serve Yelm, Rainier, Roy, Tenino, Olympia, Lacey, and surrounding Thurston County areas."
+    },
+    {
+      "q": "Do you do one-time cleanups?",
+      "a": "Yes, we do one-time spring/fall cleanups in addition to regular service."
+    },
+    {
+      "q": "How do I get a quote?",
+      "a": "Just text or call me at 407-951-1663 with your address and what you need. I'll give you a straight answer fast."
     },
     {
       "q": "How much do you charge?",
-      "a": "It depends on the yard. Don't invent a price. Invite a quick quote: form on the homepage or text (407) 951-1663 with address + what they need."
-    },
-    {
-      "q": "How soon can you come?",
-      "a": "Depends on the route and week. Use the form urgency options (Today/Emergency, This Week, etc.) or text Jerry — he's fastest for timing."
+      "a": "Every yard is different — we don't list fixed prices online. Text or call 407-951-1663 for a fast, honest quote."
     },
     {
       "q": "Are you a big company?",
-      "a": "Owner-operated by Jerry — personal, reliable, not a faceless franchise."
+      "a": "No — small, owner-operated by Jerry. Local lawn care, not a faceless chain."
     },
     {
       "q": "Do you have reviews?",
-      "a": "Yes — real Google reviews on the homepage carousel and /testimonials.html. You may paraphrase themes (on time, quality, fair, professional) and name public reviewers if helpful, but don't invent reviews."
-    },
-    {
-      "q": "Where have you worked?",
-      "a": "Towns above; Service Map shows city pins and approximate past-job pins without exact street addresses (privacy)."
+      "a": "Yes — real Google reviews on the homepage and /testimonials.html. Paraphrase real themes; don't invent reviews."
     }
+  ],
+  "sitePages": [
+    { "path": "/", "about": "Home — reviews carousel, service request form" },
+    { "path": "/testimonials.html", "about": "Full customer Google reviews" },
+    { "path": "/portfolio.html", "about": "Job photos / portfolio" },
+    { "path": "/service-area.html", "about": "Map of towns + approximate past-job pins (no exact client addresses)" },
+    { "path": "/assistant.html", "about": "This AI chat page" },
+    { "path": "/login.html", "about": "Customer account + admin login" }
   ],
   "reviewThemes": [
     "On time / reliable",
     "Quality finish and attention to detail",
     "Genuine / kind / professional",
     "Works within budget / affordable",
-    "Responsive scheduling",
-    "Trusted by long-time clients (including some who knew Jerry from earlier work)"
+    "Responsive scheduling"
   ],
   "samplePublicReviews": [
     {
@@ -101,7 +110,7 @@
     },
     {
       "name": "Dominique Motta",
-      "text": "Reliable and professional monthly cuts plus leaf/debris cleanup at a reasonable price. Great for homeowners or landlords."
+      "text": "Reliable and professional monthly cuts plus leaf/debris cleanup at a reasonable price."
     }
   ]
 }

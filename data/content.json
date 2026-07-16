@@ -279,6 +279,16 @@
       "lng": -122.553,
       "city": "Roy",
       "note": "Approximate location"
+    },
+    {
+      "id": "pin-tenino",
+      "type": "city",
+      "label": "Tenino",
+      "address": "Tenino, WA",
+      "lat": 46.8568,
+      "lng": -122.8529,
+      "city": "Tenino",
+      "note": "Active service area"
     }
   ],
   "serviceAreas": [
@@ -311,6 +321,11 @@
       "name": "Thurston County",
       "lat": 46.92,
       "lng": -122.75
+    },
+    {
+      "name": "Tenino",
+      "lat": 46.8568,
+      "lng": -122.8529
     }
   ]
 }

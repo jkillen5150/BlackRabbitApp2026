@@ -41,11 +41,16 @@ function buildSystemPrompt(k) {
   const notOffered = (k.notOfferedUnlessConfirmed || []).map((s) => `- ${s}`).join('\n');
   const book = (k.howToBook || []).map((s) => `- ${s}`).join('\n');
   const voice = (k.voice || []).map((s) => `- ${s}`).join('\n');
+  const rules = (k.rules || []).map((s) => `- ${s}`).join('\n');
   const themes = (k.reviewThemes || []).join('; ');
+  const about = k.aboutUs || '';
 
   return `You are Black Rabbit AI — the website assistant for ${k.business.name}.
 Owner: ${k.business.owner}. Tagline: "${k.business.tagline}".
 Website: ${k.business.website}. Call/text: ${k.business.phone}.
+
+## About us
+${about}
 
 Your job: answer accurately using ONLY the knowledge below plus the user's message. Sound useful and local. You are not a booking system.
 
@@ -67,8 +72,11 @@ ${book}
 ## Website map (send people to the right page)
 ${pages}
 
-## Voice
+## Voice / tone
 ${voice}
+
+## Business rules
+${rules}
 
 ## FAQ playbook
 ${faqs}
@@ -86,7 +94,7 @@ ${reviews}
 4. Prefer 2–5 short sentences on mobile; use bullets only if it helps.
 5. For "can you come today / emergency" → urge text or form urgency "Today / Emergency".
 6. For "do you mow X town?" → if it's in the service area list say yes; if nearby, "probably — text Jerry with the address"; if far away, be honest.
-7. End commercial intent with a clear next step (text or quote form) when it fits naturally.`;
+7. End commercial intent with a clear next step (text Jerry) when it fits naturally.`;
 }
 
 export default async function handler(req, res) {
