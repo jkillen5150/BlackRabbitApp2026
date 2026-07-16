@@ -1,5 +1,11 @@
+/**
+ * Black Rabbit AI — Vercel serverless function at /api/chat
+ * Env: XAI_API_KEY (set in Vercel project settings)
+ *
+ * Same repo as the static site so deploy is one piece.
+ */
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Credentials', true);
+  // Same-origin browser calls don't need CORS; keep OPTIONS for safety
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -12,7 +18,33 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { message, history } = req.body || {};
+  if (!process.env.XAI_API_KEY) {
+    console.error('Missing XAI_API_KEY');
+    return res.status(500).json({
+      error: 'Chat not configured',
+      choices: [
+        {
+          message: {
+            content:
+              "Chat isn't wired up on the server yet. Text Jerry at (407) 951-1663 and we'll get you sorted."
+          }
+        }
+      ]
+    });
+  }
+
+  // Vercel may pass body as object or string
+  let body = req.body;
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch {
+      body = {};
+    }
+  }
+  body = body || {};
+
+  const { message, history } = body;
 
   if (!message || typeof message !== 'string') {
     return res.status(400).json({ error: 'Message is required' });

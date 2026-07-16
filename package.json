@@ -1,0 +1,9 @@
+{
+  "name": "black-rabbit-website",
+  "private": true,
+  "description": "Black Rabbit Landscaping site + AI chat API (one Vercel project)",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  }
+}

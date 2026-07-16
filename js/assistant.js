@@ -1,9 +1,18 @@
 /**
  * Full-page Black Rabbit AI chat (mobile-first)
+ * Prefers same-origin /api/chat (one Vercel project). Falls back to the
+ * legacy proxy only if same-origin isn't available yet.
  */
 (function () {
-  const PROXY_URL = 'https://br-chat-proxy.vercel.app/api/chat';
   const history = [];
+
+  function endpoints() {
+    if (window.BR_CHAT_API) return [window.BR_CHAT_API];
+    return [
+      '/api/chat',
+      'https://br-chat-proxy.vercel.app/api/chat' // legacy until domain is fully on Vercel
+    ];
+  }
 
   function escapeHtml(s) {
     return String(s)
@@ -25,6 +34,35 @@
     if (box) box.scrollTop = box.scrollHeight;
   }
 
+  async function postChat(payload) {
+    let lastErr;
+    for (const url of endpoints()) {
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        // HTML 404 from static host → try next endpoint
+        const type = res.headers.get('content-type') || '';
+        if (!res.ok && res.status === 404) {
+          lastErr = new Error('404 ' + url);
+          continue;
+        }
+        if (!type.includes('application/json')) {
+          lastErr = new Error('non-json ' + url);
+          continue;
+        }
+        const data = await res.json();
+        if (data && (data.choices || data.error)) return data;
+        lastErr = new Error('bad payload');
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr || new Error('chat unavailable');
+  }
+
   async function send(text) {
     const input = document.getElementById('chat-input');
     const messages = document.getElementById('chat-messages');
@@ -43,15 +81,10 @@
     if (sendBtn) sendBtn.disabled = true;
 
     try {
-      const res = await fetch(PROXY_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: clean,
-          history: history.slice(0, -1)
-        })
+      const data = await postChat({
+        message: clean,
+        history: history.slice(0, -1)
       });
-      const data = await res.json();
       const reply =
         data.choices?.[0]?.message?.content ||
         "Sorry, I'm having trouble right now. Text Jerry at (407) 951-1663!";
