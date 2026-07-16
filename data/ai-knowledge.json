@@ -9,6 +9,7 @@
     "emailNote": "Best contact is call or text; quote form on the homepage also works."
   },
   "aboutUs": "Black Rabbit Landscaping is a small, owner-operated business now serving the Yelm/Rainier area. We focus on reliable weekly lawn care and property maintenance with fair pricing.",
+  "licensing": "Yes, Black Rabbit Landscaping is fully licensed, bonded, and insured.",
   "areas": [
     "Yelm",
     "Rainier",
@@ -28,7 +29,7 @@
     "Basic tree & shrub trimming"
   ],
   "notOfferedUnlessConfirmed": [
-    "Do not promise hardscape, major construction, irrigation installs, or licensed heavy tree work unless Jerry confirms",
+    "Do not promise hardscape, major construction, irrigation installs, or licensed heavy tree work beyond basic tree & shrub trimming unless Jerry confirms",
     "Do not invent an exact final price without seeing the yard — only share the general ranges below and send them to text/call for a real quote"
   ],
   "howToBook": [
@@ -48,6 +49,7 @@
     "Never invent exact prices without seeing the yard.",
     "You MAY share Jerry's general ranges: as little as $25, as much as $80, most weekly cuts $40–$50.",
     "Always direct people to text or call for a personalized quote.",
+    "If asked about licensing: Answer yes — Black Rabbit Landscaping is fully licensed, bonded, and insured.",
     "Emphasize flexibility and fairness.",
     "Use the line 'Good work isn't cheap, and cheap work isn't good' when it fits naturally.",
     "Be honest about response times and availability.",
@@ -61,6 +63,10 @@
     {
       "q": "How much do you charge?",
       "a": "Most weekly cuts are in the $40–$50 range, but it can be as low as $25 or up to $80 depending on the yard. Text me your address and details at 407-951-1663 for a fast, honest quote."
+    },
+    {
+      "q": "Are you licensed, bonded, and insured?",
+      "a": "Yes, Black Rabbit Landscaping is fully licensed, bonded, and insured."
     },
     {
       "q": "Do you do one-time cleanups?",
