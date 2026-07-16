@@ -28,7 +28,23 @@
       Edits save in this browser (local storage) and update the live pages for visitors on <em>this same device</em>.
       Use <strong>Export content.json</strong>, replace <code>data/content.json</code> in the repo, and redeploy so everyone sees your updates.
       Photo uploads under ~2.5MB are stored as data URLs; larger shots should be hosted and linked by URL.
+      <br><br>
+      <strong>Chat leads:</strong> Ask AI can interview customers and email you. They also show below when the API is live.
+      Optional: set <code>GITHUB_TOKEN</code> on Vercel so the follow-up list stays durable in <code>data/leads.json</code>.
     </div>
+
+    <!-- Leads / follow-ups -->
+    <section class="admin-panel">
+      <h2>📋 Follow-up quotes (from chat)</h2>
+      <p style="color:#666;font-size:0.9rem;margin-top:0;">
+        Customers who said “quote” / “connect me” in Ask AI. You also get an email for each one.
+      </p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <button type="button" class="btn btn-solid" id="btn-refresh-leads">Refresh leads</button>
+        <span id="leads-meta" style="font-size:0.85rem;color:#666;align-self:center;"></span>
+      </div>
+      <div id="leads-list"></div>
+    </section>
 
     <!-- Reviews -->
     <section class="admin-panel">

@@ -16,9 +16,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     await refreshAll();
   });
 
+  document.getElementById('btn-refresh-leads')?.addEventListener('click', () => loadLeads());
+
   await BRContent.load();
   await refreshAll();
   wireForms();
+  loadLeads();
 });
 
 async function refreshAll() {
@@ -26,6 +29,70 @@ async function refreshAll() {
   renderReviews(data.reviews);
   renderPortfolio(data.portfolio);
   renderPins(data.pins);
+}
+
+async function loadLeads() {
+  const list = document.getElementById('leads-list');
+  const meta = document.getElementById('leads-meta');
+  if (!list) return;
+  list.innerHTML = '<p style="color:#666">Loading…</p>';
+  try {
+    const res = await fetch('/api/lead', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const leads = data.leads || [];
+    if (meta) {
+      meta.textContent = data.durable
+        ? `${leads.length} lead(s) · durable storage on`
+        : `${leads.length} lead(s) · ${data.note || 'email mode'}`;
+    }
+    if (!leads.length) {
+      list.innerHTML =
+        '<div class="empty-state">No chat leads yet. When someone uses Ask AI → quote / connect me, they’ll show up here (and in your email).</div>';
+      return;
+    }
+    list.innerHTML = leads
+      .map((l) => {
+        const st = BRContent.escapeHtml(l.status || 'new');
+        return `
+        <div class="lead-card" data-id="${BRContent.escapeAttr(l.id)}">
+          <h4>${BRContent.escapeHtml(l.name || 'Customer')}
+            <span class="lead-status ${st}">${st}</span>
+          </h4>
+          <p><strong>Phone:</strong> <a href="tel:${BRContent.escapeAttr(String(l.phone || '').replace(/\s/g, ''))}">${BRContent.escapeHtml(l.phone || '')}</a>
+            · <a href="sms:${BRContent.escapeAttr(String(l.phone || '').replace(/\s/g, ''))}">Text</a></p>
+          <p><strong>Address:</strong> ${BRContent.escapeHtml(l.address || '—')}</p>
+          <p><strong>Need:</strong> ${BRContent.escapeHtml(l.need || '—')}</p>
+          <p style="color:#888;font-size:0.8rem;">${BRContent.escapeHtml(l.createdAt || '')} · ${BRContent.escapeHtml(l.source || '')}</p>
+          <div class="lead-actions">
+            <button type="button" class="btn-sm" data-status="texted" data-id="${BRContent.escapeAttr(l.id)}">Mark texted</button>
+            <button type="button" class="btn-sm" data-status="booked" data-id="${BRContent.escapeAttr(l.id)}">Mark booked</button>
+            <button type="button" class="btn-sm" data-status="done" data-id="${BRContent.escapeAttr(l.id)}">Done</button>
+            <button type="button" class="btn-sm" data-status="new" data-id="${BRContent.escapeAttr(l.id)}">Reopen</button>
+          </div>
+        </div>`;
+      })
+      .join('');
+
+    list.querySelectorAll('[data-status]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        try {
+          await fetch('/api/lead', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: btn.dataset.id, status: btn.dataset.status })
+          });
+          loadLeads();
+        } catch {
+          alert('Could not update status (is /api/lead live on Vercel?)');
+        }
+      });
+    });
+  } catch (e) {
+    if (meta) meta.textContent = 'API offline or not on Vercel yet';
+    list.innerHTML =
+      '<div class="empty-state">Could not load leads from <code>/api/lead</code>. Chat still works for Q&amp;A; lead handoff needs the site on Vercel with this API. You still get homepage form emails via Web3Forms.</div>';
+  }
 }
 
 function wireForms() {

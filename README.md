@@ -19,6 +19,15 @@ Serving Yelm, Rainier, Lacey, Roy, Olympia & Thurston County.
 | Quote thank-you | `thankyou.html` |
 | Chat API | `api/chat.js` → `POST /api/chat` |
 
+## Chat leads (“connect me” / quote without the form)
+
+Ask AI can **interview** a customer (name → phone → address → need), then:
+
+1. **Email you** via Web3Forms (same system as the homepage form)
+2. **Log the lead** for Admin → **Follow-up quotes** (`GET/POST/PATCH /api/lead`)
+
+Optional durable list: set **`GITHUB_TOKEN`** (repo contents write) on Vercel so leads append to `data/leads.json`. Without it, you still get **emails**; the on-site list may be partial after cold starts.
+
 ## Making the AI smarter (no “training”)
 
 You do **not** fine-tune a model. Each chat request gets a **briefing packet**:

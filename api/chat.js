@@ -260,13 +260,18 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message is required' });
   }
 
-  // Instant answer for contact — no model loop
+  // Pure number/contact asks — give digits. Quote/connect interview is handled in assistant.js.
   if (isContactIntent(message)) {
+    const t = String(message).toLowerCase();
+    const handoff =
+      /\b(quote|book|schedule|connect me|mow my|want service)\b/.test(t) === false;
     return res.status(200).json({
       choices: [
         {
           message: {
-            content: `${PHONE_LINE} That's Jerry — owner of Black Rabbit. Fastest way to get a quote or book. I can't place the call from this chat 😁`
+            content: handoff
+              ? `${PHONE_LINE} That's Jerry — owner of Black Rabbit. Want a follow-up quote without the form? Say "I want a quote" and the site will ask your name, phone, and address, then email him 😁`
+              : `${PHONE_LINE} Or say "I want a quote" so the chat can take your details and email Jerry a follow-up.`
           }
         }
       ]
