@@ -1,11 +1,95 @@
 /**
  * Black Rabbit AI — Vercel serverless function at /api/chat
- * Env: XAI_API_KEY (set in Vercel project settings)
+ * Env: XAI_API_KEY
  *
- * Same repo as the static site so deploy is one piece.
+ * Intelligence = briefing packet (system prompt + data/ai-knowledge.json),
+ * not fine-tuning. Edit data/ai-knowledge.json and redeploy to teach it more.
  */
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+let knowledgeCache = null;
+
+function loadKnowledge() {
+  if (knowledgeCache) return knowledgeCache;
+  try {
+    const path = join(process.cwd(), 'data', 'ai-knowledge.json');
+    knowledgeCache = JSON.parse(readFileSync(path, 'utf8'));
+  } catch (e) {
+    console.error('Could not load ai-knowledge.json', e);
+    knowledgeCache = null;
+  }
+  return knowledgeCache;
+}
+
+function buildSystemPrompt(k) {
+  if (!k) {
+    return `You are Black Rabbit AI for Black Rabbit Landscaping (Jerry) in Yelm / Thurston County WA. Phone (407) 951-1663. Don't invent prices. Keep answers short.`;
+  }
+
+  const pages = (k.sitePages || [])
+    .map((p) => `- ${p.path}: ${p.about}`)
+    .join('\n');
+  const faqs = (k.faqs || [])
+    .map((f) => `Q: ${f.q}\nA: ${f.a}`)
+    .join('\n\n');
+  const reviews = (k.samplePublicReviews || [])
+    .map((r) => `- ${r.name}: "${r.text}"`)
+    .join('\n');
+  const services = (k.services || []).map((s) => `- ${s}`).join('\n');
+  const areas = (k.areas || []).join('; ');
+  const notOffered = (k.notOfferedUnlessConfirmed || []).map((s) => `- ${s}`).join('\n');
+  const book = (k.howToBook || []).map((s) => `- ${s}`).join('\n');
+  const voice = (k.voice || []).map((s) => `- ${s}`).join('\n');
+  const themes = (k.reviewThemes || []).join('; ');
+
+  return `You are Black Rabbit AI — the website assistant for ${k.business.name}.
+Owner: ${k.business.owner}. Tagline: "${k.business.tagline}".
+Website: ${k.business.website}. Call/text: ${k.business.phone}.
+
+Your job: answer accurately using ONLY the knowledge below plus the user's message. Sound useful and local. You are not a booking system.
+
+## Service area
+${areas}
+
+## Services we do
+${services}
+
+## Do not over-promise
+${notOffered}
+
+## Pricing
+${k.pricingGuidance}
+
+## How customers book
+${book}
+
+## Website map (send people to the right page)
+${pages}
+
+## Voice
+${voice}
+
+## FAQ playbook
+${faqs}
+
+## Review themes (public Google feedback)
+${themes}
+
+## Sample public Google reviews (OK to paraphrase or quote briefly)
+${reviews}
+
+## Hard rules
+1. Never invent prices, discounts, availability slots, licenses, or fake reviews.
+2. Never invent client street addresses or private details.
+3. If you don't know, say so in one line and send them to text ${k.business.phone} or the homepage quote form.
+4. Prefer 2–5 short sentences on mobile; use bullets only if it helps.
+5. For "can you come today / emergency" → urge text or form urgency "Today / Emergency".
+6. For "do you mow X town?" → if it's in the service area list say yes; if nearby, "probably — text Jerry with the address"; if far away, be honest.
+7. End commercial intent with a clear next step (text or quote form) when it fits naturally.`;
+}
+
 export default async function handler(req, res) {
-  // Same-origin browser calls don't need CORS; keep OPTIONS for safety
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -33,7 +117,6 @@ export default async function handler(req, res) {
     });
   }
 
-  // Vercel may pass body as object or string
   let body = req.body;
   if (typeof body === 'string') {
     try {
@@ -50,21 +133,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message is required' });
   }
 
-  const system = `You are Black Rabbit AI, the website helper for Black Rabbit Landscaping (owner: Jerry).
+  const knowledge = loadKnowledge();
+  const system = buildSystemPrompt(knowledge);
 
-BUSINESS FACTS (stick to these; do not invent others):
-- Tagline: Simple. Affordable. Reliable.
-- Services: lawn care / mowing, yard cleanups, gardens, beds, light landscaping, tree-related help as discussed case-by-case.
-- Service area: Yelm, Rainier, Lacey, Roy, Olympia, and greater Thurston County, Washington.
-- Contact: call or text (407) 951-1663. Quote form is on the homepage (blackrabbitlawn.com).
-- Style: owner-operated, personal, responsive by text, fair pricing.
-- Do NOT invent exact prices, package rates, or availability calendars. For cost/schedule, say it depends on the yard and invite them to request a quote or text Jerry.
-- Do NOT invent fake reviews, addresses, or client names.
-- If unsure, say so briefly and point them to text/call Jerry or the quote form.
-- Keep answers short (2–5 sentences) on mobile. Friendly, professional, no fluff.
-- If they want service ASAP, encourage the quote form urgency options or a direct text.`;
-
-  // Optional short history from the assistant page (role/content pairs only)
   const prior = Array.isArray(history)
     ? history
         .filter(
@@ -92,8 +163,9 @@ BUSINESS FACTS (stick to these; do not invent others):
           ...prior,
           { role: 'user', content: message.slice(0, 2000) }
         ],
-        temperature: 0.5,
-        max_tokens: 400
+        // Lower temp = fewer creative lies, more "follow the briefing"
+        temperature: 0.35,
+        max_tokens: 450
       })
     });
 

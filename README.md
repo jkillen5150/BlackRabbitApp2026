@@ -19,6 +19,16 @@ Serving Yelm, Rainier, Lacey, Roy, Olympia & Thurston County.
 | Quote thank-you | `thankyou.html` |
 | Chat API | `api/chat.js` → `POST /api/chat` |
 
+## Making the AI smarter (no “training”)
+
+You do **not** fine-tune a model. Each chat request gets a **briefing packet**:
+
+1. Edit **`data/ai-knowledge.json`** — services, towns, FAQs, review blurbs, booking steps, voice.
+2. Redeploy Vercel (push to `main` if auto-deploy is on).
+3. The API (`api/chat.js`) loads that file into the system prompt.
+
+That’s “teaching the site,” not machine-learning training. Add new FAQs or services anytime.
+
 ## One-piece deploy (Vercel)
 
 GitHub Pages can’t run the chat function. Keep **everything on Vercel**:
