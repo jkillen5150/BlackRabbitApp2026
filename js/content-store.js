@@ -1,6 +1,8 @@
 /**
  * Black Rabbit content store
- * Loads data/content.json, merges with local admin overrides (localStorage).
+ * Loads data/content.json; optional local admin draft in localStorage.
+ * Local drafts are only used when they were saved against the *current*
+ * bundled content fingerprint — so a redeploy invalidates stale local data.
  */
 (function (global) {
   const STORAGE_KEY = 'br_site_content_v1';
@@ -15,9 +17,38 @@
 
   let cache = null;
   let loadPromise = null;
+  /** Fingerprint of the last successfully fetched bundled content.json */
+  let bundledFingerprint = null;
+  /** True when active cache is a local admin draft (not pure bundled) */
+  let usingLocalDraft = false;
 
   function uid(prefix) {
     return prefix + '-' + Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
+  }
+
+  function normalize(data) {
+    return {
+      reviews: (data && data.reviews) || [],
+      portfolio: (data && data.portfolio) || [],
+      pins: (data && data.pins) || [],
+      serviceAreas: (data && data.serviceAreas) || []
+    };
+  }
+
+  /** Stable short fingerprint so redeploys invalidate old local drafts. */
+  function fingerprint(data) {
+    const n = normalize(data);
+    const raw = JSON.stringify({
+      reviews: n.reviews,
+      portfolio: n.portfolio,
+      pins: n.pins,
+      serviceAreas: n.serviceAreas
+    });
+    let h = 5381;
+    for (let i = 0; i < raw.length; i++) {
+      h = ((h << 5) + h) ^ raw.charCodeAt(i);
+    }
+    return (h >>> 0).toString(16) + '-' + raw.length.toString(16);
   }
 
   function readLocal() {
@@ -32,8 +63,15 @@
 
   function writeLocal(data) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    cache = data;
-    global.dispatchEvent(new CustomEvent('br:content-updated', { detail: data }));
+    cache = normalize(data);
+    usingLocalDraft = true;
+    global.dispatchEvent(new CustomEvent('br:content-updated', { detail: cache }));
+  }
+
+  async function fetchBundled() {
+    const res = await fetch(DEFAULT_PATH, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to load content');
+    return normalize(await res.json());
   }
 
   async function load() {
@@ -41,30 +79,46 @@
     if (loadPromise) return loadPromise;
 
     loadPromise = (async () => {
+      let bundled = empty();
+      try {
+        bundled = await fetchBundled();
+        bundledFingerprint = fingerprint(bundled);
+      } catch {
+        bundledFingerprint = null;
+      }
+
       const local = readLocal();
-      if (local && (local.reviews || local.portfolio || local.pins)) {
-        cache = {
-          reviews: local.reviews || [],
-          portfolio: local.portfolio || [],
-          pins: local.pins || [],
-          serviceAreas: local.serviceAreas || []
-        };
+      // New format: { basedOn, reviews, ... }. Legacy: bare content without basedOn.
+      const localBasedOn = local && local.basedOn;
+      const localContent = local
+        ? normalize(local.reviews || local.portfolio || local.pins ? local : empty())
+        : null;
+
+      if (
+        localContent &&
+        bundledFingerprint &&
+        localBasedOn &&
+        localBasedOn === bundledFingerprint &&
+        (localContent.reviews.length ||
+          localContent.portfolio.length ||
+          localContent.pins.length)
+      ) {
+        cache = localContent;
+        usingLocalDraft = true;
         return cache;
       }
 
-      try {
-        const res = await fetch(DEFAULT_PATH, { cache: 'no-store' });
-        if (!res.ok) throw new Error('Failed to load content');
-        const data = await res.json();
-        cache = {
-          reviews: data.reviews || [],
-          portfolio: data.portfolio || [],
-          pins: data.pins || [],
-          serviceAreas: data.serviceAreas || []
-        };
-      } catch {
-        cache = empty();
+      // Stale or legacy localStorage — drop so redeployed content.json wins
+      if (local) {
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch {
+          /* ignore */
+        }
       }
+
+      cache = bundled;
+      usingLocalDraft = false;
       return cache;
     })();
 
@@ -72,15 +126,19 @@
   }
 
   function getSync() {
-    return cache || readLocal() || empty();
+    return cache || normalize(readLocal() || empty());
+  }
+
+  function isLocalDraft() {
+    return usingLocalDraft;
   }
 
   function save(data) {
+    const normalized = normalize(data);
+    // If we never fetched bundled (offline), still save; basedOn may be null
     writeLocal({
-      reviews: data.reviews || [],
-      portfolio: data.portfolio || [],
-      pins: data.pins || [],
-      serviceAreas: data.serviceAreas || []
+      basedOn: bundledFingerprint,
+      ...normalized
     });
   }
 
@@ -88,6 +146,8 @@
     localStorage.removeItem(STORAGE_KEY);
     cache = null;
     loadPromise = null;
+    usingLocalDraft = false;
+    bundledFingerprint = null;
     return load();
   }
 
@@ -113,13 +173,23 @@
   function renderReviewCard(r, active) {
     const sourceLabel = r.source === 'Google' ? 'Google review' : (r.source || 'Customer') + ' review';
     const isGoogle = r.source === 'Google';
+    const location = (r.location || '').trim();
+    const dateLabel = r.date ? formatDate(r.date) : '';
+    const subParts = [location, dateLabel].filter(Boolean);
+    const subHtml = subParts.length
+      ? `<div class="sub">${escapeHtml(subParts.join(' · '))}</div>`
+      : '';
+    const footerLoc = location
+      ? `<span>${escapeHtml(location)}</span>`
+      : '<span></span>';
+
     return `
       <article class="review-card${active ? ' active' : ''}" data-id="${escapeAttr(r.id)}">
         <div class="review-card-header">
           <div class="review-avatar" aria-hidden="true">${escapeHtml(initial(r.name))}</div>
           <div class="review-meta">
             <strong>${escapeHtml(r.name || 'Customer')}</strong>
-            <div class="sub">${escapeHtml(r.location || '')}${r.date ? ' · ' + escapeHtml(formatDate(r.date)) : ''}</div>
+            ${subHtml}
           </div>
         </div>
         <div class="review-stars" aria-label="${r.rating || 5} out of 5 stars">${stars(r.rating || 5)}</div>
@@ -129,7 +199,7 @@
             ${isGoogle ? '<span class="google-g">G</span>' : '⭐'}
             ${escapeHtml(sourceLabel)}
           </span>
-          <span>${escapeHtml(r.location || '')}</span>
+          ${footerLoc}
         </div>
       </article>
     `;
@@ -174,6 +244,7 @@
     save,
     resetToBundled,
     exportJson,
+    isLocalDraft,
     uid,
     stars,
     initial,

@@ -24,11 +24,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadLeads();
 });
 
+function updateDraftStatus() {
+  const el = document.getElementById('admin-draft-status');
+  if (!el || !window.BRContent) return;
+  if (BRContent.isLocalDraft && BRContent.isLocalDraft()) {
+    el.textContent =
+      'Status: local draft active on this device — Export + redeploy to publish, or Reset to defaults to match the live site.';
+    el.style.color = '#8a5a00';
+  } else {
+    el.textContent = 'Status: showing bundled content.json (no local draft).';
+    el.style.color = '#2e5a2e';
+  }
+}
+
 async function refreshAll() {
   const data = await BRContent.load();
   renderReviews(data.reviews);
   renderPortfolio(data.portfolio);
   renderPins(data.pins);
+  updateDraftStatus();
 }
 
 async function loadLeads() {

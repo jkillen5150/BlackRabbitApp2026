@@ -73,3 +73,13 @@ python3 -m http.server 8765
 - Seed data: `data/content.json`
 - Styles: `css/site.css`
 - Scripts: `js/`
+- Brand: `logo.jpg` (favicon + Open Graph image)
+
+### Admin drafts vs redeploy
+
+Admin edits save in **this browser only** (localStorage), keyed to the current `data/content.json` fingerprint. After you export, commit, and redeploy a new `content.json`, any **stale** local draft is dropped automatically so the new site content shows. Export before redeploy if you still need local-only changes.
+
+### Housekeeping notes
+
+- Public pages use `logo.jpg` (not a space-filled filename).
+- Legacy root `styles.css` / `script.js` were removed; the live stack is `css/site.css` + `js/*`.

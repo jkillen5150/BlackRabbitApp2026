@@ -6,10 +6,9 @@
   const SESSION_KEY = 'br_session_v1';
   const CUSTOMERS_KEY = 'br_customers_v1';
 
-  // username: jkillen5150  |  password hash of admin secret (SHA-256)
+  // Client-side gate only — not a substitute for server auth.
   const ADMIN = {
     username: 'jkillen5150',
-    // sha256("Kungfuyou2!")
     passwordHash: '5e259625878ec56c9622080a33a6b80506a7bb40b12780ea9af975c02d69c193'
   };
 

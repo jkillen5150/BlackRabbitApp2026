@@ -16,7 +16,7 @@
       <nav class="site-nav" id="site-nav" aria-label="Main">
         <div class="site-nav-inner">
           <a class="site-nav-brand" href="index.html">
-            <img src="Black Rabbit Logo Nu.jpg" alt="" width="40" height="40">
+            <img src="logo.jpg" alt="" width="40" height="40">
             <span>Black Rabbit</span>
           </a>
           <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
