@@ -74,6 +74,7 @@ python3 -m http.server 8765
 - Styles: `css/site.css`
 - Scripts: `js/`
 - Brand: `logo.jpg` (favicon + Open Graph image)
+- SEO: `robots.txt`, `sitemap.xml`, canonical URLs, LocalBusiness JSON-LD on home
 
 ### Admin drafts vs redeploy
 

@@ -1,0 +1,16 @@
+# Black Rabbit Landscaping — https://blackrabbitlawn.com
+User-agent: *
+Allow: /
+
+# Private / utility surfaces
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /login
+Disallow: /login.html
+Disallow: /customer
+Disallow: /customer.html
+Disallow: /thankyou
+Disallow: /thankyou.html
+Disallow: /api/
+
+Sitemap: https://blackrabbitlawn.com/sitemap.xml

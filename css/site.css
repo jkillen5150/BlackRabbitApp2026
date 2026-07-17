@@ -139,12 +139,21 @@ a { color: var(--green); }
 }
 
 .hero h1 {
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  margin: 0 0 8px;
+  font-size: clamp(1.55rem, 3.8vw, 2.35rem);
+  margin: 0 0 6px;
   font-weight: 700;
+  line-height: 1.2;
 }
 
-.hero p { font-size: 1.1rem; margin: 0; opacity: 0.95; }
+.hero .hero-brand {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+  opacity: 0.98;
+  letter-spacing: 0.02em;
+}
+
+.hero p { font-size: 1.05rem; margin: 0; opacity: 0.95; }
 
 .hero-ctas {
   display: flex;
@@ -262,6 +271,90 @@ a { color: var(--green); }
 .quick-link-card span {
   font-size: 0.82rem;
   color: var(--muted);
+}
+
+/* ——— SEO / services intro (crawlable copy) ——— */
+.seo-section {
+  max-width: 900px;
+  margin: 40px auto 0;
+  padding: 0 20px 8px;
+}
+
+.seo-section h2 {
+  color: var(--green);
+  font-size: 1.45rem;
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.seo-section > p {
+  color: var(--muted);
+  text-align: center;
+  margin: 0 auto 22px;
+  max-width: 640px;
+  line-height: 1.6;
+}
+
+.seo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .seo-grid { grid-template-columns: 1fr; }
+}
+
+.seo-card {
+  background: #fff;
+  border: 1px solid #e6ebe6;
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.seo-card h3 {
+  margin: 0 0 10px;
+  color: var(--green-dark);
+  font-size: 1.05rem;
+}
+
+.seo-card ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: #333;
+  line-height: 1.55;
+}
+
+.seo-card li { margin-bottom: 4px; }
+
+.seo-card p {
+  margin: 0;
+  color: #444;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+.site-footer .footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  justify-content: center;
+  margin: 0 0 10px;
+}
+
+.site-footer .footer-nav a {
+  color: #cde5cd;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.site-footer .footer-nav a:hover { text-decoration: underline; }
+
+.site-footer .footer-nap {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #a8c4a8;
 }
 
 /* ——— Google-style review cards + carousel ——— */
