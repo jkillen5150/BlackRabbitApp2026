@@ -1,6 +1,6 @@
 /**
  * Full-page Black Rabbit AI + conversational "connect me / quote" handoff.
- * Asks name → phone → address → need, then emails Jerry + logs a lead.
+ * Asks name → phone → address (optional) → need, then emails Jerry + logs a lead.
  */
 (function () {
   const history = [];
@@ -177,12 +177,17 @@
       }
       leadFlow.data.phone = clean;
       leadFlow.step = 'address';
-      return 'Got it 📍 What’s the **property address** (street + city is perfect)?';
+      return (
+        'Got it 📍 Property **address** helps (street + city), but it’s **optional** — ' +
+        'type **skip** if you’d rather not share it. You’ll still get emailed to Jerry.'
+      );
     }
 
     if (leadFlow.step === 'address') {
-      if (clean.length < 5) return 'Street and city help a lot — what’s the address?';
-      leadFlow.data.address = clean;
+      const skip =
+        !clean ||
+        /^(skip|none|n\/?a|no|prefer not|rather not|no address|pass)$/i.test(t);
+      leadFlow.data.address = skip ? '' : clean;
       leadFlow.step = 'need';
       return 'What do you need done, and how soon? (weekly mow, cleanup, this week, etc.) 🌱';
     }
@@ -194,18 +199,21 @@
       try {
         const result = await submitLead(payload);
         leadFlow = null;
+        const addrLine = payload.address
+          ? `• Address: ${payload.address}\n`
+          : '• Address: (not provided)\n';
         return (
           `You’re on Jerry’s list ✅ I emailed him your details.\n\n` +
           `• Name: ${payload.name}\n` +
           `• Phone: ${payload.phone}\n` +
-          `• Address: ${payload.address}\n\n` +
-          `He’ll follow up. For the absolute fastest reply, text him yourself: **${result.jerryPhone || JERRY_PHONE}** 💬📞`
+          addrLine +
+          `\nHe’ll follow up. For the absolute fastest reply, text him yourself: **${result.jerryPhone || JERRY_PHONE}** 💬📞`
         );
       } catch (e) {
         leadFlow = null;
         return (
           `Couldn’t push the lead through automatically 😬 ` +
-          `Please text Jerry directly at **${JERRY_PHONE}** with your name and address — he’ll take care of you.`
+          `Please text Jerry directly at **${JERRY_PHONE}** with your name (and address if you want) — he’ll take care of you.`
         );
       }
     }
@@ -275,7 +283,7 @@
     // Pure "what's your number"
     if (justWantsNumber(clean) || isContactIntent(clean)) {
       addBot(
-        `${PHONE_LINE}\n\nWant me to email Jerry your name/address for a quote? Say **quote** and I’ll ask a few quick questions 😁`
+        `${PHONE_LINE}\n\nWant me to email Jerry your name & phone for a quote? Say **quote** and I’ll ask a few quick questions (address is optional) 😁`
       );
       return;
     }

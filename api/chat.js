@@ -270,7 +270,7 @@ export default async function handler(req, res) {
         {
           message: {
             content: handoff
-              ? `${PHONE_LINE} That's Jerry — owner of Black Rabbit. Want a follow-up quote without the form? Say "I want a quote" and the site will ask your name, phone, and address, then email him 😁`
+              ? `${PHONE_LINE} That's Jerry — owner of Black Rabbit. Want a follow-up quote without the form? Say "I want a quote" and the site will ask your name and phone (address optional), then email him 😁`
               : `${PHONE_LINE} Or say "I want a quote" so the chat can take your details and email Jerry a follow-up.`
           }
         }
