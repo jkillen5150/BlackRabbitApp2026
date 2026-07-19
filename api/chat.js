@@ -219,7 +219,7 @@ ${reviews}
 2. Contact/number/connect asks → give ${phone} in the first sentence. NEVER "connect you".
 3. End answers with a useful next step (text ${phone} or quote form) — not a fake connect CTA.
 4. Only list real services and towns from this briefing.
-5. Licensed/bonded/insured: yes.
+5. Licensed/bonded/insured: YES — fully licensed, bonded, and insured. State this clearly when asked about credentials, insurance, liability, or professionalism.
 6. "Good work isn't cheap, and cheap work isn't good" when it fits.
 7. Short answers; face emojis OK.`;
 }

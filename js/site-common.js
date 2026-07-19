@@ -57,8 +57,45 @@
         <a href="/lawn-care-roy/">Roy</a> ·
         <a href="/lawn-care-olympia/">Olympia</a>
       </p>
+      <p class="footer-trust">Licensed · Bonded · Insured</p>
       <p class="footer-nap">${NAP_LINE}<a href="tel:${PHONE_TEL}">${PHONE_DISPLAY}</a></p>
     `;
+  }
+
+  /** Ensure every public footer shows credentials (static HTML may predate this). */
+  function ensureFooterTrust() {
+    document.querySelectorAll('footer.site-footer').forEach((footer) => {
+      if (footer.classList.contains('site-footer-simple')) return;
+      if (footer.querySelector('.footer-trust')) return;
+      const nap = footer.querySelector('.footer-nap');
+      const el = document.createElement('p');
+      el.className = 'footer-trust';
+      el.textContent = 'Licensed · Bonded · Insured';
+      if (nap) footer.insertBefore(el, nap);
+      else footer.appendChild(el);
+    });
+  }
+
+  /** Licensed / bonded / insured pills on marketing heroes */
+  function injectHeroTrust() {
+    if (document.querySelector('.trust-badges')) return;
+    const hero = document.querySelector('.page-hero, header.hero');
+    if (!hero) return;
+    const page = document.body.dataset.page || '';
+    if (['admin', 'login', 'customer'].includes(page)) return;
+    if (document.body.classList.contains('admin-page')) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'trust-badges';
+    wrap.setAttribute('role', 'group');
+    wrap.setAttribute('aria-label', 'Credentials');
+    wrap.innerHTML = `
+      <span class="trust-badge"><span class="trust-check" aria-hidden="true">✓</span> Licensed</span>
+      <span class="trust-badge"><span class="trust-check" aria-hidden="true">✓</span> Bonded</span>
+      <span class="trust-badge"><span class="trust-check" aria-hidden="true">✓</span> Insured</span>
+    `;
+    const ctas = hero.querySelector('.city-hero-ctas, .hero-ctas');
+    if (ctas) hero.insertBefore(wrap, ctas);
+    else hero.appendChild(wrap);
   }
 
   function injectNav(active) {
@@ -131,6 +168,8 @@
     const active = document.body.dataset.page || '';
     injectNav(active);
     injectFooter();
+    ensureFooterTrust();
+    injectHeroTrust();
     injectFabs();
     wireUrgencyButtons();
   });

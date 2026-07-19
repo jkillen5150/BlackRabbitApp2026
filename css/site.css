@@ -202,6 +202,71 @@ a { color: var(--green); }
   border: 2px solid var(--green);
 }
 
+/* ——— Trust: licensed / bonded / insured ——— */
+.trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 14px 0 0;
+}
+
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  color: #fff;
+}
+
+.trust-badge .trust-check {
+  display: inline-flex;
+  width: 1.1em;
+  height: 1.1em;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85em;
+  line-height: 1;
+}
+
+/* On cream / white backgrounds */
+.trust-badges.trust-on-light .trust-badge {
+  background: #eef5ee;
+  border-color: #b7d0b7;
+  color: var(--green-dark);
+}
+
+.trust-line {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--green-dark);
+}
+
+.footer-trust {
+  margin: 0 0 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #e8f5e8;
+}
+
+.quote-trust {
+  text-align: center;
+  margin: 0 0 18px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
 /* ——— Page shell ——— */
 .page-hero {
   background: linear-gradient(135deg, var(--green-dark), var(--green));
