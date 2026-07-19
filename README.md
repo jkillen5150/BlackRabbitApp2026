@@ -9,7 +9,8 @@ Serving Yelm, Rainier, Lacey, Roy, Olympia & Thurston County.
 | Page | File |
 |------|------|
 | Home (+ quote form, rotating reviews, FAQ) | `index.html` |
-| City landings (local SEO) | `lawn-care-yelm/index.html` (etc.) — folder form so GitHub Pages serves `/lawn-care-yelm/` |
+| City landings (local SEO) | `lawn-care-yelm/` … `lawn-care-tenino/` (folder form for GitHub Pages) |
+| Service landings | `lawn-mowing/`, `yard-cleanup/` |
 | Testimonials | `testimonials.html` |
 | Portfolio | `portfolio.html` |
 | Service map (pins) | `service-area.html` |

@@ -570,18 +570,42 @@ a { color: var(--green); }
   font-size: 0.95rem;
 }
 
-.site-footer .footer-cities {
+.site-footer .footer-cities,
+.site-footer .footer-services {
   margin: 0 0 10px;
   font-size: 0.85rem;
 }
 
-.site-footer .footer-cities a {
+.site-footer .footer-cities a,
+.site-footer .footer-services a {
   color: #cde5cd;
   text-decoration: none;
   font-weight: 600;
 }
 
-.site-footer .footer-cities a:hover { text-decoration: underline; }
+.site-footer .footer-cities a:hover,
+.site-footer .footer-services a:hover { text-decoration: underline; }
+
+.home-services {
+  max-width: 900px;
+  margin: 28px auto 8px;
+  padding: 0 20px;
+}
+
+.home-services h2 {
+  text-align: center;
+  color: var(--green);
+  font-size: 1.25rem;
+  margin: 0 0 8px;
+}
+
+.home-services > p {
+  text-align: center;
+  color: var(--muted);
+  margin: 0 auto 14px;
+  max-width: 520px;
+  font-size: 0.95rem;
+}
 
 /* ——— FAQ (home SEO) ——— */
 .faq-section {

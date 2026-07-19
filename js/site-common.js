@@ -55,7 +55,12 @@
         <a href="/lawn-care-rainier/">Rainier</a> ·
         <a href="/lawn-care-lacey/">Lacey</a> ·
         <a href="/lawn-care-roy/">Roy</a> ·
-        <a href="/lawn-care-olympia/">Olympia</a>
+        <a href="/lawn-care-olympia/">Olympia</a> ·
+        <a href="/lawn-care-tenino/">Tenino</a>
+      </p>
+      <p class="footer-services">
+        <a href="/lawn-mowing/">Lawn mowing</a> ·
+        <a href="/yard-cleanup/">Yard cleanup</a>
       </p>
       <p class="footer-trust">Licensed · Bonded · Insured</p>
       <p class="footer-nap">${NAP_LINE}<a href="tel:${PHONE_TEL}">${PHONE_DISPLAY}</a></p>

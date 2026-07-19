@@ -181,6 +181,16 @@
       "note": "Olympia & greater Thurston County"
     },
     {
+      "id": "pin-tenino",
+      "type": "city",
+      "label": "Tenino",
+      "address": "Tenino, WA",
+      "lat": 46.8568,
+      "lng": -122.8529,
+      "city": "Tenino",
+      "note": "Active service area"
+    },
+    {
       "id": "pin-thurston",
       "type": "city",
       "label": "Thurston County",

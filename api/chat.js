@@ -134,6 +134,10 @@ function buildSystemPrompt(k) {
   const cityPageLines = Object.entries(cityUrls)
     .map(([town, url]) => `- ${town}: ${url}`)
     .join('\n');
+  const serviceUrls = k.servicePages?.urls || {};
+  const servicePageLines = Object.entries(serviceUrls)
+    .map(([name, url]) => `- ${name}: ${url}`)
+    .join('\n');
   const pl = k.pricingLogic || {};
   const pricingSteps = (pl.steps || []).map((s, i) => `${i + 1}. ${s}`).join('\n');
   const pricingExample = pl.workedExample || '';
@@ -173,6 +177,9 @@ ${areas}
 
 ## City landing pages (share when someone asks about a specific town)
 ${cityPageLines || '(none listed)'}
+
+## Service landing pages (share for mowing / cleanups)
+${servicePageLines || '(none listed)'}
 
 ## Services we do (ONLY these — do not invent fertilization, aeration, etc.)
 ${services}

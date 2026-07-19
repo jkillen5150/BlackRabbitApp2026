@@ -73,7 +73,15 @@
       "Rainier": "https://blackrabbitlawn.com/lawn-care-rainier",
       "Lacey": "https://blackrabbitlawn.com/lawn-care-lacey",
       "Roy": "https://blackrabbitlawn.com/lawn-care-roy",
-      "Olympia": "https://blackrabbitlawn.com/lawn-care-olympia"
+      "Olympia": "https://blackrabbitlawn.com/lawn-care-olympia",
+      "Tenino": "https://blackrabbitlawn.com/lawn-care-tenino"
+    }
+  },
+  "servicePages": {
+    "note": "Share these when someone asks about mowing or cleanups specifically.",
+    "urls": {
+      "Lawn mowing": "https://blackrabbitlawn.com/lawn-mowing",
+      "Yard cleanup": "https://blackrabbitlawn.com/yard-cleanup"
     }
   },
   "voice": [

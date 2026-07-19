@@ -17,7 +17,8 @@
     rainier: '/lawn-care-rainier/',
     lacey: '/lawn-care-lacey/',
     roy: '/lawn-care-roy/',
-    olympia: '/lawn-care-olympia/'
+    olympia: '/lawn-care-olympia/',
+    tenino: '/lawn-care-tenino/'
   };
 
   function cityPageHref(p) {
