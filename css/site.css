@@ -1243,6 +1243,66 @@ a { color: var(--green); }
   margin-bottom: 16px;
 }
 
+/* ——— Sticky mobile CTA bar ——— */
+.mobile-cta-bar {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 110;
+  background: rgba(30, 61, 30, 0.97);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.22);
+  gap: 8px;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.mobile-cta-bar a {
+  flex: 1;
+  max-width: 200px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.92rem;
+  border-radius: 12px;
+  padding: 12px 10px;
+  line-height: 1.2;
+}
+
+.mobile-cta-bar .mcta-text {
+  background: #25d366;
+  color: #fff;
+}
+
+.mobile-cta-bar .mcta-call {
+  background: #fff;
+  color: var(--green-dark);
+}
+
+.mobile-cta-bar .mcta-quote {
+  background: transparent;
+  color: #e8f5e8;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+}
+
+/* Lift floating fabs above the sticky bar on small screens */
+@media (max-width: 768px) {
+  .mobile-cta-bar { display: flex; }
+  body.has-mobile-cta {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+  body.has-mobile-cta .site-fabs {
+    bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+  }
+  body.has-mobile-cta .site-footer {
+    padding-bottom: 24px;
+  }
+}
+
 /* ——— FABs ——— */
 .site-fabs {
   position: fixed;

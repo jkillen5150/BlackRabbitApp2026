@@ -60,7 +60,8 @@
       </p>
       <p class="footer-services">
         <a href="/lawn-mowing/">Lawn mowing</a> ·
-        <a href="/yard-cleanup/">Yard cleanup</a>
+        <a href="/yard-cleanup/">Yard cleanup</a> ·
+        <a href="/fall-leaf-cleanup/">Fall leaf cleanup</a>
       </p>
       <p class="footer-trust">Licensed · Bonded · Insured</p>
       <p class="footer-nap">${NAP_LINE}<a href="tel:${PHONE_TEL}">${PHONE_DISPLAY}</a></p>
@@ -158,6 +159,30 @@
     document.body.appendChild(wrap);
   }
 
+  /**
+   * Sticky mobile CTA: Text + Call + Quote.
+   * Skips login/admin/assistant (busy or private UI).
+   */
+  function injectMobileCta() {
+    const page = document.body.dataset.page || '';
+    if (page === 'assistant' || page === 'login' || page === 'customer') return;
+    if (document.body.classList.contains('admin-page')) return;
+    if (document.getElementById('mobile-cta-bar')) return;
+
+    const bar = document.createElement('div');
+    bar.id = 'mobile-cta-bar';
+    bar.className = 'mobile-cta-bar';
+    bar.setAttribute('role', 'navigation');
+    bar.setAttribute('aria-label', 'Quick contact');
+    bar.innerHTML = `
+      <a class="mcta-text" href="sms:${PHONE_TEL}?body=Hey%20Black%20Rabbit%20—%20I%20want%20a%20quote">Text for quote</a>
+      <a class="mcta-call" href="tel:${PHONE_TEL}">Call</a>
+      <a class="mcta-quote" href="/#service-form">Online quote</a>
+    `;
+    document.body.appendChild(bar);
+    document.body.classList.add('has-mobile-cta');
+  }
+
   function wireUrgencyButtons() {
     const field = document.getElementById('urgency-field');
     document.querySelectorAll('.urgency-btn').forEach((btn) => {
@@ -176,6 +201,7 @@
     ensureFooterTrust();
     injectHeroTrust();
     injectFabs();
+    injectMobileCta();
     wireUrgencyButtons();
   });
 })();
