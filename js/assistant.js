@@ -27,15 +27,16 @@
       .replace(/[’']/g, "'");
   }
 
+  /** User wants Jerry's number / how to reach the business — not "my phone" */
   function isContactIntent(text) {
     const t = normalize(text);
     if (!t.trim()) return false;
     if (/\bconnect(\s+me)?\b/.test(t)) return true;
     if (/\b(put me through|transfer me|get me (to )?jerry)\b/.test(t)) return true;
-    if (/\b(phone|cell|mobile|telephone)\b/.test(t)) return true;
     if (/\b(contact\s*(info|information|details)?)\b/.test(t)) return true;
-    if (/\b(your|the|a|his|jerry'?s?)\s+number\b/.test(t)) return true;
-    if (/\bnumber\b/.test(t) && /\b(what|whats|what's|got|have|give|need|want|send|share|call|text|phone)\b/.test(t)) {
+    if (/\b(your|the|a|his|jerry'?s?)\s+(phone\s*)?number\b/.test(t)) return true;
+    if (/\b(jerry'?s?|business|company|office)\s+(phone|cell|number)\b/.test(t)) return true;
+    if (/\b(what('?s| is)|got|have|give|need|want|send|share)\b.{0,24}\b(your |jerry'?s? )?(phone|number|cell)\b/.test(t)) {
       return true;
     }
     if (/\b(how (do i|can i|to) (call|text|contact|reach)|get in touch|reach (you|him|jerry))\b/.test(t)) {
@@ -45,19 +46,91 @@
     return false;
   }
 
+  function isCancelLead(text) {
+    const t = normalize(text).trim();
+    return (
+      t === 'cancel' ||
+      t === 'stop' ||
+      t === 'nevermind' ||
+      t === 'never mind' ||
+      t === 'quit' ||
+      t === 'back' ||
+      t === 'forget it' ||
+      /^just asking\b/.test(t)
+    );
+  }
+
+  const CANCEL_LEAD_MSG =
+    `No problem 🙃 Anytime you want, text Jerry at ${JERRY_PHONE} or use the quote form on the homepage.`;
+
+  /** Informational Q — never start (or stay in) quote handoff for these */
+  function isInformationalQuestion(text) {
+    const t = normalize(text);
+    if (!t.trim()) return false;
+    if (/\?/.test(text) && text.replace(/\D/g, '').length < 10) return true;
+    if (
+      /^(what|where|when|who|how|do you|does|can you|are you|is |which|why|tell me|list)\b/.test(t) &&
+      !/\b(quote|book|schedule|sign me up|connect me|call me back|follow up)\b/.test(t)
+    ) {
+      return true;
+    }
+    if (
+      /\b(service area|areas? do you serve|what (services|do you offer)|how much|pricing|price range|licensed|bonded|insured|how soon|when can you)\b/.test(
+        t
+      ) &&
+      !/\b(i want a quote|get a quote|book|schedule|sign me up)\b/.test(t)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   /** Start handoff interview (not just dump number) */
   function wantsHandoff(text) {
     const t = normalize(text);
+    // Pure Q&A about the business — answer, don't interview for phone
+    if (isInformationalQuestion(text)) return false;
     if (/\bconnect(\s+me)?\b/.test(t)) return true;
-    if (/\b(get me (to )?jerry|talk to jerry|speak to jerry)\b/.test(t)) return true;
-    if (/\b(i want a quote|get a quote|need a quote|book (a )?service|schedule|sign me up)\b/.test(t)) {
+    if (/\b(get me (to )?jerry|talk to jerry|speak to jerry|have jerry (call|text|contact))\b/.test(t)) {
       return true;
     }
-    if (/\b(come (out|over|mow)|mow my (lawn|yard)|yard (is|needs)|need (a )?mow)\b/.test(t)) {
+    if (/\b(i want a quote|get a quote|need a quote|book (a )?service|schedule (a )?(cut|mow|service|visit)|sign me up)\b/.test(t)) {
+      return true;
+    }
+    // Action / booking intent — not "do I need a mow weekly?"
+    if (
+      /\b(come (out|over)|please mow|mow my (lawn|yard)|i need (you to |a )?(mow|cleanup|service)|yard is (out of control|huge|overgrown|a mess))\b/.test(
+        t
+      )
+    ) {
       return true;
     }
     if (/^(yes|yeah|yep|sure|ok|okay)\b.{0,40}\b(connect|quote|jerry|book)\b/.test(t)) return true;
     if (/^(yes|yeah|yep|sure|ok|okay|please|do it)[!.,\s]*$/.test(t.trim()) && leadFlow) return true;
+    return false;
+  }
+
+  /** Leave quote interview when user pivots to normal chat (not cancel — handled separately) */
+  function shouldAbortLeadFlow(text) {
+    const t = normalize(text);
+    if (!leadFlow) return false;
+    if (isCancelLead(text)) return false; // cancel has its own path
+    if (leadFlow.step === 'sending') return false; // wait for submit
+    if (isInformationalQuestion(text)) return true;
+
+    // Phone step: long non-numeric answers are off-topic, not "bad phones"
+    if (leadFlow.step === 'phone') {
+      const digits = String(text || '').replace(/\D/g, '');
+      const words = t.trim().split(/\s+/).filter(Boolean);
+      if (digits.length < 7 && words.length >= 4) return true;
+      if (digits.length < 7 && /\b(serve|service|area|price|cost|mow|lawn|cleanup|licensed)\b/.test(t)) {
+        return true;
+      }
+    }
+
+    // Name step: questions aren't names
+    if (leadFlow.step === 'name' && isInformationalQuestion(text)) return true;
+
     return false;
   }
 
@@ -156,24 +229,43 @@
 
   async function handleLeadStep(clean) {
     const t = normalize(clean);
-    if (t === 'cancel' || t === 'stop' || t === 'nevermind' || t === 'never mind') {
+    if (isCancelLead(clean)) {
       leadFlow = null;
-      return `No problem 🙃 Anytime you want, text Jerry at ${JERRY_PHONE} or use the quote form on the homepage.`;
+      return CANCEL_LEAD_MSG;
     }
 
     if (!leadFlow) return null;
 
+    // Don't accept new answers while submitting
+    if (leadFlow.step === 'sending') {
+      return 'One sec — still sending your details to Jerry…';
+    }
+
     if (leadFlow.step === 'name') {
       if (clean.length < 2) return 'What name should Jerry see on the lead?';
+      // Don't treat a multi-sentence question as a name
+      if (isInformationalQuestion(clean) || (clean.includes('?') && clean.replace(/\D/g, '').length < 7)) {
+        return null;
+      }
       leadFlow.data.name = clean;
       leadFlow.step = 'phone';
-      return `Thanks, ${clean.split(/\s+/)[0]} 👍 What’s the best **phone number** to reach you?`;
+      return (
+        `Thanks, ${clean.split(/\s+/)[0]} 👍 What’s the best **phone number** to reach you?\n\n` +
+        `(Or type **cancel** to keep chatting / text Jerry yourself at ${JERRY_PHONE})`
+      );
     }
 
     if (leadFlow.step === 'phone') {
       const digits = clean.replace(/\D/g, '');
       if (digits.length < 10) {
-        return 'Need a real phone number (at least 10 digits) so Jerry can text you back 😅';
+        // One clear re-prompt — do not infinite-loop if they keep chatting
+        if (isInformationalQuestion(clean) || clean.trim().split(/\s+/).length >= 4) {
+          return null; // caller aborts lead and answers normally
+        }
+        return (
+          `Need a real phone number (at least 10 digits) so Jerry can text you back 😅\n\n` +
+          `Or type **cancel** to leave the quote form and keep asking questions.`
+        );
       }
       leadFlow.data.phone = clean;
       leadFlow.step = 'address';
@@ -263,24 +355,47 @@
 
     // Mid handoff interview
     if (leadFlow) {
-      if (sendBtn) sendBtn.disabled = true;
-      try {
-        const reply = await handleLeadStep(clean);
-        if (reply) addBot(reply);
-      } finally {
-        if (sendBtn) sendBtn.disabled = false;
-        input?.focus();
+      // Explicit cancel → friendly scripted exit (do not send "cancel" to the model)
+      if (isCancelLead(clean)) {
+        leadFlow = null;
+        addBot(CANCEL_LEAD_MSG);
+        return;
       }
-      return;
+
+      // Pivot to Q&A → leave interview, answer the new question
+      if (shouldAbortLeadFlow(clean)) {
+        leadFlow = null;
+        addBot('No worries — leaving the quote form. Here’s that answer:');
+        // fall through to normal chat / number handling
+      } else {
+        if (sendBtn) sendBtn.disabled = true;
+        try {
+          const reply = await handleLeadStep(clean);
+          if (reply) {
+            addBot(reply);
+            return;
+          }
+          // null = treat as off-topic and leave the interview
+          leadFlow = null;
+          addBot('No worries — leaving the quote form. Here’s that answer:');
+        } catch {
+          leadFlow = null;
+        } finally {
+          if (sendBtn) sendBtn.disabled = false;
+          input?.focus();
+        }
+        if (leadFlow) return;
+        // continue to normal AI path below
+      }
     }
 
-    // Start handoff (quote / connect) — ask questions instead of fake transfer
+    // Start handoff (quote / connect) — only for clear booking/quote intent
     if (wantsHandoff(clean)) {
       addBot(startLeadFlow(clean));
       return;
     }
 
-    // Pure "what's your number"
+    // Pure "what's your number" (Jerry's line) — not every mention of "phone"
     if (justWantsNumber(clean) || isContactIntent(clean)) {
       addBot(
         `${PHONE_LINE}\n\nWant me to email Jerry your name & phone for a quote? Say **quote** and I’ll ask a few quick questions (address is optional) 😁`

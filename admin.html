@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/site.css">
 </head>
-<body data-page="login">
+<body data-page="admin" class="admin-page">
   <div id="site-nav-mount"></div>
 
   <div class="admin-shell">
@@ -30,7 +30,7 @@
       Edits save in this browser as a <strong>local draft</strong> (preview on this device only).
       Use <strong>Export content.json</strong>, replace <code>data/content.json</code> in the repo, and redeploy so everyone sees your updates.
       After a redeploy, stale local drafts are discarded automatically so the new site content shows up.
-      Photo uploads under ~2.5MB are stored as data URLs; larger shots should be hosted and linked by URL.
+      Photos are compressed in your browser and saved in this device’s local draft. Prefer JPEG/PNG (iPhone HEIC may not work). Export + redeploy to publish.
       <br><br>
       <strong>Chat leads:</strong> Ask AI can interview customers and email you. They also show below when the API is live.
       Optional: set <code>GITHUB_TOKEN</code> on Vercel so the follow-up list stays durable in <code>data/leads.json</code>.
@@ -123,8 +123,10 @@
         </div>
         <div class="admin-row">
           <div class="form-group">
-            <label>Upload photo</label>
-            <input name="photo" type="file" accept="image/*">
+            <label for="portfolio-photo">Upload photo</label>
+            <input id="portfolio-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp,image/*" capture="environment">
+            <p id="portfolio-photo-status" class="file-status">No file chosen yet.</p>
+            <img id="portfolio-photo-preview" class="preview-thumb" alt="" hidden style="margin-top:10px;width:120px;height:90px;">
           </div>
           <div class="form-group">
             <label>Or image URL / path</label>

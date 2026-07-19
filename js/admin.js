@@ -124,39 +124,103 @@ function wireForms() {
       date: String(fd.get('date') || new Date().toISOString().slice(0, 10)),
       featured: fd.get('featured') === 'on'
     });
-    BRContent.save(data);
+    const result = BRContent.save(data);
+    if (!result || result.ok === false) {
+      alert((result && result.error) || 'Could not save review.');
+      return;
+    }
     e.target.reset();
     await refreshAll();
   });
 
-  document.getElementById('form-portfolio').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const fd = new FormData(e.target);
-    const file = fd.get('photo');
-    let image = String(fd.get('imageUrl') || '').trim();
-    if (file && file.size) {
-      if (file.size > 2.5 * 1024 * 1024) {
-        alert('Please use a photo under ~2.5MB (or host it and paste a URL).');
+  const photoInput = document.getElementById('portfolio-photo');
+  const photoStatus = document.getElementById('portfolio-photo-status');
+  const photoPreview = document.getElementById('portfolio-photo-preview');
+  if (photoInput && photoStatus) {
+    photoInput.addEventListener('change', () => {
+      const f = photoInput.files && photoInput.files[0];
+      if (!f) {
+        photoStatus.textContent = 'No file chosen yet.';
+        if (photoPreview) {
+          photoPreview.hidden = true;
+          photoPreview.removeAttribute('src');
+        }
         return;
       }
-      image = await BRContent.fileToDataUrl(file);
-    }
-    if (!image) {
-      alert('Add a photo file or an image URL.');
-      return;
-    }
-    const data = await BRContent.load();
-    data.portfolio.unshift({
-      id: BRContent.uid('port'),
-      title: String(fd.get('title') || '').trim(),
-      location: String(fd.get('location') || '').trim(),
-      description: String(fd.get('description') || '').trim(),
-      image,
-      date: new Date().toISOString().slice(0, 10)
+      const mb = (f.size / (1024 * 1024)).toFixed(1);
+      photoStatus.textContent = `Selected: ${f.name} (${mb} MB) — will be compressed on save.`;
+      if (photoPreview) {
+        const url = URL.createObjectURL(f);
+        photoPreview.src = url;
+        photoPreview.hidden = false;
+        photoPreview.onload = () => URL.revokeObjectURL(url);
+      }
     });
-    BRContent.save(data);
-    e.target.reset();
-    await refreshAll();
+  }
+
+  document.getElementById('form-portfolio').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const fd = new FormData(form);
+    const file = fd.get('photo');
+    let image = String(fd.get('imageUrl') || '').trim();
+
+    const setBusy = (busy) => {
+      if (!submitBtn) return;
+      submitBtn.disabled = busy;
+      submitBtn.textContent = busy ? 'Adding photo…' : 'Add portfolio item';
+    };
+
+    try {
+      setBusy(true);
+      if (file && typeof file === 'object' && file.size) {
+        // Phone photos are often 4–12MB; we compress before saving to local draft
+        if (file.size > 20 * 1024 * 1024) {
+          alert('That photo is over 20MB. Pick a smaller shot or paste an image URL.');
+          return;
+        }
+        if (photoStatus) photoStatus.textContent = 'Compressing photo…';
+        image = await BRContent.compressImageFile(file);
+        if (photoStatus) {
+          const kb = Math.round((image.length * 0.75) / 1024);
+          photoStatus.textContent = `Ready (~${kb} KB compressed). Saving…`;
+        }
+      }
+      if (!image) {
+        alert('Add a photo file or an image URL.');
+        return;
+      }
+
+      const data = await BRContent.load();
+      data.portfolio.unshift({
+        id: BRContent.uid('port'),
+        title: String(fd.get('title') || '').trim(),
+        location: String(fd.get('location') || '').trim(),
+        description: String(fd.get('description') || '').trim(),
+        image,
+        date: new Date().toISOString().slice(0, 10)
+      });
+      const result = BRContent.save(data);
+      if (!result || result.ok === false) {
+        alert((result && result.error) || 'Could not save photo.');
+        if (photoStatus) photoStatus.textContent = 'Save failed — try a smaller photo or image URL.';
+        return;
+      }
+      form.reset();
+      if (photoStatus) photoStatus.textContent = 'No file chosen yet.';
+      if (photoPreview) {
+        photoPreview.hidden = true;
+        photoPreview.removeAttribute('src');
+      }
+      await refreshAll();
+    } catch (err) {
+      console.error(err);
+      alert((err && err.message) || 'Could not add that photo. Try JPEG/PNG or an image URL.');
+      if (photoStatus) photoStatus.textContent = 'Upload failed. Try JPEG or PNG.';
+    } finally {
+      setBusy(false);
+    }
   });
 
   document.getElementById('form-pin').addEventListener('submit', async (e) => {
@@ -219,7 +283,11 @@ function wireForms() {
       city,
       note: String(fd.get('note') || '').trim() || (isClient ? 'Approximate location' : '')
     });
-    BRContent.save(data);
+    const result = BRContent.save(data);
+    if (!result || result.ok === false) {
+      alert((result && result.error) || 'Could not save pin.');
+      return;
+    }
     e.target.reset();
     await refreshAll();
   });
@@ -247,7 +315,11 @@ function renderReviews(list) {
     btn.addEventListener('click', async () => {
       const data = await BRContent.load();
       data.reviews = data.reviews.filter((r) => r.id !== btn.dataset.delReview);
-      BRContent.save(data);
+      const result = BRContent.save(data);
+      if (!result || result.ok === false) {
+        alert((result && result.error) || 'Could not save.');
+        return;
+      }
       await refreshAll();
     });
   });
@@ -277,7 +349,11 @@ function renderPortfolio(list) {
     btn.addEventListener('click', async () => {
       const data = await BRContent.load();
       data.portfolio = data.portfolio.filter((p) => p.id !== btn.dataset.delPort);
-      BRContent.save(data);
+      const result = BRContent.save(data);
+      if (!result || result.ok === false) {
+        alert((result && result.error) || 'Could not save.');
+        return;
+      }
       await refreshAll();
     });
   });
@@ -305,7 +381,11 @@ function renderPins(list) {
     btn.addEventListener('click', async () => {
       const data = await BRContent.load();
       data.pins = data.pins.filter((p) => p.id !== btn.dataset.delPin);
-      BRContent.save(data);
+      const result = BRContent.save(data);
+      if (!result || result.ok === false) {
+        alert((result && result.error) || 'Could not save.');
+        return;
+      }
       await refreshAll();
     });
   });

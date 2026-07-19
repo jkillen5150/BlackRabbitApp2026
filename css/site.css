@@ -259,14 +259,6 @@ a { color: var(--green); }
   color: #e8f5e8;
 }
 
-.quote-trust {
-  text-align: center;
-  margin: 0 0 18px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--green-dark);
-}
-
 /* ——— Page shell ——— */
 .page-hero {
   background: linear-gradient(135deg, var(--green-dark), var(--green));
@@ -1626,4 +1618,35 @@ a { color: var(--green); }
   font-size: 0.9rem;
   max-width: 720px;
   margin: 0 auto 24px;
+}
+
+/* Admin file upload */
+.form-group input[type="file"] {
+  padding: 10px;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.form-group input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--green);
+  color: #fff;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.file-status {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.35;
+}
+
+body.admin-page .site-fabs,
+body.admin-page .mobile-cta-bar {
+  display: none !important;
 }

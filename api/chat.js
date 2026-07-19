@@ -32,25 +32,24 @@ function normalize(text) {
     .replace(/[’']/g, "'");
 }
 
-/** Any contact / phone / connect intent */
+/** User wants Jerry's / business contact — not bare "yes" or "my phone" */
 function isContactIntent(text) {
   const t = normalize(text);
   if (!t.trim()) return false;
 
   if (/\bconnect(\s+me)?\b/.test(t)) return true;
   if (/\b(put me through|transfer me|get me (to )?jerry)\b/.test(t)) return true;
-  if (/\b(phone|cell|mobile|telephone)\b/.test(t)) return true;
   if (/\b(contact\s*(info|information|details)?)\b/.test(t)) return true;
-  if (/\b(your|the|a|his|jerry'?s?)\s+number\b/.test(t)) return true;
-  if (/\bnumber\b/.test(t) && /\b(what|whats|what's|got|have|give|need|want|send|share|call|text|phone)\b/.test(t)) {
+  if (/\b(your|the|a|his|jerry'?s?)\s+(phone\s*)?number\b/.test(t)) return true;
+  if (/\b(jerry'?s?|business|company|office)\s+(phone|cell|number)\b/.test(t)) return true;
+  if (/\b(what('?s| is)|got|have|give|need|want|send|share)\b.{0,24}\b(your |jerry'?s? )?(phone|number|cell)\b/.test(t)) {
     return true;
   }
   if (/\b(how (do i|can i|to) (call|text|contact|reach)|get in touch|reach (you|him|jerry))\b/.test(t)) {
     return true;
   }
   if (/\b(who do i (call|text)|where can i (call|text|reach))\b/.test(t)) return true;
-  // short yes after a connect offer
-  if (/^(yes|yeah|yep|sure|ok|okay|please|do it)[!.,\s]*$/.test(t.trim())) return true;
+  // Affirmative only when clearly about connect / Jerry's number — not bare "yes"
   if (/^(yes|yeah|yep|sure|ok)\b.{0,40}\b(connect|jerry|call|text|number)\b/.test(t)) return true;
 
   return false;
@@ -125,10 +124,12 @@ function buildSystemPrompt(k) {
   const book = (k.howToBook || []).map((s) => `- ${s}`).join('\n');
   const voice = (k.voice || []).map((s) => `- ${s}`).join('\n');
   const rules = (k.rules || []).map((s) => `- ${s}`).join('\n');
+  const behavior = (k.assistantBehavior?.rules || []).map((s) => `- ${s}`).join('\n');
   const themes = (k.reviewThemes || []).join('; ');
   const about = k.aboutUs || '';
   const licensing = k.licensing || '';
   const contact = k.contact || `Jerry's direct number is ${JERRY_PHONE}.`;
+  const areasNote = k.areasNote || '';
   const phone = k.business?.realPhone || k.business?.phone || JERRY_PHONE;
   const cityUrls = k.cityPages?.urls || {};
   const cityPageLines = Object.entries(cityUrls)
@@ -146,21 +147,30 @@ function buildSystemPrompt(k) {
 Owner: ${k.business.owner}. Tagline: "${k.business.tagline}".
 Website: ${k.business.website}.
 
+## ASSISTANT BEHAVIOR (CRITICAL — read first)
+${behavior || `- Always answer the user's actual question first.
+- Only ask for their name/phone when they want a quote, to schedule, or Jerry to contact them.
+- Informational questions do NOT require collecting their phone number.
+- Never loop on demanding a phone number.`}
+
+Answer first. Help fully. Contact collection is optional and only for quote/schedule/callback intent.
+
 ## FORBIDDEN PHRASES — never say these
 - "Would you like me to connect you to Jerry"
 - "I'll get you connected"
 - "Let me connect you"
 - "I'll connect you right away"
 - Any claim that you can place a call or transfer them
+- "Need a real phone number…" (unless they are mid quote/callback and you are waiting for digits they agreed to give)
 
 You CANNOT call or connect anyone. You are text only.
 
 ## When they want Jerry / a quote / contact / a number / "yes connect me"
-Reply with the number immediately, e.g.:
-"Jerry's number is ${phone} — text or call anytime 💬📞"
-That is the ONLY correct response pattern for contact. Do not ask if they want to be connected.
+If they only want **Jerry's** number / how to reach you: give ${phone} immediately.
+If they want a **quote / schedule / Jerry to call them back**: you may ask name + phone (10 digits), or point them to text ${phone} themselves.
+Do not force their phone number for casual Q&A.
 
-## ONLY phone number (never invent another)
+## ONLY business phone number (never invent another)
 ${phone}
 
 ## Contact
@@ -174,6 +184,7 @@ ${licensing}
 
 ## Service area (use the full list — not a shorter list)
 ${areas}
+${areasNote ? `\n${areasNote}` : ''}
 
 ## City landing pages (share when someone asks about a specific town)
 ${cityPageLines || '(none listed)'}
@@ -195,7 +206,7 @@ ${pricingSteps}
 
 Rounding: base one-cut → nearest $5. After 15% discount → ROUND UP to nearest $5.
 Single: base×1.10 before discount. Bi-weekly: base×2.15. Weekly: base×4.3.
-You cannot browse Zillow. Never invent sq ft. Ask address first; if only address, tell them to text ${phone} or provide lot+house sq ft.
+You cannot browse Zillow. Never invent sq ft. Always give ballpark pricing when asked “how much.” Address / sq ft is only for precise formula quotes — never a gate before answering.
 
 ${pricingExample ? `Example (illustrative):\n${pricingExample}` : ''}
 
@@ -222,13 +233,14 @@ ${themes}
 ${reviews}
 
 ## Hard rules
-1. Phone is ALWAYS ${phone}. No other number.
-2. Contact/number/connect asks → give ${phone} in the first sentence. NEVER "connect you".
-3. End answers with a useful next step (text ${phone} or quote form) — not a fake connect CTA.
+1. Business phone is ALWAYS ${phone}. No other number.
+2. Contact/number/connect asks for **Jerry's** line → give ${phone} in the first sentence. NEVER "connect you".
+3. Do NOT demand the user's phone number for informational answers. Optional soft CTA is fine (text ${phone} or quote form).
 4. Only list real services and towns from this briefing.
 5. Licensed/bonded/insured: YES — fully licensed, bonded, and insured. State this clearly when asked about credentials, insurance, liability, or professionalism.
 6. "Good work isn't cheap, and cheap work isn't good" when it fits.
-7. Short answers; face emojis OK.`;
+7. Short answers; face emojis OK.
+8. Never trap the user in a phone-number collection loop.`;
 }
 
 export default async function handler(req, res) {

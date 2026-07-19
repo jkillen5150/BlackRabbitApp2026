@@ -88,7 +88,7 @@
     const hero = document.querySelector('.page-hero, header.hero');
     if (!hero) return;
     const page = document.body.dataset.page || '';
-    if (['admin', 'login', 'customer'].includes(page)) return;
+    if (['admin', 'login', 'customer', 'thankyou', 'assistant'].includes(page)) return;
     if (document.body.classList.contains('admin-page')) return;
     const wrap = document.createElement('div');
     wrap.className = 'trust-badges';
@@ -139,7 +139,9 @@
   /** Floating call / text / Facebook — skip admin + assistant (busy UI) */
   function injectFabs() {
     const page = document.body.dataset.page || '';
-    if (page === 'assistant') return;
+    if (page === 'assistant' || page === 'admin' || page === 'login' || page === 'customer' || page === 'thankyou') {
+      return;
+    }
     if (document.body.classList.contains('admin-page')) return;
     if (document.getElementById('site-fabs')) return;
 
@@ -165,7 +167,9 @@
    */
   function injectMobileCta() {
     const page = document.body.dataset.page || '';
-    if (page === 'assistant' || page === 'login' || page === 'customer') return;
+    if (page === 'assistant' || page === 'login' || page === 'customer' || page === 'admin' || page === 'thankyou') {
+      return;
+    }
     if (document.body.classList.contains('admin-page')) return;
     if (document.getElementById('mobile-cta-bar')) return;
 

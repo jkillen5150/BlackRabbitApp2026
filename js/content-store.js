@@ -68,6 +68,13 @@
     global.dispatchEvent(new CustomEvent('br:content-updated', { detail: cache }));
   }
 
+  function quotaErrorMessage() {
+    return (
+      'Browser storage is full (portfolio photos live in this device’s local draft). ' +
+      'Export content.json, remove an older photo, or use a smaller image / image URL.'
+    );
+  }
+
   async function fetchBundled() {
     const res = await fetch(DEFAULT_PATH, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to load content');
@@ -133,13 +140,26 @@
     return usingLocalDraft;
   }
 
+  /**
+   * Persist admin draft. Returns { ok: true } or { ok: false, error }.
+   * Never throws QuotaExceededError to the form handlers.
+   */
   function save(data) {
     const normalized = normalize(data);
-    // If we never fetched bundled (offline), still save; basedOn may be null
-    writeLocal({
-      basedOn: bundledFingerprint,
-      ...normalized
-    });
+    try {
+      // If we never fetched bundled (offline), still save; basedOn may be null
+      writeLocal({
+        basedOn: bundledFingerprint,
+        ...normalized
+      });
+      return { ok: true };
+    } catch (e) {
+      const name = e && e.name;
+      if (name === 'QuotaExceededError' || name === 'NS_ERROR_DOM_QUOTA_REACHED' || (e && e.code === 22)) {
+        return { ok: false, error: quotaErrorMessage() };
+      }
+      return { ok: false, error: (e && e.message) || 'Could not save draft.' };
+    }
   }
 
   function resetToBundled() {
@@ -233,9 +253,135 @@
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
+      reader.onerror = () => reject(new Error('Could not read that file.'));
       reader.readAsDataURL(file);
     });
+  }
+
+  function loadImageElement(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        resolve(img);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Could not open that image. Try JPEG or PNG.'));
+      };
+      img.src = url;
+    });
+  }
+
+  /** Prefer createImageBitmap with EXIF orientation when the browser supports it */
+  async function loadDrawable(file) {
+    if (typeof createImageBitmap === 'function') {
+      try {
+        return await createImageBitmap(file, { imageOrientation: 'from-image' });
+      } catch {
+        try {
+          return await createImageBitmap(file);
+        } catch {
+          /* fall through to Image() */
+        }
+      }
+    }
+    return loadImageElement(file);
+  }
+
+  function drawScaledToDataUrl(img, maxEdge, quality) {
+    const width = img.naturalWidth || img.width;
+    const height = img.naturalHeight || img.height;
+    if (!width || !height) return null;
+
+    let w = width;
+    let h = height;
+    const longEdge = Math.max(w, h);
+    if (longEdge > maxEdge) {
+      const scale = maxEdge / longEdge;
+      w = Math.max(1, Math.round(w * scale));
+      h = Math.max(1, Math.round(h * scale));
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+    // White fill so transparent PNGs don’t go black as JPEG
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(img, 0, 0, w, h);
+    return canvas.toDataURL('image/jpeg', quality);
+  }
+
+  /**
+   * Resize + compress a photo for localStorage drafts.
+   * Phone photos (3–12MB) are reduced to a JPEG data URL that usually fits.
+   */
+  async function compressImageFile(file, options) {
+    const opts = options || {};
+    const maxEdge = opts.maxEdge || 1280;
+    const quality = opts.quality == null ? 0.72 : opts.quality;
+    const maxDataUrlChars = opts.maxDataUrlChars || 900000;
+
+    if (!file || !file.size) {
+      throw new Error('Please choose an image file (JPEG or PNG works best).');
+    }
+
+    // HEIC and some camera formats fail canvas decode in browsers — fail clearly
+    const type = String(file.type || '');
+    const name = String(file.name || '');
+    if (/heic|heif/i.test(type) || /\.heic$/i.test(name) || /\.heif$/i.test(name)) {
+      throw new Error(
+        'iPhone HEIC photos aren’t supported here. In Photos, share/export as JPEG, or set Camera → Formats → Most Compatible.'
+      );
+    }
+    if (type && !type.startsWith('image/')) {
+      throw new Error('That file is not an image. Use JPEG or PNG.');
+    }
+
+    let img;
+    try {
+      img = await loadDrawable(file);
+    } catch (err) {
+      throw err instanceof Error
+        ? err
+        : new Error('Could not open that image. Try JPEG or PNG.');
+    }
+
+    try {
+      let dataUrl = drawScaledToDataUrl(img, maxEdge, quality);
+      if (!dataUrl) {
+        throw new Error('Could not process that image. Try JPEG or PNG, or paste an image URL.');
+      }
+
+      // Still large → smaller edge / lower quality
+      if (dataUrl.length > 900000) {
+        dataUrl = drawScaledToDataUrl(img, 1000, 0.6) || dataUrl;
+      }
+      if (dataUrl.length > 1100000) {
+        dataUrl = drawScaledToDataUrl(img, 800, 0.52) || dataUrl;
+      }
+      if (dataUrl.length > maxDataUrlChars) {
+        dataUrl = drawScaledToDataUrl(img, 640, 0.45) || dataUrl;
+      }
+      if (dataUrl.length > maxDataUrlChars) {
+        throw new Error(
+          'That photo is still too large after compression. Try a smaller shot or paste an image URL / path.'
+        );
+      }
+      return dataUrl;
+    } finally {
+      if (img && typeof img.close === 'function') {
+        try {
+          img.close();
+        } catch {
+          /* ignore */
+        }
+      }
+    }
   }
 
   global.BRContent = {
@@ -253,6 +399,7 @@
     escapeHtml,
     escapeAttr,
     fileToDataUrl,
+    compressImageFile,
     STORAGE_KEY
   };
 })(window);
