@@ -18,8 +18,20 @@
   <meta property="og:image" content="https://blackrabbitlawn.com/logo.jpg">
   <meta property="og:image:alt" content="Black Rabbit Landscaping logo">
   <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/site.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://blackrabbitlawn.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Portfolio", "item": "https://blackrabbitlawn.com/portfolio" }
+    ]
+  }
+  </script>
 </head>
 <body data-page="portfolio">
   <div id="site-nav-mount"></div>
@@ -34,7 +46,23 @@
   </section>
 
   <footer class="site-footer">
-    <p><a href="index.html">← Home</a> · Admin can upload photos via <a href="login.html?role=admin">Login</a></p>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="testimonials.html">Testimonials</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="service-area.html">Service Map</a>
+      <a href="assistant.html">Ask AI</a>
+      <a href="index.html#service-form">Get a Quote</a>
+      <a href="https://www.facebook.com/profile.php?id=61591537527292" target="_blank" rel="noopener noreferrer">Facebook</a>
+    </nav>
+    <p class="footer-cities">
+      <a href="/lawn-care-yelm/">Yelm</a> ·
+      <a href="/lawn-care-rainier/">Rainier</a> ·
+      <a href="/lawn-care-lacey/">Lacey</a> ·
+      <a href="/lawn-care-roy/">Roy</a> ·
+      <a href="/lawn-care-olympia/">Olympia</a>
+    </p>
+    <p class="footer-nap">Black Rabbit Landscaping · Yelm, WA 98597 · <a href="tel:+14079511663">(407) 951-1663</a></p>
   </footer>
 
   <script src="js/content-store.js"></script>

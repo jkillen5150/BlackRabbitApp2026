@@ -18,26 +18,128 @@
   <meta property="og:image" content="https://blackrabbitlawn.com/logo.jpg">
   <meta property="og:image:alt" content="Black Rabbit Landscaping logo">
   <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/site.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://blackrabbitlawn.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Testimonials", "item": "https://blackrabbitlawn.com/testimonials" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LandscapingBusiness",
+    "@id": "https://blackrabbitlawn.com/#business",
+    "name": "Black Rabbit Landscaping",
+    "url": "https://blackrabbitlawn.com/",
+    "telephone": "+14079511663",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Yelm",
+      "addressRegion": "WA",
+      "postalCode": "98597",
+      "addressCountry": "US"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "11",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "William Beasley" },
+        "datePublished": "2026-07-02",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "reviewBody": "Always on time and always puts amazing work in. Really nice and very genuine. Really really great service!"
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Sarah McGinty" },
+        "datePublished": "2026-07-02",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "reviewBody": "This gentleman came out super quick to work on our lawn. He went above and beyond. He made my place look great. He also worked within my budget. Overall this was a great experience."
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Caden Cress" },
+        "datePublished": "2026-06-11",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "reviewBody": "Jerry is the best! Very professional and kind. Highly recommend"
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Dominique Motta" },
+        "datePublished": "2026-03-26",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "reviewBody": "These guys get the job DONE!!!!! Have always been reliable and professional."
+      }
+    ]
+  }
+  </script>
 </head>
 <body data-page="testimonials">
   <div id="site-nav-mount"></div>
 
   <header class="page-hero">
     <h1>Lawn Care Reviews — Yelm &amp; Thurston County</h1>
-    <p>Real client feedback from lawns and landscapes across the South Sound. Black Rabbit Landscaping is simple, affordable, and reliable.</p>
+    <p>
+      Real client feedback from lawns and landscapes across the South Sound.
+      Black Rabbit Landscaping is simple, affordable, and reliable —
+      <strong>11 five-star Google reviews</strong> and counting.
+    </p>
   </header>
 
-  <section class="section">
+  <section class="section" aria-labelledby="all-reviews-heading">
+    <h2 id="all-reviews-heading" class="sr-only">All client reviews</h2>
+    <!-- Crawlable summary (JS fills the full grid) -->
+    <p class="section-sub" style="margin-top:0;">
+      Google reviews for Black Rabbit Landscaping lawn mowing and yard care in
+      Yelm, Rainier, Lacey, Roy, Olympia &amp; Thurston County WA.
+      Call or text <a href="tel:+14079511663">(407) 951-1663</a> for a free quote.
+    </p>
     <div class="reviews-grid" id="testimonials-grid"></div>
+    <noscript>
+      <div class="seo-reviews-static">
+        <p><strong>William Beasley</strong> (5★) — Always on time and always puts amazing work in.</p>
+        <p><strong>Sarah McGinty</strong> (5★) — Super quick, went above and beyond, worked within my budget.</p>
+        <p><strong>Patty Deford</strong> (5★) — Jerry was a God send to this disabled widow who lives on SSDI.</p>
+        <p><strong>Vito Capri</strong> (5★) — Best lawn people hands down. Very professional.</p>
+        <p><strong>Dominique Motta</strong> (5★) — Reliable monthly cuts and cleanups at a fair price.</p>
+      </div>
+    </noscript>
     <p style="text-align:center;margin-top:28px;">
       <a class="btn btn-solid" href="index.html#service-form">Request a quote</a>
     </p>
   </section>
 
   <footer class="site-footer">
-    <p><a href="index.html">← Home</a> · <a href="index.html#service-form">Request a quote</a></p>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="testimonials.html">Testimonials</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="service-area.html">Service Map</a>
+      <a href="assistant.html">Ask AI</a>
+      <a href="index.html#service-form">Get a Quote</a>
+      <a href="https://www.facebook.com/profile.php?id=61591537527292" target="_blank" rel="noopener noreferrer">Facebook</a>
+    </nav>
+    <p class="footer-cities">
+      <a href="/lawn-care-yelm/">Yelm</a> ·
+      <a href="/lawn-care-rainier/">Rainier</a> ·
+      <a href="/lawn-care-lacey/">Lacey</a> ·
+      <a href="/lawn-care-roy/">Roy</a> ·
+      <a href="/lawn-care-olympia/">Olympia</a>
+    </p>
+    <p class="footer-nap">Black Rabbit Landscaping · Yelm, WA 98597 · <a href="tel:+14079511663">(407) 951-1663</a></p>
   </footer>
 
   <script src="js/content-store.js"></script>

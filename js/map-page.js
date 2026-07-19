@@ -11,6 +11,22 @@
     return (p.type || 'city') === 'city';
   }
 
+  /** SEO city landings — folder URLs work on GitHub Pages + Vercel */
+  const CITY_PAGES = {
+    yelm: '/lawn-care-yelm/',
+    rainier: '/lawn-care-rainier/',
+    lacey: '/lawn-care-lacey/',
+    roy: '/lawn-care-roy/',
+    olympia: '/lawn-care-olympia/'
+  };
+
+  function cityPageHref(p) {
+    const key = String(p.city || p.label || '')
+      .toLowerCase()
+      .replace(/[^a-z]/g, '');
+    return CITY_PAGES[key] || null;
+  }
+
   function cityIcon() {
     return L.divIcon({
       className: '',
@@ -92,11 +108,15 @@
     cities.forEach((p) => {
       if (p.lat == null || p.lng == null) return;
       const detail = publicDetail(p);
+      const page = cityPageHref(p);
+      const link = page
+        ? `<br><a href="${BRContent.escapeAttr(page)}">Lawn care in ${BRContent.escapeHtml(publicLabel(p))} →</a>`
+        : '';
       const m = L.marker([p.lat, p.lng], { icon: cityIcon(), zIndexOffset: 200 }).addTo(layerGroup);
       m.bindPopup(
         `<strong>${BRContent.escapeHtml(publicLabel(p))}</strong><br>
          ${BRContent.escapeHtml(detail.line)}<br>
-         <em>${BRContent.escapeHtml(detail.note)}</em>`
+         <em>${BRContent.escapeHtml(detail.note)}</em>${link}`
       );
       bounds.push([p.lat, p.lng]);
     });
@@ -143,11 +163,15 @@
         .map((p) => {
           const detail = publicDetail(p);
           const dotClass = isCity(p) ? 'pin-dot' : 'pin-dot pin-dot-client';
+          const page = isCity(p) ? cityPageHref(p) : null;
+          const title = page
+            ? `<h4><a href="${BRContent.escapeAttr(page)}">${BRContent.escapeHtml(publicLabel(p))}</a></h4>`
+            : `<h4>${BRContent.escapeHtml(publicLabel(p))}</h4>`;
           return `
           <div class="pin-list-item">
             <div class="${dotClass}" aria-hidden="true"></div>
             <div>
-              <h4>${BRContent.escapeHtml(publicLabel(p))}</h4>
+              ${title}
               <p>${BRContent.escapeHtml(detail.line)}</p>
               ${detail.note ? `<p>${BRContent.escapeHtml(detail.note)}</p>` : ''}
             </div>

@@ -8,7 +8,8 @@ Serving Yelm, Rainier, Lacey, Roy, Olympia & Thurston County.
 
 | Page | File |
 |------|------|
-| Home (+ quote form, rotating reviews) | `index.html` |
+| Home (+ quote form, rotating reviews, FAQ) | `index.html` |
+| City landings (local SEO) | `lawn-care-yelm/index.html` (etc.) — folder form so GitHub Pages serves `/lawn-care-yelm/` |
 | Testimonials | `testimonials.html` |
 | Portfolio | `portfolio.html` |
 | Service map (pins) | `service-area.html` |
@@ -74,7 +75,7 @@ python3 -m http.server 8765
 - Styles: `css/site.css`
 - Scripts: `js/`
 - Brand: `logo.jpg` (favicon + Open Graph image)
-- SEO: `robots.txt`, `sitemap.xml`, canonical URLs, LocalBusiness JSON-LD on home
+- SEO: `robots.txt`, `sitemap.xml`, canonical URLs, LocalBusiness + review/FAQ JSON-LD on home, city landing pages for Yelm/Rainier/Lacey/Roy/Olympia
 
 ### Admin drafts vs redeploy
 

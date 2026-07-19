@@ -66,6 +66,16 @@
     "Homepage quote form also works",
     "AI chat is NOT a booking system and cannot place calls"
   ],
+  "cityPages": {
+    "note": "If someone asks about a specific town, you can point them to the matching page on the site.",
+    "urls": {
+      "Yelm": "https://blackrabbitlawn.com/lawn-care-yelm",
+      "Rainier": "https://blackrabbitlawn.com/lawn-care-rainier",
+      "Lacey": "https://blackrabbitlawn.com/lawn-care-lacey",
+      "Roy": "https://blackrabbitlawn.com/lawn-care-roy",
+      "Olympia": "https://blackrabbitlawn.com/lawn-care-olympia"
+    }
+  },
   "voice": [
     "Friendly, straightforward, no corporate fluff",
     "Sound like a local guy who actually does the work",

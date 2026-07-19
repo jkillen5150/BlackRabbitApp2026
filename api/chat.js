@@ -130,6 +130,10 @@ function buildSystemPrompt(k) {
   const licensing = k.licensing || '';
   const contact = k.contact || `Jerry's direct number is ${JERRY_PHONE}.`;
   const phone = k.business?.realPhone || k.business?.phone || JERRY_PHONE;
+  const cityUrls = k.cityPages?.urls || {};
+  const cityPageLines = Object.entries(cityUrls)
+    .map(([town, url]) => `- ${town}: ${url}`)
+    .join('\n');
   const pl = k.pricingLogic || {};
   const pricingSteps = (pl.steps || []).map((s, i) => `${i + 1}. ${s}`).join('\n');
   const pricingExample = pl.workedExample || '';
@@ -166,6 +170,9 @@ ${licensing}
 
 ## Service area (use the full list — not a shorter list)
 ${areas}
+
+## City landing pages (share when someone asks about a specific town)
+${cityPageLines || '(none listed)'}
 
 ## Services we do (ONLY these — do not invent fertilization, aeration, etc.)
 ${services}
