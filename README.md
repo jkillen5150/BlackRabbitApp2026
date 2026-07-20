@@ -10,6 +10,7 @@ Serving Yelm, Rainier, Lacey, Roy, Olympia, Tenino & Thurston County.
 |------|------|
 | Home (+ quote form, rotating reviews, FAQ) | `index.html` |
 | City landings (local SEO) | `lawn-care-yelm/` … `lawn-care-tenino/` (folder form for GitHub Pages) |
+| **Cut My Grass** (book-a-cut app flow) | `cut-my-grass/` |
 | Service landings | `lawn-mowing/`, `yard-cleanup/`, `fall-leaf-cleanup/` |
 | Testimonials | `testimonials.html` |
 | Portfolio | `portfolio.html` |
@@ -93,6 +94,15 @@ python3 -m http.server 8765
 ### Admin drafts vs redeploy
 
 Admin edits save in **this browser only** (localStorage), keyed to the current `data/content.json` fingerprint. After you export, commit, and redeploy a new `content.json`, any **stale** local draft is dropped automatically so the new site content shows. Export before redeploy if you still need local-only changes.
+
+### Cut My Grass (v1)
+
+Fast booking UX at **`/cut-my-grass/`**, branded as a product of Black Rabbit:
+
+1. Home hero → **Try Cut My Grass**
+2. Multi-step: service → address → when → contact
+3. Posts to **`POST /api/lead`** with `source: cut-my-grass` (email + Admin list)
+4. **Stripe** not wired yet — copy says pay after work; add Checkout later under the same brand
 
 ### Housekeeping notes
 

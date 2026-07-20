@@ -11,6 +11,7 @@
   function navHtml(active) {
     const links = [
       { href: '/', id: 'home', label: 'Home' },
+      { href: '/cut-my-grass/', id: 'cut-my-grass', label: 'Cut My Grass' },
       { href: '/testimonials.html', id: 'testimonials', label: 'Testimonials' },
       { href: '/portfolio.html', id: 'portfolio', label: 'Portfolio' },
       { href: '/service-area.html', id: 'map', label: 'Service Map' },
@@ -43,6 +44,7 @@
     return `
       <nav class="footer-nav" aria-label="Footer">
         <a href="/">Home</a>
+        <a href="/cut-my-grass/">Cut My Grass</a>
         <a href="/testimonials.html">Testimonials</a>
         <a href="/portfolio.html">Portfolio</a>
         <a href="/service-area.html">Service Map</a>
@@ -59,6 +61,7 @@
         <a href="/lawn-care-tenino/">Tenino</a>
       </p>
       <p class="footer-services">
+        <a href="/cut-my-grass/">Cut My Grass</a> ·
         <a href="/lawn-mowing/">Lawn mowing</a> ·
         <a href="/yard-cleanup/">Yard cleanup</a> ·
         <a href="/fall-leaf-cleanup/">Fall leaf cleanup</a>
@@ -139,7 +142,14 @@
   /** Floating call / text / Facebook — skip admin + assistant (busy UI) */
   function injectFabs() {
     const page = document.body.dataset.page || '';
-    if (page === 'assistant' || page === 'admin' || page === 'login' || page === 'customer' || page === 'thankyou') {
+    if (
+      page === 'assistant' ||
+      page === 'admin' ||
+      page === 'login' ||
+      page === 'customer' ||
+      page === 'thankyou' ||
+      page === 'cut-my-grass'
+    ) {
       return;
     }
     if (document.body.classList.contains('admin-page')) return;
@@ -167,7 +177,14 @@
    */
   function injectMobileCta() {
     const page = document.body.dataset.page || '';
-    if (page === 'assistant' || page === 'login' || page === 'customer' || page === 'admin' || page === 'thankyou') {
+    if (
+      page === 'assistant' ||
+      page === 'login' ||
+      page === 'customer' ||
+      page === 'admin' ||
+      page === 'thankyou' ||
+      page === 'cut-my-grass'
+    ) {
       return;
     }
     if (document.body.classList.contains('admin-page')) return;
@@ -179,9 +196,9 @@
     bar.setAttribute('role', 'navigation');
     bar.setAttribute('aria-label', 'Quick contact');
     bar.innerHTML = `
-      <a class="mcta-text" href="sms:${PHONE_TEL}?body=Hey%20Black%20Rabbit%20—%20I%20want%20a%20quote">Text for quote</a>
+      <a class="mcta-text" href="sms:${PHONE_TEL}?body=Hey%20Black%20Rabbit%20—%20I%20want%20a%20quote">Text</a>
       <a class="mcta-call" href="tel:${PHONE_TEL}">Call</a>
-      <a class="mcta-quote" href="/#service-form">Online quote</a>
+      <a class="mcta-quote" href="/cut-my-grass/">Cut My Grass</a>
     `;
     document.body.appendChild(bar);
     document.body.classList.add('has-mobile-cta');

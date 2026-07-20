@@ -1650,3 +1650,365 @@ body.admin-page .site-fabs,
 body.admin-page .mobile-cta-bar {
   display: none !important;
 }
+
+/* ——— Cut My Grass (booking product on Black Rabbit) ——— */
+body.cmg-page {
+  background: linear-gradient(180deg, #eef5ee 0%, var(--cream) 28%, var(--cream) 100%);
+}
+
+body.cmg-page .site-fabs,
+body.cmg-page .mobile-cta-bar {
+  display: none !important;
+}
+
+body.cmg-page.has-mobile-cta {
+  padding-bottom: 0;
+}
+
+.cmg-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+.cmg-hero {
+  text-align: center;
+  margin: 8px 0 20px;
+}
+
+.cmg-kicker {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green);
+  opacity: 0.9;
+}
+
+.cmg-hero h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.85rem, 6vw, 2.35rem);
+  color: var(--green-dark);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.cmg-sub {
+  margin: 0 auto 14px;
+  max-width: 340px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.cmg-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.cmg-trust-row span {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--green-dark);
+  background: rgba(46, 90, 46, 0.1);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+.cmg-card {
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 16px 48px rgba(30, 61, 30, 0.1);
+  border: 1px solid rgba(46, 90, 46, 0.1);
+  padding: 22px 18px 18px;
+}
+
+.cmg-progress {
+  height: 6px;
+  background: #e8eee8;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.cmg-progress-bar {
+  height: 100%;
+  width: 8%;
+  background: linear-gradient(90deg, var(--green), #3d7a3d);
+  border-radius: 999px;
+  transition: width 0.28s ease;
+}
+
+.cmg-step-label {
+  margin: 0 0 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #888;
+}
+
+.cmg-step h2 {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+  color: var(--green-dark);
+  line-height: 1.25;
+}
+
+.cmg-hint {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.cmg-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cmg-choice {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  padding: 14px 14px;
+  border-radius: 16px;
+  border: 2px solid #e6ebe6;
+  background: #fafcfb;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
+}
+
+.cmg-choice:hover {
+  border-color: #c5d6c5;
+  background: #fff;
+}
+
+.cmg-choice:active {
+  transform: scale(0.99);
+}
+
+.cmg-choice.selected {
+  border-color: var(--green);
+  background: #f0f7f0;
+  box-shadow: 0 0 0 1px var(--green);
+}
+
+.cmg-choice-icon {
+  font-size: 1.45rem;
+  width: 2rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.cmg-choice-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cmg-choice-text strong {
+  color: var(--green-dark);
+  font-size: 1rem;
+}
+
+.cmg-choice-text span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.cmg-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--green-dark);
+  margin: 0 0 6px;
+}
+
+.cmg-optional {
+  font-weight: 500;
+  color: #999;
+}
+
+.cmg-input {
+  width: 100%;
+  border: 1.5px solid #d8e0d8;
+  border-radius: 12px;
+  padding: 14px 14px;
+  font-size: 1rem;
+  font-family: inherit;
+  margin-bottom: 14px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.cmg-input:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(46, 90, 46, 0.15);
+}
+
+.cmg-textarea {
+  resize: vertical;
+  min-height: 88px;
+}
+
+.cmg-ballpark {
+  margin: 4px 0 0;
+  padding: 12px 14px;
+  background: #f4f7f4;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  color: #444;
+  line-height: 1.45;
+}
+
+.cmg-summary {
+  background: #f4f7f4;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 4px 0 14px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.cmg-summary-title {
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: var(--green-dark);
+  font-size: 0.85rem;
+}
+
+.cmg-summary ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  line-height: 1.55;
+}
+
+.cmg-stripe-note {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  color: #777;
+  line-height: 1.4;
+}
+
+.cmg-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  align-items: stretch;
+}
+
+.cmg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1rem;
+  font-family: inherit;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  padding: 14px 18px;
+  transition: opacity 0.15s ease, transform 0.12s ease, background 0.15s ease;
+}
+
+.cmg-btn:active {
+  transform: scale(0.98);
+}
+
+.cmg-btn-primary {
+  flex: 1;
+  background: var(--green);
+  color: #fff;
+}
+
+.cmg-btn-primary:disabled,
+.cmg-btn-primary.cmg-busy {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cmg-btn-ghost {
+  background: #eef2ee;
+  color: var(--green-dark);
+  border: 1px solid #d5ded5;
+}
+
+.cmg-btn-link {
+  background: transparent;
+  color: var(--green);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.cmg-error {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fdecea;
+  color: #8a1f11;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.cmg-success {
+  text-align: center;
+  padding: 12px 4px 8px;
+}
+
+.cmg-success-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #34a853, var(--green));
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(46, 90, 46, 0.28);
+}
+
+.cmg-done-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cmg-alt {
+  text-align: center;
+  margin: 22px 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.cmg-alt a {
+  font-weight: 600;
+}
+
+.cmg-footer-tag {
+  margin: 10px 0 0;
+  font-size: 0.8rem;
+  color: #a8c4a8;
+  text-align: center;
+}
+
+@media (min-width: 520px) {
+  .cmg-card {
+    padding: 28px 26px 22px;
+  }
+
+  .cmg-shell {
+    padding-top: 28px;
+  }
+}

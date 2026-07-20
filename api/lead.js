@@ -55,18 +55,24 @@ function clean(s, max = 500) {
 }
 
 async function emailLead(lead) {
+  const isCmg = String(lead.source || '').includes('cut-my-grass');
+  const subject = isCmg
+    ? `Cut My Grass request — ${lead.name || 'Customer'}`
+    : `Black Rabbit CHAT lead — ${lead.name || 'Customer'}`;
+  const fromName = isCmg ? 'Cut My Grass (Black Rabbit)' : 'Black Rabbit Website Chat';
+  const banner = isCmg ? '--- Cut My Grass booking ---' : '--- Lead from Ask AI chat ---';
   const res = await fetch('https://api.web3forms.com/submit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify({
       access_key: WEB3_KEY,
-      subject: `Black Rabbit CHAT lead — ${lead.name || 'Customer'}`,
-      from_name: 'Black Rabbit Website Chat',
+      subject,
+      from_name: fromName,
       name: lead.name,
       phone: lead.phone,
       address: lead.address || '(not provided)',
       message: [
-        '--- Lead from Ask AI chat ---',
+        banner,
         `Name: ${lead.name}`,
         `Phone: ${lead.phone}`,
         `Address: ${lead.address || '(not provided)'}`,
