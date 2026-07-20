@@ -40,13 +40,26 @@
 
     <!-- Leads / follow-ups -->
     <section class="admin-panel">
-      <h2>📋 Follow-up quotes (from chat)</h2>
+      <h2>📋 Follow-up quotes (from chat + Cut My Grass)</h2>
       <p style="color:#666;font-size:0.9rem;margin-top:0;">
-        Customers who said “quote” / “connect me” in Ask AI. You also get an email for each one.
+        Customers who booked Cut My Grass or said “quote” / “connect me” in Ask AI. You also get an email for each one.
+        When <code>LEAD_ADMIN_TOKEN</code> is set on Vercel, the public lead list is locked — paste that same token below (stored only in this browser session).
       </p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-        <button type="button" class="btn btn-solid" id="btn-refresh-leads">Refresh leads</button>
-        <span id="leads-meta" style="font-size:0.85rem;color:#666;align-self:center;"></span>
+      <div class="lead-token-row">
+        <label for="lead-admin-token">Lead admin token</label>
+        <div class="lead-token-controls">
+          <input
+            type="password"
+            id="lead-admin-token"
+            name="lead-admin-token"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Paste LEAD_ADMIN_TOKEN from Vercel"
+          >
+          <button type="button" class="btn btn-outline" id="btn-save-lead-token">Save for session</button>
+          <button type="button" class="btn btn-solid" id="btn-refresh-leads">Refresh leads</button>
+        </div>
+        <span id="leads-meta" style="font-size:0.85rem;color:#666;display:block;margin-top:8px;"></span>
       </div>
       <div id="leads-list"></div>
     </section>

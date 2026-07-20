@@ -17,6 +17,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.getElementById('btn-refresh-leads')?.addEventListener('click', () => loadLeads());
+  document.getElementById('btn-save-lead-token')?.addEventListener('click', () => {
+    const input = document.getElementById('lead-admin-token');
+    const val = (input && input.value ? input.value : '').trim();
+    setLeadToken(val);
+    const meta = document.getElementById('leads-meta');
+    if (meta) {
+      meta.textContent = val
+        ? 'Lead token saved for this browser session. Refreshing…'
+        : 'Lead token cleared for this session.';
+      meta.style.color = val ? '#2e5a2e' : '#666';
+    }
+    loadLeads();
+  });
+
+  // Prefill token field if already saved this session (does not reveal full secret length only)
+  const tokenInput = document.getElementById('lead-admin-token');
+  const existing = getLeadToken();
+  if (tokenInput && existing) {
+    tokenInput.value = existing;
+    tokenInput.placeholder = 'Token saved for this session (edit to change)';
+  }
 
   await BRContent.load();
   await refreshAll();
@@ -73,11 +94,21 @@ function leadAuthHeaders(extra) {
 
 async function ensureLeadTokenOn401(res) {
   if (res.status !== 401) return false;
+  const input = document.getElementById('lead-admin-token');
+  if (input) {
+    input.focus();
+    input.classList.add('lead-token-needed');
+  }
   const entered = window.prompt(
-    'Lead admin token required (matches LEAD_ADMIN_TOKEN on Vercel). Enter it for this browser session:'
+    'Lead list is locked. Paste LEAD_ADMIN_TOKEN from Vercel (same value you set in Project → Settings → Environment Variables):'
   );
   if (!entered) return false;
-  setLeadToken(entered.trim());
+  const token = entered.trim();
+  setLeadToken(token);
+  if (input) {
+    input.value = token;
+    input.classList.remove('lead-token-needed');
+  }
   return true;
 }
 
@@ -91,13 +122,24 @@ async function loadLeads() {
     if (res.status === 401 && (await ensureLeadTokenOn401(res))) {
       res = await fetch('/api/lead', { cache: 'no-store', headers: leadAuthHeaders() });
     }
+    if (res.status === 401) {
+      if (meta) {
+        meta.textContent = 'Locked — set LEAD_ADMIN_TOKEN on Vercel, then paste it above.';
+        meta.style.color = '#8a5a00';
+      }
+      list.innerHTML =
+        '<div class="empty-state">Lead list is protected. Add <code>LEAD_ADMIN_TOKEN</code> in Vercel env, redeploy, paste the same token above, then Refresh. Public visitors cannot list leads without it. New Cut My Grass / chat leads still POST and email you normally.</div>';
+      return;
+    }
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     const leads = data.leads || [];
     if (meta) {
+      const lock = getLeadToken() ? ' · token OK' : '';
       meta.textContent = data.durable
-        ? `${leads.length} lead(s) · durable storage on`
-        : `${leads.length} lead(s) · ${data.note || 'email mode'}`;
+        ? `${leads.length} lead(s) · durable storage on${lock}`
+        : `${leads.length} lead(s) · ${data.note || 'email mode'}${lock}`;
+      meta.style.color = '#666';
     }
     if (!leads.length) {
       list.innerHTML =

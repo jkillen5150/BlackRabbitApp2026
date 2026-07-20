@@ -1588,6 +1588,49 @@ a { color: var(--green); }
   margin-top: 10px;
 }
 
+.lead-token-row {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  background: #f4f7f4;
+  border-radius: 12px;
+  border: 1px solid #e0e8e0;
+}
+
+.lead-token-row > label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--green-dark);
+  margin-bottom: 8px;
+}
+
+.lead-token-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.lead-token-controls input {
+  flex: 1 1 200px;
+  min-width: 160px;
+  padding: 10px 12px;
+  border: 1.5px solid #d0d8d0;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.92rem;
+}
+
+.lead-token-controls input.lead-token-needed {
+  border-color: #c47b00;
+  box-shadow: 0 0 0 3px rgba(196, 123, 0, 0.15);
+}
+
+.lead-token-controls .btn {
+  padding: 10px 14px;
+  font-size: 0.88rem;
+}
+
 @media (min-width: 700px) {
   .assistant-messages {
     max-height: 560px;

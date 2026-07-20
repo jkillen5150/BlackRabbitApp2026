@@ -32,7 +32,7 @@ Ask AI can **interview** a customer (name → phone → address → need), then:
 
 Optional durable list: set **`GITHUB_TOKEN`** (repo contents write) on Vercel so leads append to `data/leads.json`. Without it, you still get **emails**; the on-site list may be partial after cold starts.
 
-Optional privacy: set **`LEAD_ADMIN_TOKEN`** on Vercel. When set, listing/updating leads requires header `X-Lead-Token` (Admin prompts once per browser session). Public **POST** of new leads still works without the token.
+**Lead list privacy:** set **`LEAD_ADMIN_TOKEN`** on Vercel (Project → Settings → Environment Variables → Production + Preview). Use a long random string. When set, `GET`/`PATCH` `/api/lead` require header `X-Lead-Token`. In Admin, paste the same token under **Lead admin token** (session only). Public **POST** of new leads (Cut My Grass / Ask AI) still works without the token.
 
 ## Making the AI smarter (no “training”)
 
