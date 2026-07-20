@@ -45,13 +45,52 @@ async function refreshAll() {
   updateDraftStatus();
 }
 
+const LEAD_TOKEN_KEY = 'br_lead_token';
+
+function getLeadToken() {
+  try {
+    return sessionStorage.getItem(LEAD_TOKEN_KEY) || '';
+  } catch {
+    return '';
+  }
+}
+
+function setLeadToken(token) {
+  try {
+    if (token) sessionStorage.setItem(LEAD_TOKEN_KEY, token);
+    else sessionStorage.removeItem(LEAD_TOKEN_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+function leadAuthHeaders(extra) {
+  const headers = Object.assign({}, extra || {});
+  const token = getLeadToken();
+  if (token) headers['X-Lead-Token'] = token;
+  return headers;
+}
+
+async function ensureLeadTokenOn401(res) {
+  if (res.status !== 401) return false;
+  const entered = window.prompt(
+    'Lead admin token required (matches LEAD_ADMIN_TOKEN on Vercel). Enter it for this browser session:'
+  );
+  if (!entered) return false;
+  setLeadToken(entered.trim());
+  return true;
+}
+
 async function loadLeads() {
   const list = document.getElementById('leads-list');
   const meta = document.getElementById('leads-meta');
   if (!list) return;
   list.innerHTML = '<p style="color:#666">Loading…</p>';
   try {
-    const res = await fetch('/api/lead', { cache: 'no-store' });
+    let res = await fetch('/api/lead', { cache: 'no-store', headers: leadAuthHeaders() });
+    if (res.status === 401 && (await ensureLeadTokenOn401(res))) {
+      res = await fetch('/api/lead', { cache: 'no-store', headers: leadAuthHeaders() });
+    }
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     const leads = data.leads || [];
@@ -91,11 +130,19 @@ async function loadLeads() {
     list.querySelectorAll('[data-status]').forEach((btn) => {
       btn.addEventListener('click', async () => {
         try {
-          await fetch('/api/lead', {
+          let res = await fetch('/api/lead', {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: leadAuthHeaders({ 'Content-Type': 'application/json' }),
             body: JSON.stringify({ id: btn.dataset.id, status: btn.dataset.status })
           });
+          if (res.status === 401 && (await ensureLeadTokenOn401(res))) {
+            res = await fetch('/api/lead', {
+              method: 'PATCH',
+              headers: leadAuthHeaders({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify({ id: btn.dataset.id, status: btn.dataset.status })
+            });
+          }
+          if (!res.ok) throw new Error('HTTP ' + res.status);
           loadLeads();
         } catch {
           alert('Could not update status (is /api/lead live on Vercel?)');

@@ -5,10 +5,11 @@
  * 3) Keeps a warm in-memory list as a short-lived backup
  *
  * Env (optional):
- *   WEB3FORMS_KEY — defaults to site public key
- *   GITHUB_TOKEN  — repo contents write for durable admin list
- *   GITHUB_OWNER  — default jkillen5150
- *   GITHUB_REPO   — default BlackRabbitApp2026
+ *   WEB3FORMS_KEY     — defaults to site public key
+ *   GITHUB_TOKEN      — repo contents write for durable admin list
+ *   GITHUB_OWNER      — default jkillen5150
+ *   GITHUB_REPO       — default BlackRabbitApp2026
+ *   LEAD_ADMIN_TOKEN  — if set, required on GET/PATCH (header X-Lead-Token or Bearer)
  */
 const WEB3_KEY =
   process.env.WEB3FORMS_KEY || '6467d992-e261-48c0-ae1e-2bc4b6cc557d';
@@ -18,6 +19,21 @@ function globalLeads() {
   const g = globalThis;
   if (!g.__brLeads) g.__brLeads = [];
   return g.__brLeads;
+}
+
+/** When LEAD_ADMIN_TOKEN is set, block unauthenticated list/update of PII. */
+function requireLeadAdmin(req, res) {
+  const secret = process.env.LEAD_ADMIN_TOKEN;
+  if (!secret) return true;
+  const header = String(req.headers['x-lead-token'] || '');
+  const auth = String(req.headers.authorization || '');
+  const bearer = auth.match(/^Bearer\s+(.+)$/i)?.[1]?.trim() || '';
+  if (header === secret || bearer === secret) return true;
+  res.status(401).json({
+    error: 'Unauthorized',
+    note: 'Set X-Lead-Token to match LEAD_ADMIN_TOKEN on Vercel (Admin can store it for this browser session).'
+  });
+  return false;
 }
 
 function parseBody(req) {
@@ -146,6 +162,7 @@ export default async function handler(req, res) {
 
   // GET — list leads for admin
   if (req.method === 'GET') {
+    if (!requireLeadAdmin(req, res)) return;
     const gh = await githubGetLeads();
     const mem = globalLeads();
     let leads = gh?.leads || [];
@@ -166,6 +183,7 @@ export default async function handler(req, res) {
 
   // PATCH — update status { id, status }
   if (req.method === 'PATCH') {
+    if (!requireLeadAdmin(req, res)) return;
     const body = parseBody(req);
     const id = clean(body.id, 80);
     const status = clean(body.status, 40) || 'new';

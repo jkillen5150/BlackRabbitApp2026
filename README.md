@@ -2,7 +2,7 @@
 
 One project: **static website + Grok chat API**, meant to deploy together on **Vercel**.
 
-Serving Yelm, Rainier, Lacey, Roy, Olympia & Thurston County.
+Serving Yelm, Rainier, Lacey, Roy, Olympia, Tenino & Thurston County.
 
 ## Pages
 
@@ -10,7 +10,7 @@ Serving Yelm, Rainier, Lacey, Roy, Olympia & Thurston County.
 |------|------|
 | Home (+ quote form, rotating reviews, FAQ) | `index.html` |
 | City landings (local SEO) | `lawn-care-yelm/` … `lawn-care-tenino/` (folder form for GitHub Pages) |
-| Service landings | `lawn-mowing/`, `yard-cleanup/` |
+| Service landings | `lawn-mowing/`, `yard-cleanup/`, `fall-leaf-cleanup/` |
 | Testimonials | `testimonials.html` |
 | Portfolio | `portfolio.html` |
 | Service map (pins) | `service-area.html` |
@@ -20,6 +20,7 @@ Serving Yelm, Rainier, Lacey, Roy, Olympia & Thurston County.
 | Customer dashboard | `customer.html` |
 | Quote thank-you | `thankyou.html` |
 | Chat API | `api/chat.js` → `POST /api/chat` |
+| Lead API | `api/lead.js` → `GET/POST/PATCH /api/lead` |
 
 ## Chat leads (“connect me” / quote without the form)
 
@@ -29,6 +30,8 @@ Ask AI can **interview** a customer (name → phone → address → need), then:
 2. **Log the lead** for Admin → **Follow-up quotes** (`GET/POST/PATCH /api/lead`)
 
 Optional durable list: set **`GITHUB_TOKEN`** (repo contents write) on Vercel so leads append to `data/leads.json`. Without it, you still get **emails**; the on-site list may be partial after cold starts.
+
+Optional privacy: set **`LEAD_ADMIN_TOKEN`** on Vercel. When set, listing/updating leads requires header `X-Lead-Token` (Admin prompts once per browser session). Public **POST** of new leads still works without the token.
 
 ## Making the AI smarter (no “training”)
 
@@ -46,8 +49,12 @@ GitHub Pages can’t run the chat function. Keep **everything on Vercel**:
 
 1. Import **jkillen5150/BlackRabbitApp2026** in [vercel.com](https://vercel.com) (or link the existing project to this repo).
 2. Framework preset: **Other** (static + `api/`).
-3. Project env var: **`XAI_API_KEY`** = your xAI key (same one you used for the old proxy).
-4. Deploy. Chat calls **`/api/chat`** on the same domain — no separate `br-chat-proxy` app needed.
+3. Project env vars:
+   - **`XAI_API_KEY`** — xAI key for Ask AI
+   - **`GITHUB_TOKEN`** (optional) — durable lead list
+   - **`LEAD_ADMIN_TOKEN`** (optional) — gate Admin lead list/updates
+   - **`WEB3FORMS_KEY`** (optional) — overrides the public form access key
+4. Deploy. Chat calls **`/api/chat`** on the same domain — no separate proxy app needed.
 5. Point **blackrabbitlawn.com** DNS to this Vercel project (Domains → Add).
 
 Optional local full stack:
@@ -70,13 +77,18 @@ python3 -m http.server 8765
 3. Add reviews, portfolio photos, map pins
 4. Edits save in the browser; **Export content.json** → replace `data/content.json` → redeploy for everyone
 
+**Security note:** Admin login is a **client-side gate** (password hash in `js/auth.js`). It is not server authentication. Do not put secrets only behind Admin HTML. Prefer `LEAD_ADMIN_TOKEN` + Vercel env for lead PII, and keep real keys only in Vercel env vars.
+
 ## Content
 
 - Seed data: `data/content.json`
+- AI briefing: `data/ai-knowledge.json`
 - Styles: `css/site.css`
 - Scripts: `js/`
-- Brand: `logo.jpg` (favicon + Open Graph image)
-- SEO: `robots.txt`, `sitemap.xml`, canonical URLs, LocalBusiness + review/FAQ JSON-LD on home, city landing pages for Yelm/Rainier/Lacey/Roy/Olympia
+- Brand: `logo.jpg` (favicon + LocalBusiness image)
+- Social share image: `og-image.jpg`
+- Portfolio/hero photos: `IMG_9642.jpeg`, `IMG_9650.jpeg`
+- SEO: `robots.txt`, `sitemap.xml`, canonical URLs, LocalBusiness + review/FAQ JSON-LD on home and landings
 
 ### Admin drafts vs redeploy
 
@@ -86,3 +98,5 @@ Admin edits save in **this browser only** (localStorage), keyed to the current `
 
 - Public pages use `logo.jpg` (not a space-filled filename).
 - Legacy root `styles.css` / `script.js` were removed; the live stack is `css/site.css` + `js/*`.
+- A historical commit once tracked a `.env` with an xAI key. The file is gone from `HEAD`, but **rotate the key on the xAI console** if it may still be valid — git history remains public.
+- Stale local git worktree: `site/multi-page-and-reviews` (safe to remove with `git worktree remove` when unused).

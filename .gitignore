@@ -8,3 +8,7 @@ build/
 dist/
 *.sqlite
 *.db
+
+.vercel/
+.turbo/
+*.swp
