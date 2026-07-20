@@ -102,7 +102,8 @@ Fast booking UX at **`/cut-my-grass/`**, branded as a product of Black Rabbit:
 1. Home hero → **Try Cut My Grass**
 2. Multi-step: service → address → when → contact
 3. Posts to **`POST /api/lead`** with `source: cut-my-grass` (email + Admin list)
-4. **Stripe** not wired yet — copy says pay after work; add Checkout later under the same brand
+4. Optional **yard photos** (up to 2) — compressed on-device, emailed as attachments; Admin shows previews when the API is still warm
+5. **Stripe** not wired yet — copy says pay after work; add Checkout later under the same brand
 
 ### Housekeeping notes
 

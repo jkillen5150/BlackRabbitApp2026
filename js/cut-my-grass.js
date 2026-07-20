@@ -1,10 +1,13 @@
 /**
- * Cut My Grass — multi-step booking (v1)
+ * Cut My Grass — multi-step booking
  * Submits to POST /api/lead (same pipeline as Ask AI).
+ * Optional yard photos are compressed on-device and emailed as attachments.
  * Stripe checkout reserved for a later phase.
  */
 (function () {
   const TOTAL_STEPS = 4;
+  const MAX_PHOTOS = 2;
+
   const state = {
     step: 1,
     service: '',
@@ -14,13 +17,27 @@
     address: '',
     notes: '',
     name: '',
-    phone: ''
+    phone: '',
+    /** @type {{ name: string, dataUrl: string }[]} */
+    photos: []
   };
 
   const $ = (id) => document.getElementById(id);
 
   function setError(msg) {
     const el = $('cmg-error');
+    if (!el) return;
+    if (!msg) {
+      el.hidden = true;
+      el.textContent = '';
+      return;
+    }
+    el.hidden = false;
+    el.textContent = msg;
+  }
+
+  function setPhotoStatus(msg) {
+    const el = $('cmg-photo-status');
     if (!el) return;
     if (!msg) {
       el.hidden = true;
@@ -73,7 +90,7 @@
 
   function canContinue() {
     if (state.step === 1) return !!state.service;
-    if (state.step === 2) return true; // address optional
+    if (state.step === 2) return true;
     if (state.step === 3) return !!state.urgency;
     if (state.step === 4) {
       return (
@@ -103,7 +120,10 @@
       (state.address || $('cmg-address')?.value) &&
         '<strong>Where:</strong> ' + escapeHtml(state.address || $('cmg-address').value),
       (state.notes || $('cmg-notes')?.value) &&
-        '<strong>Notes:</strong> ' + escapeHtml(state.notes || $('cmg-notes').value)
+        '<strong>Notes:</strong> ' + escapeHtml(state.notes || $('cmg-notes').value),
+      state.photos.length
+        ? '<strong>Photos:</strong> ' + state.photos.length + ' attached'
+        : ''
     ].filter(Boolean);
     el.innerHTML = lines.length
       ? '<p class="cmg-summary-title">Your request</p><ul>' +
@@ -134,8 +154,154 @@
       'When: ' + (state.urgencyLabel || state.urgency || 'unspecified')
     ];
     if (state.notes) parts.push('Notes: ' + state.notes);
+    if (state.photos.length) parts.push('Photos: ' + state.photos.length + ' attached');
     parts.push('Payment: pay-after-work (Stripe in-app later)');
     return parts.join(' · ');
+  }
+
+  /** Lightweight JPEG compress for phone uploads (no content-store dep). */
+  function compressImageFile(file) {
+    return new Promise((resolve, reject) => {
+      const type = String(file.type || '');
+      const name = String(file.name || '');
+      if (/heic|heif/i.test(type) || /\.heic$/i.test(name) || /\.heif$/i.test(name)) {
+        reject(
+          new Error(
+            'iPhone HEIC isn’t supported here. Export as JPEG, or Camera → Formats → Most Compatible.'
+          )
+        );
+        return;
+      }
+      if (type && !type.startsWith('image/')) {
+        reject(new Error('That file is not an image. Use JPEG or PNG.'));
+        return;
+      }
+
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const maxEdge = 960;
+          let w = img.naturalWidth || img.width;
+          let h = img.naturalHeight || img.height;
+          const long = Math.max(w, h) || 1;
+          if (long > maxEdge) {
+            const scale = maxEdge / long;
+            w = Math.max(1, Math.round(w * scale));
+            h = Math.max(1, Math.round(h * scale));
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Could not process photo.'));
+            return;
+          }
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          let dataUrl = canvas.toDataURL('image/jpeg', 0.62);
+          if (dataUrl.length > 280000) {
+            dataUrl = canvas.toDataURL('image/jpeg', 0.48);
+          }
+          if (dataUrl.length > 320000) {
+            // second pass smaller
+            const canvas2 = document.createElement('canvas');
+            canvas2.width = Math.max(1, Math.round(w * 0.75));
+            canvas2.height = Math.max(1, Math.round(h * 0.75));
+            const ctx2 = canvas2.getContext('2d');
+            if (ctx2) {
+              ctx2.fillStyle = '#fff';
+              ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+              ctx2.drawImage(canvas, 0, 0, canvas2.width, canvas2.height);
+              dataUrl = canvas2.toDataURL('image/jpeg', 0.45);
+            }
+          }
+          resolve(dataUrl);
+        } catch (e) {
+          reject(e instanceof Error ? e : new Error('Could not process photo.'));
+        } finally {
+          URL.revokeObjectURL(url);
+        }
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Could not open that image. Try JPEG or PNG.'));
+      };
+      img.src = url;
+    });
+  }
+
+  function renderPhotoPreviews() {
+    const wrap = $('cmg-photo-previews');
+    if (!wrap) return;
+    wrap.innerHTML = state.photos
+      .map((p, i) => {
+        return (
+          '<div class="cmg-photo-thumb">' +
+          '<img src="' +
+          p.dataUrl +
+          '" alt="Yard photo ' +
+          (i + 1) +
+          '">' +
+          '<button type="button" class="cmg-photo-remove" data-i="' +
+          i +
+          '" aria-label="Remove photo ' +
+          (i + 1) +
+          '">×</button>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    wrap.querySelectorAll('.cmg-photo-remove').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const i = Number(btn.getAttribute('data-i'));
+        if (!Number.isFinite(i)) return;
+        state.photos.splice(i, 1);
+        renderPhotoPreviews();
+        setPhotoStatus(
+          state.photos.length
+            ? state.photos.length + ' photo' + (state.photos.length > 1 ? 's' : '') + ' ready'
+            : ''
+        );
+      });
+    });
+  }
+
+  async function onPhotosSelected(fileList) {
+    const files = Array.from(fileList || []);
+    if (!files.length) return;
+    const room = MAX_PHOTOS - state.photos.length;
+    if (room <= 0) {
+      setPhotoStatus('Max ' + MAX_PHOTOS + ' photos. Remove one to add another.');
+      return;
+    }
+    const take = files.slice(0, room);
+    setPhotoStatus('Compressing…');
+    try {
+      for (const file of take) {
+        const dataUrl = await compressImageFile(file);
+        const base = String(file.name || 'yard').replace(/\.[^.]+$/, '') || 'yard';
+        state.photos.push({
+          name: base.slice(0, 40) + '.jpg',
+          dataUrl
+        });
+      }
+      renderPhotoPreviews();
+      setPhotoStatus(
+        state.photos.length +
+          ' photo' +
+          (state.photos.length > 1 ? 's' : '') +
+          ' ready (shrunk for a fast send)'
+      );
+    } catch (e) {
+      setPhotoStatus('');
+      setError((e && e.message) || 'Could not add that photo.');
+    }
+    const input = $('cmg-photos');
+    if (input) input.value = '';
   }
 
   async function submit() {
@@ -159,7 +325,11 @@
       address: state.address,
       urgency: state.urgencyLabel || state.urgency,
       need: buildNeed(),
-      source: 'cut-my-grass'
+      source: 'cut-my-grass',
+      photos: state.photos.map((p) => ({
+        filename: p.name,
+        dataUrl: p.dataUrl
+      }))
     };
 
     try {
@@ -232,7 +402,6 @@
         setError('');
         const next = $('cmg-next');
         if (next) next.disabled = !canContinue();
-        // Auto-advance on service / urgency for snappier UX
         if (field === 'service' || field === 'urgency') {
           setTimeout(() => {
             if (canContinue() && state.step < TOTAL_STEPS) goNext();
@@ -251,10 +420,13 @@
       });
     });
 
+    $('cmg-photos')?.addEventListener('change', (e) => {
+      onPhotosSelected(e.target.files);
+    });
+
     $('cmg-next')?.addEventListener('click', goNext);
     $('cmg-back')?.addEventListener('click', goBack);
 
-    // Enter on last fields
     $('cmg-phone')?.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();

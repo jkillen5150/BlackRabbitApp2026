@@ -54,6 +54,36 @@ function clean(s, max = 500) {
     .slice(0, max);
 }
 
+function parseDataUrl(dataUrl) {
+  const m = String(dataUrl || '').match(/^data:([^;]+);base64,(.+)$/);
+  if (!m) return null;
+  return { mime: m[1], content: m[2] };
+}
+
+/** Normalize client photos: max 2, JPEG base64 only, size-capped. */
+function normalizePhotos(raw) {
+  if (!Array.isArray(raw)) return [];
+  const out = [];
+  for (const item of raw.slice(0, 2)) {
+    const dataUrl = item && (item.dataUrl || item.dataURL || item.content);
+    const parsed = parseDataUrl(dataUrl);
+    if (!parsed || !parsed.content) continue;
+    // ~350KB base64 ≈ safe for serverless + email attach
+    if (parsed.content.length > 480000) continue;
+    const mime = parsed.mime || 'image/jpeg';
+    if (!String(mime).startsWith('image/')) continue;
+    let filename = clean(item.filename || item.name || `yard-${out.length + 1}.jpg`, 80);
+    if (!/\.(jpe?g|png|webp|gif)$/i.test(filename)) filename += '.jpg';
+    out.push({
+      filename,
+      mimeType: mime,
+      content: parsed.content,
+      previewDataUrl: `data:${mime};base64,${parsed.content}`
+    });
+  }
+  return out;
+}
+
 async function emailLead(lead) {
   const isCmg = String(lead.source || '').includes('cut-my-grass');
   const subject = isCmg
@@ -61,36 +91,62 @@ async function emailLead(lead) {
     : `Black Rabbit CHAT lead — ${lead.name || 'Customer'}`;
   const fromName = isCmg ? 'Cut My Grass (Black Rabbit)' : 'Black Rabbit Website Chat';
   const banner = isCmg ? '--- Cut My Grass booking ---' : '--- Lead from Ask AI chat ---';
+  const photoNote =
+    lead.photoCount > 0
+      ? `Photos: ${lead.photoCount} attached to this email`
+      : 'Photos: none';
+
+  const payload = {
+    access_key: WEB3_KEY,
+    subject,
+    from_name: fromName,
+    name: lead.name,
+    phone: lead.phone,
+    address: lead.address || '(not provided)',
+    message: [
+      banner,
+      `Name: ${lead.name}`,
+      `Phone: ${lead.phone}`,
+      `Address: ${lead.address || '(not provided)'}`,
+      `Need: ${lead.need || '(not provided)'}`,
+      `Urgency: ${lead.urgency || '(not provided)'}`,
+      `Source: ${lead.source || 'assistant-chat'}`,
+      photoNote,
+      `Time: ${lead.createdAt}`,
+      '',
+      'Text them back ASAP or call.',
+      `Your public line: ${JERRY_PHONE}`
+    ].join('\n')
+  };
+
+  // Web3Forms attachments: base64 content without data: prefix
+  if (Array.isArray(lead._emailPhotos) && lead._emailPhotos.length) {
+    payload.attachments = lead._emailPhotos.map((p) => ({
+      filename: p.filename,
+      mimeType: p.mimeType || 'image/jpeg',
+      content: p.content
+    }));
+  }
+
   const res = await fetch('https://api.web3forms.com/submit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({
-      access_key: WEB3_KEY,
-      subject,
-      from_name: fromName,
-      name: lead.name,
-      phone: lead.phone,
-      address: lead.address || '(not provided)',
-      message: [
-        banner,
-        `Name: ${lead.name}`,
-        `Phone: ${lead.phone}`,
-        `Address: ${lead.address || '(not provided)'}`,
-        `Need: ${lead.need || '(not provided)'}`,
-        `Urgency: ${lead.urgency || '(not provided)'}`,
-        `Source: ${lead.source || 'assistant-chat'}`,
-        `Time: ${lead.createdAt}`,
-        '',
-        'Text them back ASAP or call.',
-        `Your public line: ${JERRY_PHONE}`
-      ].join('\n')
-    })
+    body: JSON.stringify(payload)
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok || data.success === false) {
     throw new Error(data.message || 'Email send failed');
   }
   return data;
+}
+
+/** Strip heavy photo payloads before durable GitHub storage. */
+function leadForStorage(lead) {
+  const { _emailPhotos, photoPreviews, ...rest } = lead;
+  return {
+    ...rest,
+    photoCount: lead.photoCount || 0
+  };
 }
 
 async function githubGetLeads() {
@@ -231,6 +287,7 @@ export default async function handler(req, res) {
   const need = clean(body.need || body.message, 2000);
   const urgency = clean(body.urgency, 80);
   const source = clean(body.source, 80) || 'assistant-chat';
+  const photos = normalizePhotos(body.photos);
 
   if (!name || !phone) {
     return res.status(400).json({
@@ -248,6 +305,14 @@ export default async function handler(req, res) {
     urgency,
     source,
     status: 'new',
+    photoCount: photos.length,
+    // warm Admin previews (not written to GitHub)
+    photoPreviews: photos.map((p) => p.previewDataUrl),
+    _emailPhotos: photos.map((p) => ({
+      filename: p.filename,
+      mimeType: p.mimeType,
+      content: p.content
+    })),
     createdAt: new Date().toISOString()
   };
 
@@ -261,16 +326,19 @@ export default async function handler(req, res) {
     console.error('Lead email failed', e);
   }
 
-  // memory
+  // Drop raw base64 from email helper field after send; keep previews for Admin session
+  delete lead._emailPhotos;
+
+  // memory (with previews)
   globalLeads().unshift(lead);
   if (globalLeads().length > 200) globalLeads().length = 200;
 
-  // durable
+  // durable (no image blobs)
   let saved = false;
   try {
     const gh = await githubGetLeads();
     if (gh) {
-      const next = [lead, ...gh.leads].slice(0, 500);
+      const next = [leadForStorage(lead), ...gh.leads.map(leadForStorage)].slice(0, 500);
       saved = await githubSaveLeads(next, gh.sha);
     }
   } catch (e) {
@@ -286,9 +354,10 @@ export default async function handler(req, res) {
     });
   }
 
+  const publicLead = leadForStorage(lead);
   return res.status(200).json({
     ok: true,
-    lead,
+    lead: publicLead,
     emailed,
     saved,
     jerryPhone: JERRY_PHONE,

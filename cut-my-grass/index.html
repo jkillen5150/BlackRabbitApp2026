@@ -117,6 +117,21 @@
         <input class="cmg-input" id="cmg-address" name="address" type="text" autocomplete="street-address" placeholder="123 Main St, Yelm WA" enterkeyhint="next">
         <label class="cmg-label" for="cmg-notes">Anything we should know? <span class="cmg-optional">(optional)</span></label>
         <textarea class="cmg-input cmg-textarea" id="cmg-notes" name="notes" rows="3" placeholder="Gate code, dogs, overgrown, slope…"></textarea>
+
+        <label class="cmg-label" for="cmg-photos">Yard photos <span class="cmg-optional">(optional · up to 2)</span></label>
+        <p class="cmg-hint cmg-hint-tight">A quick shot helps quote faster. JPEG/PNG — we shrink them on your phone.</p>
+        <div class="cmg-photo-row">
+          <label class="cmg-photo-add">
+            <input type="file" id="cmg-photos" accept="image/*" capture="environment" multiple hidden>
+            <span class="cmg-photo-add-inner">
+              <span class="cmg-photo-plus" aria-hidden="true">+</span>
+              <span>Add photo</span>
+            </span>
+          </label>
+          <div class="cmg-photo-previews" id="cmg-photo-previews" aria-live="polite"></div>
+        </div>
+        <p class="cmg-photo-status" id="cmg-photo-status" hidden></p>
+
         <p class="cmg-ballpark" id="cmg-ballpark">Typical weekly cuts land around <strong>$40–$50</strong>. Final quote after we see the yard.</p>
       </section>
 

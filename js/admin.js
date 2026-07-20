@@ -107,6 +107,22 @@ async function loadLeads() {
     list.innerHTML = leads
       .map((l) => {
         const st = BRContent.escapeHtml(l.status || 'new');
+        const previews = Array.isArray(l.photoPreviews) ? l.photoPreviews : [];
+        const photoCount = Number(l.photoCount) || previews.length || 0;
+        let photosHtml = '';
+        if (previews.length) {
+          photosHtml =
+            '<div class="lead-photos">' +
+            previews
+              .map(
+                (src, i) =>
+                  `<a href="${BRContent.escapeAttr(src)}" target="_blank" rel="noopener"><img src="${BRContent.escapeAttr(src)}" alt="Yard photo ${i + 1}"></a>`
+              )
+              .join('') +
+            '</div>';
+        } else if (photoCount > 0) {
+          photosHtml = `<p class="lead-photo-note">${photoCount} yard photo(s) — check your email attachment</p>`;
+        }
         return `
         <div class="lead-card" data-id="${BRContent.escapeAttr(l.id)}">
           <h4>${BRContent.escapeHtml(l.name || 'Customer')}
@@ -116,6 +132,7 @@ async function loadLeads() {
             · <a href="sms:${BRContent.escapeAttr(String(l.phone || '').replace(/\s/g, ''))}">Text</a></p>
           <p><strong>Address:</strong> ${BRContent.escapeHtml(l.address || '—')}</p>
           <p><strong>Need:</strong> ${BRContent.escapeHtml(l.need || '—')}</p>
+          ${photosHtml}
           <p style="color:#888;font-size:0.8rem;">${BRContent.escapeHtml(l.createdAt || '')} · ${BRContent.escapeHtml(l.source || '')}</p>
           <div class="lead-actions">
             <button type="button" class="btn-sm" data-status="texted" data-id="${BRContent.escapeAttr(l.id)}">Mark texted</button>
