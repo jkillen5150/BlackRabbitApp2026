@@ -159,6 +159,37 @@
     return parts.join(' · ');
   }
 
+  function saveTrackLocal(token, url) {
+    try {
+      if (token) sessionStorage.setItem('cmg_track_token', token);
+      if (url) sessionStorage.setItem('cmg_track_url', url);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function readTrackLocal() {
+    try {
+      return {
+        token: sessionStorage.getItem('cmg_track_token') || '',
+        url: sessionStorage.getItem('cmg_track_url') || ''
+      };
+    } catch {
+      return { token: '', url: '' };
+    }
+  }
+
+  function injectTrackLink(trackUrl) {
+    const actions = document.querySelector('.cmg-done-actions');
+    if (!actions || !trackUrl) return;
+    if (actions.querySelector('.cmg-track-link')) return;
+    const a = document.createElement('a');
+    a.className = 'cmg-btn cmg-btn-primary cmg-track-link';
+    a.href = trackUrl;
+    a.textContent = 'Track your cut';
+    actions.insertBefore(a, actions.firstChild);
+  }
+
   async function applyReturnState() {
     const params = new URLSearchParams(window.location.search);
     const deposit = params.get('deposit');
@@ -168,6 +199,7 @@
     const msg = $('cmg-done-msg');
     const icon = document.querySelector('.cmg-success-icon');
     const sessionId = params.get('session_id') || '';
+    const local = readTrackLocal();
 
     showStep('done');
 
@@ -188,6 +220,7 @@
           const data = await res.json().catch(() => ({}));
           verified = !!(res.ok && data.paid);
           amountLabel = data.amountLabel || '';
+          if (data.trackUrl) saveTrackLocal(data.trackToken || local.token, data.trackUrl);
         } catch {
           verified = false;
         }
@@ -209,6 +242,7 @@
         }
       }
       if (icon) icon.textContent = '✓';
+      injectTrackLink(readTrackLocal().url);
     } else if (deposit === 'cancel') {
       if (title) title.textContent = 'Request saved';
       if (msg) {
@@ -216,6 +250,7 @@
           'No charge made. Jerry still got your Cut My Grass request — text or call to finish booking, or start again and complete the deposit.';
       }
       if (icon) icon.textContent = '!';
+      injectTrackLink(local.url);
     }
 
     // Clean URL so refresh doesn’t re-flash / re-confirm spam (server is also idempotent)
@@ -437,6 +472,11 @@
       }
 
       const leadId = data.lead && data.lead.id;
+      const trackToken = data.trackToken || (data.lead && data.lead.trackToken) || '';
+      const trackUrl =
+        data.trackUrl ||
+        (trackToken ? '/track/?t=' + encodeURIComponent(trackToken) : '');
+      saveTrackLocal(trackToken, trackUrl);
 
       // 2) Stripe Checkout deposit
       if (next) next.textContent = 'Opening secure pay…';
@@ -457,6 +497,7 @@
             extra +
             '. He’ll text or call to confirm — or call (407) 951-1663.';
         }
+        injectTrackLink(trackUrl);
         return;
       }
     } catch (e) {

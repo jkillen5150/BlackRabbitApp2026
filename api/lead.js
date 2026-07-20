@@ -10,7 +10,10 @@
  *   GITHUB_OWNER      — default jkillen5150
  *   GITHUB_REPO       — default BlackRabbitApp2026
  *   LEAD_ADMIN_TOKEN  — if set, required on GET/PATCH (header X-Lead-Token or Bearer)
+ *   SITE_URL          — for track links in email
  */
+import { randomBytes } from 'crypto';
+
 const WEB3_KEY =
   process.env.WEB3FORMS_KEY || '6467d992-e261-48c0-ae1e-2bc4b6cc557d';
 const JERRY_PHONE = '407-951-1663';
@@ -52,6 +55,10 @@ function clean(s, max = 500) {
   return String(s || '')
     .trim()
     .slice(0, max);
+}
+
+function makeTrackToken() {
+  return randomBytes(18).toString('base64url');
 }
 
 function parseDataUrl(dataUrl) {
@@ -98,6 +105,11 @@ async function emailLead(lead) {
   const depositNote = isCmg
     ? 'Deposit: customer will be sent to Stripe Checkout after this email (watch for payment in Stripe Dashboard).'
     : null;
+  const site = (process.env.SITE_URL || 'https://blackrabbitlawn.com').replace(/\/$/, '');
+  const trackNote =
+    lead.trackToken && isCmg
+      ? `Customer track link: ${site}/track/?t=${lead.trackToken}`
+      : null;
 
   const payload = {
     access_key: WEB3_KEY,
@@ -116,6 +128,7 @@ async function emailLead(lead) {
       `Source: ${lead.source || 'assistant-chat'}`,
       photoNote,
       depositNote,
+      trackNote,
       `Time: ${lead.createdAt}`,
       '',
       'Text them back ASAP or call.',
@@ -304,6 +317,7 @@ export default async function handler(req, res) {
 
   const lead = {
     id: 'lead-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    trackToken: makeTrackToken(),
     name,
     phone,
     address,
@@ -312,6 +326,7 @@ export default async function handler(req, res) {
     source,
     status: 'new',
     photoCount: photos.length,
+    depositPaid: false,
     // warm Admin previews (not written to GitHub)
     photoPreviews: photos.map((p) => p.previewDataUrl),
     _emailPhotos: photos.map((p) => ({
@@ -361,9 +376,12 @@ export default async function handler(req, res) {
   }
 
   const publicLead = leadForStorage(lead);
+  const site = (process.env.SITE_URL || 'https://blackrabbitlawn.com').replace(/\/$/, '');
   return res.status(200).json({
     ok: true,
     lead: publicLead,
+    trackToken: lead.trackToken,
+    trackUrl: lead.trackToken ? `${site}/track/?t=${encodeURIComponent(lead.trackToken)}` : null,
     emailed,
     saved,
     jerryPhone: JERRY_PHONE,

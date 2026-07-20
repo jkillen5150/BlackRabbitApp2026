@@ -12,6 +12,7 @@
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
+  <!-- /track is noindex private job links — omitted from sitemap -->
   <url>
     <loc>https://blackrabbitlawn.com/lawn-mowing</loc>
     <lastmod>2026-07-20</lastmod>

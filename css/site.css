@@ -1540,6 +1540,102 @@ a { color: var(--green); }
 .lead-status.texted { background: #e0f2fe; color: #0369a1; }
 .lead-status.booked { background: #dcfce7; color: #166534; }
 .lead-status.deposit_paid { background: #fef3c7; color: #92400e; }
+.lead-status.en_route { background: #ffedd5; color: #9a3412; }
+
+.lead-track-line {
+  margin: 6px 0 4px !important;
+  font-size: 0.85rem !important;
+}
+
+.lead-track-line a {
+  font-weight: 600;
+}
+
+/* Customer track page */
+.track-loading {
+  margin: 0;
+  color: var(--muted);
+  text-align: center;
+  padding: 12px 0;
+}
+
+.track-hello {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--green-dark);
+}
+
+.track-status-pill {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #e8f5e8;
+  color: var(--green-dark);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.track-blurb {
+  margin: 0 0 10px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.track-meta {
+  margin: 0 0 18px;
+  font-size: 0.88rem;
+  color: #777;
+}
+
+.track-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.track-steps li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f6f8f6;
+  color: #888;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.track-steps li.done {
+  color: var(--green-dark);
+  background: #eef6ee;
+}
+
+.track-steps li.current {
+  color: #fff;
+  background: linear-gradient(135deg, var(--green), #3d7a3d);
+  box-shadow: 0 6px 18px rgba(46, 90, 46, 0.25);
+}
+
+.track-step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ccc;
+  flex-shrink: 0;
+}
+
+.track-steps li.done .track-step-dot {
+  background: var(--green);
+}
+
+.track-steps li.current .track-step-dot {
+  background: #fff;
+}
 
 .lead-card {
   border: 1px solid #eee;

@@ -148,7 +148,8 @@
       page === 'login' ||
       page === 'customer' ||
       page === 'thankyou' ||
-      page === 'cut-my-grass'
+      page === 'cut-my-grass' ||
+      page === 'track'
     ) {
       return;
     }
@@ -183,7 +184,8 @@
       page === 'customer' ||
       page === 'admin' ||
       page === 'thankyou' ||
-      page === 'cut-my-grass'
+      page === 'cut-my-grass' ||
+      page === 'track'
     ) {
       return;
     }

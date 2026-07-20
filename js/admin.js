@@ -180,15 +180,39 @@ async function loadLeads() {
           <p><strong>Need:</strong> ${BRContent.escapeHtml(l.need || '—')}</p>
           ${photosHtml}
           <p style="color:#888;font-size:0.8rem;">${BRContent.escapeHtml(l.createdAt || '')} · ${BRContent.escapeHtml(l.source || '')}</p>
+          <p class="lead-track-line">${
+            l.trackToken
+              ? `<a href="/track/?t=${BRContent.escapeAttr(l.trackToken)}" target="_blank" rel="noopener">Open track page</a>
+                 · <button type="button" class="btn-sm btn-copy-track" data-token="${BRContent.escapeAttr(l.trackToken)}">Copy track link</button>`
+              : '<span style="color:#999">No track link</span>'
+          }</p>
           <div class="lead-actions">
-            <button type="button" class="btn-sm" data-status="texted" data-id="${BRContent.escapeAttr(l.id)}">Mark texted</button>
-            <button type="button" class="btn-sm" data-status="booked" data-id="${BRContent.escapeAttr(l.id)}">Mark booked</button>
+            <button type="button" class="btn-sm" data-status="texted" data-id="${BRContent.escapeAttr(l.id)}">Texted</button>
+            <button type="button" class="btn-sm" data-status="booked" data-id="${BRContent.escapeAttr(l.id)}">Booked</button>
+            <button type="button" class="btn-sm" data-status="en_route" data-id="${BRContent.escapeAttr(l.id)}">On the way</button>
             <button type="button" class="btn-sm" data-status="done" data-id="${BRContent.escapeAttr(l.id)}">Done</button>
             <button type="button" class="btn-sm" data-status="new" data-id="${BRContent.escapeAttr(l.id)}">Reopen</button>
           </div>
         </div>`;
       })
       .join('');
+
+    list.querySelectorAll('.btn-copy-track').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const token = btn.dataset.token;
+        if (!token) return;
+        const url = window.location.origin + '/track/?t=' + encodeURIComponent(token);
+        try {
+          await navigator.clipboard.writeText(url);
+          btn.textContent = 'Copied!';
+          setTimeout(() => {
+            btn.textContent = 'Copy track link';
+          }, 1500);
+        } catch {
+          window.prompt('Copy track link:', url);
+        }
+      });
+    });
 
     list.querySelectorAll('[data-status]').forEach((btn) => {
       btn.addEventListener('click', async () => {

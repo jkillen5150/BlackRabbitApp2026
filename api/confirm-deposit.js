@@ -49,6 +49,11 @@ function markLeadDepositPaid(leadId, info) {
   return lead;
 }
 
+function findLeadAnywhere(leadId) {
+  if (!leadId) return null;
+  return memoryLeads().find((l) => l && l.id === leadId) || null;
+}
+
 async function emailJerryPaid(info) {
   const res = await fetch('https://api.web3forms.com/submit', {
     method: 'POST',
@@ -67,13 +72,16 @@ async function emailJerryPaid(info) {
         `Address: ${info.address || '(not provided)'}`,
         `Service: ${info.service || '(not provided)'}`,
         `Lead ID: ${info.leadId || '(none)'}`,
+        info.trackUrl ? `Customer track: ${info.trackUrl}` : null,
         `Stripe session: ${info.sessionId}`,
         `Payment status: ${info.paymentStatus}`,
         `Time: ${new Date().toISOString()}`,
         '',
-        'Text them to confirm the slot.',
+        'Text them to confirm the slot. Update status in Admin so their track page moves.',
         `Your public line: ${JERRY_PHONE}`
-      ].join('\n')
+      ]
+        .filter(Boolean)
+        .join('\n')
     })
   });
   const data = await res.json().catch(() => ({}));
@@ -174,11 +182,16 @@ export default async function handler(req, res) {
       info.phone = clean(session.customer_details.phone, 40);
     }
 
-    markLeadDepositPaid(info.leadId, info);
+    const lead = markLeadDepositPaid(info.leadId, info) || findLeadAnywhere(info.leadId);
+    const site = (process.env.SITE_URL || 'https://blackrabbitlawn.com').replace(/\/$/, '');
+    const trackToken = lead && lead.trackToken ? lead.trackToken : null;
+    const trackUrl = trackToken
+      ? `${site}/track/?t=${encodeURIComponent(trackToken)}`
+      : null;
 
     let emailed = false;
     try {
-      await emailJerryPaid(info);
+      await emailJerryPaid({ ...info, trackUrl });
       emailed = true;
     } catch (e) {
       console.error('Deposit paid email failed', e);
@@ -192,7 +205,9 @@ export default async function handler(req, res) {
       emailed,
       amountLabel: info.amountLabel,
       leadId: info.leadId || null,
-      name: info.name || null
+      name: info.name || null,
+      trackToken,
+      trackUrl
     });
   } catch (e) {
     console.error('confirm-deposit', e);
