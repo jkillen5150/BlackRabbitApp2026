@@ -151,6 +151,9 @@ async function loadLeads() {
         const st = BRContent.escapeHtml(l.status || 'new');
         const previews = Array.isArray(l.photoPreviews) ? l.photoPreviews : [];
         const photoCount = Number(l.photoCount) || previews.length || 0;
+        const depositBadge = l.depositPaid
+          ? '<span class="lead-status deposit_paid">deposit paid</span>'
+          : '';
         let photosHtml = '';
         if (previews.length) {
           photosHtml =
@@ -169,6 +172,7 @@ async function loadLeads() {
         <div class="lead-card" data-id="${BRContent.escapeAttr(l.id)}">
           <h4>${BRContent.escapeHtml(l.name || 'Customer')}
             <span class="lead-status ${st}">${st}</span>
+            ${depositBadge}
           </h4>
           <p><strong>Phone:</strong> <a href="tel:${BRContent.escapeAttr(String(l.phone || '').replace(/\s/g, ''))}">${BRContent.escapeHtml(l.phone || '')}</a>
             · <a href="sms:${BRContent.escapeAttr(String(l.phone || '').replace(/\s/g, ''))}">Text</a></p>

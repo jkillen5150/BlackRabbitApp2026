@@ -1539,6 +1539,7 @@ a { color: var(--green); }
 .lead-status.done { background: #e8e8e8; color: #555; }
 .lead-status.texted { background: #e0f2fe; color: #0369a1; }
 .lead-status.booked { background: #dcfce7; color: #166534; }
+.lead-status.deposit_paid { background: #fef3c7; color: #92400e; }
 
 .lead-card {
   border: 1px solid #eee;

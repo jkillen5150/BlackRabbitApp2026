@@ -159,7 +159,7 @@
     return parts.join(' · ');
   }
 
-  function applyReturnState() {
+  async function applyReturnState() {
     const params = new URLSearchParams(window.location.search);
     const deposit = params.get('deposit');
     if (!deposit) return;
@@ -167,14 +167,46 @@
     const title = $('cmg-done-title');
     const msg = $('cmg-done-msg');
     const icon = document.querySelector('.cmg-success-icon');
+    const sessionId = params.get('session_id') || '';
 
     showStep('done');
 
     if (deposit === 'success') {
-      if (title) title.textContent = 'Deposit received';
+      if (title) title.textContent = 'Confirming payment…';
+      if (msg) msg.textContent = 'One moment — verifying your deposit with Stripe.';
+      if (icon) icon.textContent = '…';
+
+      let verified = false;
+      let amountLabel = '';
+      if (sessionId) {
+        try {
+          const res = await fetch('/api/confirm-deposit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ sessionId })
+          });
+          const data = await res.json().catch(() => ({}));
+          verified = !!(res.ok && data.paid);
+          amountLabel = data.amountLabel || '';
+        } catch {
+          verified = false;
+        }
+      }
+
+      if (title) title.textContent = verified ? 'Deposit received' : 'You’re booked in';
       if (msg) {
-        msg.textContent =
-          'Thanks — your booking deposit went through. Jerry has your request and will text or call to confirm timing. Deposit applies to your final quote.';
+        if (verified) {
+          const amt =
+            amountLabel &&
+            (String(amountLabel).startsWith('$') ? amountLabel : '$' + amountLabel);
+          msg.textContent =
+            'Thanks — your booking deposit' +
+            (amt ? ' (' + amt + ')' : '') +
+            ' went through. Jerry has been notified and will text or call to confirm timing. Deposit applies to your final quote.';
+        } else {
+          msg.textContent =
+            'Thanks — your request is in. If you completed card pay, Jerry will confirm shortly. Otherwise text (407) 951-1663.';
+        }
       }
       if (icon) icon.textContent = '✓';
     } else if (deposit === 'cancel') {
@@ -186,7 +218,7 @@
       if (icon) icon.textContent = '!';
     }
 
-    // Clean URL so refresh doesn’t re-flash
+    // Clean URL so refresh doesn’t re-flash / re-confirm spam (server is also idempotent)
     try {
       const clean = window.location.pathname.replace(/\/?$/, '/');
       window.history.replaceState({}, '', clean);

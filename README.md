@@ -104,6 +104,7 @@ Fast booking UX at **`/cut-my-grass/`**, branded as a product of Black Rabbit:
 3. Posts to **`POST /api/lead`** with `source: cut-my-grass` (email + Admin list)
 4. Optional **yard photos** (up to 2) — compressed on-device, emailed as attachments; Admin shows previews when the API is still warm
 5. **Stripe deposit** — after the request is saved, customer is sent to Stripe Checkout (`POST /api/create-deposit`). Default **$25** (`STRIPE_DEPOSIT_AMOUNT_CENTS=2500`). Deposit applies to the final quote; balance after the job.
+6. **Deposit confirm** — return URL calls `POST /api/confirm-deposit` with the Checkout `session_id`. Verifies payment with Stripe, emails you **DEPOSIT PAID**, marks the warm Admin lead when possible.
 
 ### Stripe env (Vercel)
 
