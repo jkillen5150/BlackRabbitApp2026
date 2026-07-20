@@ -602,14 +602,14 @@ a { color: var(--green); }
 /* ——— FAQ (home SEO) ——— */
 .faq-section {
   max-width: 760px;
-  margin: 48px auto 8px;
-  padding: 0 20px 16px;
+  margin: 48px auto 0;
+  padding: 0 20px 8px;
 }
 
 .faq-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 14px;
 }
 
 .faq-item {
@@ -617,13 +617,9 @@ a { color: var(--green); }
   border: 1px solid #e6ebe6;
   border-radius: 14px;
   padding: 0;
-  margin: 0 0 12px;
+  margin: 0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   overflow: hidden;
-}
-
-.faq-item:last-child {
-  margin-bottom: 0;
 }
 
 .faq-item summary {
@@ -867,12 +863,11 @@ a { color: var(--green); }
 /* ——— Service form ——— */
 .service-request {
   max-width: 620px;
-  margin: 0 auto;
+  margin: 40px auto 0;
   padding: 50px 30px;
   background: white;
   border-radius: 20px;
   box-shadow: var(--shadow);
-  margin-top: -36px;
   position: relative;
   z-index: 10;
 }
