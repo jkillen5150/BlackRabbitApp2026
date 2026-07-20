@@ -95,6 +95,9 @@ async function emailLead(lead) {
     lead.photoCount > 0
       ? `Photos: ${lead.photoCount} attached to this email`
       : 'Photos: none';
+  const depositNote = isCmg
+    ? 'Deposit: customer will be sent to Stripe Checkout after this email (watch for payment in Stripe Dashboard).'
+    : null;
 
   const payload = {
     access_key: WEB3_KEY,
@@ -112,11 +115,14 @@ async function emailLead(lead) {
       `Urgency: ${lead.urgency || '(not provided)'}`,
       `Source: ${lead.source || 'assistant-chat'}`,
       photoNote,
+      depositNote,
       `Time: ${lead.createdAt}`,
       '',
       'Text them back ASAP or call.',
       `Your public line: ${JERRY_PHONE}`
-    ].join('\n')
+    ]
+      .filter(Boolean)
+      .join('\n')
   };
 
   // Web3Forms attachments: base64 content without data: prefix

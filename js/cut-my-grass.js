@@ -1,8 +1,8 @@
 /**
  * Cut My Grass — multi-step booking
- * Submits to POST /api/lead (same pipeline as Ask AI).
- * Optional yard photos are compressed on-device and emailed as attachments.
- * Stripe checkout reserved for a later phase.
+ * 1) POST /api/lead (email + Admin)
+ * 2) POST /api/create-deposit → Stripe Checkout (card deposit)
+ * Optional yard photos compressed on-device.
  */
 (function () {
   const TOTAL_STEPS = 4;
@@ -79,7 +79,7 @@
     if (back) back.hidden = step <= 1;
     if (next) {
       next.disabled = !canContinue();
-      next.textContent = step === TOTAL_STEPS ? 'Send request' : 'Continue';
+      next.textContent = step === TOTAL_STEPS ? 'Pay deposit & book' : 'Continue';
       next.classList.toggle('cmg-busy', false);
     }
     if (step === 4) renderSummary();
@@ -155,8 +155,68 @@
     ];
     if (state.notes) parts.push('Notes: ' + state.notes);
     if (state.photos.length) parts.push('Photos: ' + state.photos.length + ' attached');
-    parts.push('Payment: pay-after-work (Stripe in-app later)');
+    parts.push('Payment: card deposit via Stripe Checkout (applied to final quote)');
     return parts.join(' · ');
+  }
+
+  function applyReturnState() {
+    const params = new URLSearchParams(window.location.search);
+    const deposit = params.get('deposit');
+    if (!deposit) return;
+
+    const title = $('cmg-done-title');
+    const msg = $('cmg-done-msg');
+    const icon = document.querySelector('.cmg-success-icon');
+
+    showStep('done');
+
+    if (deposit === 'success') {
+      if (title) title.textContent = 'Deposit received';
+      if (msg) {
+        msg.textContent =
+          'Thanks — your booking deposit went through. Jerry has your request and will text or call to confirm timing. Deposit applies to your final quote.';
+      }
+      if (icon) icon.textContent = '✓';
+    } else if (deposit === 'cancel') {
+      if (title) title.textContent = 'Request saved';
+      if (msg) {
+        msg.textContent =
+          'No charge made. Jerry still got your Cut My Grass request — text or call to finish booking, or start again and complete the deposit.';
+      }
+      if (icon) icon.textContent = '!';
+    }
+
+    // Clean URL so refresh doesn’t re-flash
+    try {
+      const clean = window.location.pathname.replace(/\/?$/, '/');
+      window.history.replaceState({}, '', clean);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function startDeposit(leadId) {
+    const res = await fetch('/api/create-deposit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        name: state.name,
+        phone: state.phone,
+        address: state.address,
+        leadId: leadId || '',
+        service: state.serviceLabel || state.service,
+        urgency: state.urgencyLabel || state.urgency
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const err = new Error(data.error || 'Could not start deposit');
+      err.detail = data.detail || data.note || '';
+      err.code = res.status;
+      throw err;
+    }
+    if (!data.url) throw new Error('No checkout URL returned');
+    return data;
   }
 
   /** Lightweight JPEG compress for phone uploads (no content-store dep). */
@@ -333,6 +393,7 @@
     };
 
     try {
+      // 1) Always capture the lead so Jerry is notified even if they bail on card pay
       const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -342,11 +403,29 @@
       if (!res.ok) {
         throw new Error(data.error || 'Could not send request');
       }
-      showStep('done');
-      const msg = $('cmg-done-msg');
-      if (msg && data.emailed === false) {
-        msg.textContent =
-          'We saved your request. If you don’t hear back soon, text Jerry at (407) 951-1663.';
+
+      const leadId = data.lead && data.lead.id;
+
+      // 2) Stripe Checkout deposit
+      if (next) next.textContent = 'Opening secure pay…';
+      try {
+        const checkout = await startDeposit(leadId);
+        window.location.href = checkout.url;
+        return;
+      } catch (depErr) {
+        // Lead already saved — soft-fail so booking isn’t lost
+        showStep('done');
+        const title = $('cmg-done-title');
+        const msg = $('cmg-done-msg');
+        if (title) title.textContent = 'Request received';
+        if (msg) {
+          const extra = depErr.detail ? ' (' + depErr.detail + ')' : '';
+          msg.textContent =
+            'Jerry got your request. Card deposit isn’t available right now' +
+            extra +
+            '. He’ll text or call to confirm — or call (407) 951-1663.';
+        }
+        return;
       }
     } catch (e) {
       setError(
@@ -356,7 +435,7 @@
       if (next) {
         next.disabled = false;
         next.classList.remove('cmg-busy');
-        next.textContent = 'Send request';
+        next.textContent = 'Pay deposit & book';
       }
     }
   }
@@ -434,7 +513,11 @@
       }
     });
 
-    showStep(1);
+    if (new URLSearchParams(window.location.search).get('deposit')) {
+      applyReturnState();
+    } else {
+      showStep(1);
+    }
   }
 
   if (document.readyState === 'loading') {

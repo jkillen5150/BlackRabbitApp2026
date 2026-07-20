@@ -103,7 +103,17 @@ Fast booking UX at **`/cut-my-grass/`**, branded as a product of Black Rabbit:
 2. Multi-step: service → address → when → contact
 3. Posts to **`POST /api/lead`** with `source: cut-my-grass` (email + Admin list)
 4. Optional **yard photos** (up to 2) — compressed on-device, emailed as attachments; Admin shows previews when the API is still warm
-5. **Stripe** not wired yet — copy says pay after work; add Checkout later under the same brand
+5. **Stripe deposit** — after the request is saved, customer is sent to Stripe Checkout (`POST /api/create-deposit`). Default **$25** (`STRIPE_DEPOSIT_AMOUNT_CENTS=2500`). Deposit applies to the final quote; balance after the job.
+
+### Stripe env (Vercel)
+
+| Variable | Required | Notes |
+|----------|----------|--------|
+| `STRIPE_SECRET_KEY` | Yes for deposits | `sk_live_…` (or `sk_test_…` while testing) |
+| `STRIPE_DEPOSIT_AMOUNT_CENTS` | No | Default `2500` ($25.00) |
+| `SITE_URL` | No | e.g. `https://blackrabbitlawn.com` if redirects mis-detect host |
+
+Never commit secret keys. Dashboard → Developers → API keys → add to Vercel → **redeploy**.
 
 ### Housekeeping notes
 
