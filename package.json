@@ -5,5 +5,8 @@
   "scripts": {
     "dev": "vercel dev",
     "deploy": "vercel --prod"
+  },
+  "devDependencies": {
+    "vercel": "^56.3.2"
   }
 }
