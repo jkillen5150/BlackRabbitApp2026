@@ -286,6 +286,47 @@
     return data;
   }
 
+  /**
+   * Web3Forms free tier often blocks server-side sends. Homepage form posts from
+   * the browser — do the same as a reliable backup so Jerry still gets email.
+   */
+  async function notifyJerryClientSide(trackUrl) {
+    const accessKey = '6467d992-e261-48c0-ae1e-2bc4b6cc557d';
+    const message = [
+      '--- Cut My Grass booking (browser notify) ---',
+      'Name: ' + state.name,
+      'Phone: ' + state.phone,
+      'Address: ' + (state.address || '(not provided)'),
+      'Service: ' + (state.serviceLabel || state.service || ''),
+      'When: ' + (state.urgencyLabel || state.urgency || ''),
+      'Notes: ' + (state.notes || '(none)'),
+      'Photos: ' + state.photos.length,
+      trackUrl ? 'Track: ' + trackUrl : null,
+      'Source: cut-my-grass'
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: accessKey,
+          subject: 'Cut My Grass request — ' + state.name,
+          from_name: 'Cut My Grass (Black Rabbit)',
+          name: state.name,
+          phone: state.phone,
+          message: message
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      return !!(res.ok && data.success !== false);
+    } catch {
+      return false;
+    }
+  }
+
   /** Lightweight JPEG compress for phone uploads (no content-store dep). */
   function compressImageFile(file) {
     return new Promise((resolve, reject) => {
@@ -478,6 +519,17 @@
         (trackToken ? '/track/?t=' + encodeURIComponent(trackToken) : '');
       saveTrackLocal(trackToken, trackUrl);
 
+      // Browser-side email backup (Web3Forms free plan allows client, not always server)
+      if (!data.emailed) {
+        await notifyJerryClientSide(
+          trackUrl && trackUrl.indexOf('http') === 0
+            ? trackUrl
+            : trackUrl
+              ? window.location.origin + trackUrl
+              : ''
+        );
+      }
+
       // 2) Stripe Checkout deposit
       if (next) next.textContent = 'Opening secure pay…';
       try {
@@ -491,11 +543,17 @@
         const msg = $('cmg-done-msg');
         if (title) title.textContent = 'Request received';
         if (msg) {
-          const extra = depErr.detail ? ' (' + depErr.detail + ')' : '';
+          const detail = depErr.detail || depErr.message || '';
+          const stripeHint =
+            /not configured|STRIPE/i.test(detail + (depErr.message || ''))
+              ? ' Stripe isn’t configured on this Vercel project yet (add STRIPE_SECRET_KEY + redeploy).'
+              : detail
+                ? ' (' + detail + ')'
+                : '';
           msg.textContent =
-            'Jerry got your request. Card deposit isn’t available right now' +
-            extra +
-            '. He’ll text or call to confirm — or call (407) 951-1663.';
+            'Jerry should have your request. Card deposit isn’t available right now.' +
+            stripeHint +
+            ' Call/text (407) 951-1663 anytime.';
         }
         injectTrackLink(trackUrl);
         return;

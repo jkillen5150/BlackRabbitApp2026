@@ -337,6 +337,11 @@ export default async function handler(req, res) {
     createdAt: new Date().toISOString()
   };
 
+  // Always accept into warm memory first so booking can continue even if email provider
+  // blocks server-side sends (Web3Forms free plan requires client-side).
+  globalLeads().unshift(lead);
+  if (globalLeads().length > 200) globalLeads().length = 200;
+
   let emailed = false;
   let emailError = null;
   try {
@@ -350,10 +355,6 @@ export default async function handler(req, res) {
   // Drop raw base64 from email helper field after send; keep previews for Admin session
   delete lead._emailPhotos;
 
-  // memory (with previews)
-  globalLeads().unshift(lead);
-  if (globalLeads().length > 200) globalLeads().length = 200;
-
   // durable (no image blobs)
   let saved = false;
   try {
@@ -366,17 +367,10 @@ export default async function handler(req, res) {
     console.error('Lead persist failed', e);
   }
 
-  if (!emailed && !saved) {
-    return res.status(502).json({
-      error: 'Could not deliver lead',
-      detail: emailError,
-      jerryPhone: JERRY_PHONE,
-      fallback: `Text Jerry directly at ${JERRY_PHONE}`
-    });
-  }
-
   const publicLead = leadForStorage(lead);
   const site = (process.env.SITE_URL || 'https://blackrabbitlawn.com').replace(/\/$/, '');
+
+  // Never hard-fail the customer after we have a lead id — client may also email via Web3Forms.
   return res.status(200).json({
     ok: true,
     lead: publicLead,
@@ -384,9 +378,13 @@ export default async function handler(req, res) {
     trackUrl: lead.trackToken ? `${site}/track/?t=${encodeURIComponent(lead.trackToken)}` : null,
     emailed,
     saved,
+    accepted: true,
+    emailError: emailed ? null : emailError,
     jerryPhone: JERRY_PHONE,
     message: emailed
       ? 'Jerry has been emailed this lead.'
-      : 'Lead saved; email may have failed — text Jerry too.'
+      : saved
+        ? 'Lead saved. Server email failed — client fallback may still notify Jerry.'
+        : 'Lead accepted. Server email failed — client should notify Jerry via Web3Forms.'
   });
 }
