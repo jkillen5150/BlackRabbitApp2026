@@ -609,7 +609,7 @@ a { color: var(--green); }
 .faq-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
 }
 
 .faq-item {
@@ -617,8 +617,13 @@ a { color: var(--green); }
   border: 1px solid #e6ebe6;
   border-radius: 14px;
   padding: 0;
+  margin: 0 0 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   overflow: hidden;
+}
+
+.faq-item:last-child {
+  margin-bottom: 0;
 }
 
 .faq-item summary {
