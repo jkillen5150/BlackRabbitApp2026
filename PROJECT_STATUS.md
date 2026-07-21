@@ -84,16 +84,32 @@ Env names are **exact**, not suggestions. Redeploy after every env change.
 - Later: USPTO search + TM for **Cut My Grass** / **Black Rabbit**; copyright automatic on content.
 - Use ™ informally when ready; ® only after federal registration.
 
-## Next when we resume (priority)
-1. Confirm **`GITHUB_TOKEN`** is on Production + redeploy finished → Admin “durable storage on”
-2. Confirm **`SITE_URL=https://www.blackrabbitlawn.com`** if return/track links ever go wrong
-3. **Full live dry run:** book → client email → deposit → track loads → Admin “On the way” → track updates
-4. Tune deposit amount if desired
-5. **Build options:** Stripe webhook backup · SMS track link (Twilio) · recurring weekly option
-6. **Not now:** native app, multi-crew Uber network, $850 TM until ads/scale
+## Core product (done)
+- [x] GITHUB_TOKEN durable leads + track
+- [x] LEAD_ADMIN_TOKEN lock + Admin “Save on this device” (no pop-up loop)
+- [x] Stripe Checkout deposit ($25)
+- [x] Customer `/track` pipeline + Admin status buttons
+- [x] Cut My Grass book flow + client Web3Forms backup
+
+## TODO — optional upgrades (build when volume hurts)
+1. **Stripe webhook backup** — mark deposit paid + email Jerry even if customer never returns to the success URL  
+2. **SMS track link (Twilio)** — auto-text customer `/track?t=…` after book / after deposit  
+3. **Recurring weekly option** — Cut My Grass choice + lead field for weekly/biweekly  
+4. **Tune deposit amount** — `STRIPE_DEPOSIT_AMOUNT_CENTS` if $25 feels wrong  
+5. **Ads / traffic** — only after a few real closed jobs and known close rate (not code)
+
+## Not now
+- Native app  
+- Multi-crew “Uber for lawn” network  
+- $850 trademark filing until ads/scale  
+
+## Next when we resume (ops)
+1. Confirm **`SITE_URL=https://www.blackrabbitlawn.com`** if return/track links ever go wrong  
+2. Real jobs: book → deposit → track → Admin → Google review ask  
+3. Pull first item off **TODO — optional upgrades** when ready to build  
 
 ## Admin tips
-- Lead token field = `LEAD_ADMIN_TOKEN` (session)
+- Lead token field = `LEAD_ADMIN_TOKEN` → **Save on this device** (localStorage)
 - Copy track link → text to customer
 - Status buttons drive `/track` pipeline
 - If meta says WARNING about GITHUB_TOKEN, track links will fail for customers
