@@ -3,8 +3,10 @@
 Last updated: 2026-07-21
 
 ## ⚠️ Token expiry (king note)
-- **`GITHUB_TOKEN` is good for 30 days** from setup (**~2026-07-21 → rotate by ~2026-08-20**).
-- When it expires: Admin durable list + `/track` break until you mint a new PAT, update Vercel env, redeploy.
+- **`GITHUB_TOKEN` set to no expiration / indefinitely** (~2026-07-21). Does not auto-rotate.
+- **Live probe 2026-07-21:** token present but **`GitHub 403: Resource not accessible by personal access token`** — needs **Contents: Read and write** on `BlackRabbitApp2026` (or classic **`repo`** scope). Expiry is fine; **permissions are not**.
+- If track/Admin durable ever die: fix PAT scopes, update Vercel, redeploy.
+- Still treat the PAT like a password — only in Vercel env, never in the repo.
 - **`LEAD_ADMIN_TOKEN`** does not auto-expire (openssl string you control).
 
 ## Live stack
@@ -49,7 +51,7 @@ Last updated: 2026-07-21
 | `XAI_API_KEY` | Ask AI (`/api/chat`) | required for chat |
 | `STRIPE_SECRET_KEY` | Deposits — **`sk_` or `rk_live_`**, not `pk_` | required for deposits |
 | `SITE_URL` | Prefer **`https://www.blackrabbitlawn.com`** | strongly recommended |
-| **`GITHUB_TOKEN`** | Durable `data/leads.json` — **required for `/track` + Admin across cold starts**. **30-day expiry** (set ~2026-07-21 → renew ~2026-08-20). | set on Vercel |
+| **`GITHUB_TOKEN`** | Durable `data/leads.json` — **required for `/track` + Admin across cold starts**. **No expiration** (set ~2026-07-21). | set on Vercel |
 | `LEAD_ADMIN_TOKEN` | Locks GET/PATCH leads; paste same value in Admin UI | **set** (live 401 verified) |
 | `STRIPE_DEPOSIT_AMOUNT_CENTS` | Optional; default `2500` ($25) | optional |
 | `WEB3FORMS_KEY` | Optional override; free plan often needs **client-side** submit | optional |
@@ -59,7 +61,7 @@ Env names are **exact**, not suggestions. Redeploy after every env change.
 ### GITHUB_TOKEN setup (2 minutes)
 1. GitHub → Settings → Developer settings → Personal access tokens (fine-grained or classic)
 2. Classic: `repo` scope, or fine-grained: this repo + **Contents: Read and write**
-3. **Expiry: 30 days** for the current token (king) — calendar renew ~**2026-08-20**
+3. **Expiry: no expiration / indefinitely** (current king setup ~2026-07-21)
 4. Vercel project **2026** → Settings → Environment Variables → Production (and Preview if you test there)
 5. Name: `GITHUB_TOKEN` · Value: the token · Save → **Redeploy**
 6. Book a test cut → Admin should show “durable storage on” → open track link → should load
@@ -86,10 +88,9 @@ Env names are **exact**, not suggestions. Redeploy after every env change.
 1. Confirm **`GITHUB_TOKEN`** is on Production + redeploy finished → Admin “durable storage on”
 2. Confirm **`SITE_URL=https://www.blackrabbitlawn.com`** if return/track links ever go wrong
 3. **Full live dry run:** book → client email → deposit → track loads → Admin “On the way” → track updates
-4. **~2026-08-20:** rotate **`GITHUB_TOKEN`** (30-day) → update Vercel → redeploy
-5. Tune deposit amount if desired
-6. **Build options:** Stripe webhook backup · SMS track link (Twilio) · recurring weekly option
-7. **Not now:** native app, multi-crew Uber network, $850 TM until ads/scale
+4. Tune deposit amount if desired
+5. **Build options:** Stripe webhook backup · SMS track link (Twilio) · recurring weekly option
+6. **Not now:** native app, multi-crew Uber network, $850 TM until ads/scale
 
 ## Admin tips
 - Lead token field = `LEAD_ADMIN_TOKEN` (session)
