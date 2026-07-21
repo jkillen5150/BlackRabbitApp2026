@@ -7,7 +7,15 @@
  * Env:
  *   STRIPE_SECRET_KEY
  *   WEB3FORMS_KEY (optional — same as lead email)
+ *   GITHUB_TOKEN (optional but required so deposit_paid shows on /track)
+ *   SITE_URL
  */
+import {
+  findLeadById,
+  siteUrl,
+  updateLead
+} from './_lib/leads-store.js';
+
 const WEB3_KEY =
   process.env.WEB3FORMS_KEY || '6467d992-e261-48c0-ae1e-2bc4b6cc557d';
 const JERRY_PHONE = '407-951-1663';
@@ -30,28 +38,19 @@ function confirmedSet() {
   return g.__brDepositConfirmed;
 }
 
-function memoryLeads() {
-  const g = globalThis;
-  if (!g.__brLeads) g.__brLeads = [];
-  return g.__brLeads;
-}
-
-function markLeadDepositPaid(leadId, info) {
+async function markLeadDepositPaid(leadId, info) {
   if (!leadId) return null;
-  const leads = memoryLeads();
-  const lead = leads.find((l) => l && l.id === leadId);
-  if (!lead) return null;
-  lead.depositPaid = true;
-  lead.depositAmountCents = info.amountCents;
-  lead.depositSessionId = info.sessionId;
-  lead.status = lead.status === 'new' ? 'deposit_paid' : lead.status;
-  lead.updatedAt = new Date().toISOString();
-  return lead;
-}
-
-function findLeadAnywhere(leadId) {
-  if (!leadId) return null;
-  return memoryLeads().find((l) => l && l.id === leadId) || null;
+  const existing = await findLeadById(leadId);
+  const nextStatus =
+    existing && existing.status && existing.status !== 'new'
+      ? existing.status
+      : 'deposit_paid';
+  return updateLead(leadId, {
+    depositPaid: true,
+    depositAmountCents: info.amountCents,
+    depositSessionId: info.sessionId,
+    status: nextStatus
+  });
 }
 
 async function emailJerryPaid(info) {
@@ -182,11 +181,11 @@ export default async function handler(req, res) {
       info.phone = clean(session.customer_details.phone, 40);
     }
 
-    const lead = markLeadDepositPaid(info.leadId, info) || findLeadAnywhere(info.leadId);
-    const site = (process.env.SITE_URL || 'https://blackrabbitlawn.com').replace(/\/$/, '');
+    const lead = await markLeadDepositPaid(info.leadId, info);
+    const site = siteUrl(req);
     const trackToken = lead && lead.trackToken ? lead.trackToken : null;
     const trackUrl = trackToken
-      ? `${site}/track/?t=${encodeURIComponent(trackToken)}`
+      ? `${site}/track?t=${encodeURIComponent(trackToken)}`
       : null;
 
     let emailed = false;

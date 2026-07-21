@@ -30,7 +30,7 @@ Ask AI can **interview** a customer (name → phone → address → need), then:
 1. **Email you** via Web3Forms (same system as the homepage form)
 2. **Log the lead** for Admin → **Follow-up quotes** (`GET/POST/PATCH /api/lead`)
 
-Optional durable list: set **`GITHUB_TOKEN`** (repo contents write) on Vercel so leads append to `data/leads.json`. Without it, you still get **emails**; the on-site list may be partial after cold starts.
+**Track page + Admin list durability:** set **`GITHUB_TOKEN`** (repo **Contents: Read and write** on this repo) on Vercel so leads append to `data/leads.json`. **Required for customer `/track` links** — `/api/lead` and `/api/track` are separate serverless functions and do **not** share memory. Without the token, book → track returns “Not found” after a cold start. You still get **emails** either way (browser Web3Forms backup on Cut My Grass).
 
 **Lead list privacy:** set **`LEAD_ADMIN_TOKEN`** on Vercel (Project → Settings → Environment Variables → Production + Preview). Use a long random string. When set, `GET`/`PATCH` `/api/lead` require header `X-Lead-Token`. In Admin, paste the same token under **Lead admin token** (session only). Public **POST** of new leads (Cut My Grass / Ask AI) still works without the token.
 
@@ -52,9 +52,12 @@ GitHub Pages can’t run the chat function. Keep **everything on Vercel**:
 2. Framework preset: **Other** (static + `api/`).
 3. Project env vars:
    - **`XAI_API_KEY`** — xAI key for Ask AI
-   - **`GITHUB_TOKEN`** (optional) — durable lead list
+   - **`STRIPE_SECRET_KEY`** — `sk_…` or `rk_live_…` for Cut My Grass deposits
+   - **`SITE_URL`** — prefer `https://www.blackrabbitlawn.com` (canonical host)
+   - **`GITHUB_TOKEN`** — **required for `/track`** + durable Admin lead list (repo contents write)
    - **`LEAD_ADMIN_TOKEN`** (optional) — gate Admin lead list/updates
    - **`WEB3FORMS_KEY`** (optional) — overrides the public form access key
+   - **`STRIPE_DEPOSIT_AMOUNT_CENTS`** (optional) — default `2500` ($25)
 4. Deploy. Chat calls **`/api/chat`** on the same domain — no separate proxy app needed.
 5. Point **blackrabbitlawn.com** DNS to this Vercel project (Domains → Add).
 

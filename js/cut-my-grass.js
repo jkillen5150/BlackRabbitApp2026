@@ -255,8 +255,8 @@
 
     // Clean URL so refresh doesn’t re-flash / re-confirm spam (server is also idempotent)
     try {
-      const clean = window.location.pathname.replace(/\/?$/, '/');
-      window.history.replaceState({}, '', clean);
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
+      window.history.replaceState({}, '', path);
     } catch {
       /* ignore */
     }
@@ -516,7 +516,7 @@
       const trackToken = data.trackToken || (data.lead && data.lead.trackToken) || '';
       const trackUrl =
         data.trackUrl ||
-        (trackToken ? '/track/?t=' + encodeURIComponent(trackToken) : '');
+        (trackToken ? '/track?t=' + encodeURIComponent(trackToken) : '');
       saveTrackLocal(trackToken, trackUrl);
 
       // Browser-side email backup (Web3Forms free plan allows client, not always server)

@@ -1,44 +1,16 @@
 /**
  * GET /api/track?t=TOKEN
  * Public job status for Cut My Grass customers (token-gated, no full PII).
+ *
+ * Requires durable storage (GITHUB_TOKEN) in production — /api/lead memory
+ * is a different serverless isolate and is not visible here.
  */
+import { findLeadByTrackToken, isDurableConfigured } from './_lib/leads-store.js';
+
 function clean(s, max = 200) {
   return String(s || '')
     .trim()
     .slice(0, max);
-}
-
-function memoryLeads() {
-  const g = globalThis;
-  if (!g.__brLeads) g.__brLeads = [];
-  return g.__brLeads;
-}
-
-async function githubGetLeads() {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) return [];
-  const owner = process.env.GITHUB_OWNER || 'jkillen5150';
-  const repo = process.env.GITHUB_REPO || 'BlackRabbitApp2026';
-  const path = 'data/leads.json';
-  try {
-    const res = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.github+json',
-          'User-Agent': 'black-rabbit-track'
-        }
-      }
-    );
-    if (!res.ok) return [];
-    const file = await res.json();
-    const text = Buffer.from(file.content || '', 'base64').toString('utf8');
-    const leads = JSON.parse(text);
-    return Array.isArray(leads) ? leads : [];
-  } catch {
-    return [];
-  }
 }
 
 const STATUS_META = {
@@ -107,16 +79,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing track token' });
   }
 
-  let lead = memoryLeads().find((l) => l && l.trackToken === t);
-  if (!lead) {
-    const gh = await githubGetLeads();
-    lead = gh.find((l) => l && l.trackToken === t);
-  }
+  const lead = await findLeadByTrackToken(t);
 
   if (!lead) {
     return res.status(404).json({
       error: 'Not found',
-      note: 'This link may be old, or the job is no longer in active storage. Text Jerry at 407-951-1663.'
+      note: isDurableConfigured()
+        ? 'This link may be old, or the job is no longer in active storage. Text Jerry at 407-951-1663.'
+        : 'Track storage is not configured on the server (set GITHUB_TOKEN on Vercel, then redeploy). Text Jerry at 407-951-1663.'
     });
   }
 

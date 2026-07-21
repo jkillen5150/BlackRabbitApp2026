@@ -136,10 +136,14 @@ async function loadLeads() {
     const leads = data.leads || [];
     if (meta) {
       const lock = getLeadToken() ? ' · token OK' : '';
-      meta.textContent = data.durable
-        ? `${leads.length} lead(s) · durable storage on${lock}`
-        : `${leads.length} lead(s) · ${data.note || 'email mode'}${lock}`;
-      meta.style.color = '#666';
+      if (data.durable) {
+        meta.textContent = `${leads.length} lead(s) · durable storage on${lock}`;
+        meta.style.color = '#666';
+      } else {
+        meta.textContent =
+          `${leads.length} lead(s) · WARNING: GITHUB_TOKEN not set — track links break after cold starts. Add a repo contents token on Vercel, then redeploy.${lock}`;
+        meta.style.color = '#8a5a00';
+      }
     }
     if (!leads.length) {
       list.innerHTML =
@@ -182,7 +186,7 @@ async function loadLeads() {
           <p style="color:#888;font-size:0.8rem;">${BRContent.escapeHtml(l.createdAt || '')} · ${BRContent.escapeHtml(l.source || '')}</p>
           <p class="lead-track-line">${
             l.trackToken
-              ? `<a href="/track/?t=${BRContent.escapeAttr(l.trackToken)}" target="_blank" rel="noopener">Open track page</a>
+              ? `<a href="/track?t=${BRContent.escapeAttr(l.trackToken)}" target="_blank" rel="noopener">Open track page</a>
                  · <button type="button" class="btn-sm btn-copy-track" data-token="${BRContent.escapeAttr(l.trackToken)}">Copy track link</button>`
               : '<span style="color:#999">No track link</span>'
           }</p>
@@ -201,7 +205,7 @@ async function loadLeads() {
       btn.addEventListener('click', async () => {
         const token = btn.dataset.token;
         if (!token) return;
-        const url = window.location.origin + '/track/?t=' + encodeURIComponent(token);
+        const url = window.location.origin + '/track?t=' + encodeURIComponent(token);
         try {
           await navigator.clipboard.writeText(url);
           btn.textContent = 'Copied!';

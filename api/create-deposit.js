@@ -5,13 +5,15 @@
  * Env (Vercel):
  *   STRIPE_SECRET_KEY          — sk_live_… or sk_test_… (required)
  *   STRIPE_DEPOSIT_AMOUNT_CENTS — default 2500 ($25.00)
- *   SITE_URL                   — optional override, e.g. https://blackrabbitlawn.com
+ *   SITE_URL                   — optional override, e.g. https://www.blackrabbitlawn.com
  *
  * Body JSON:
  *   { name, phone, address?, leadId?, service?, urgency? }
  *
  * Returns: { url, sessionId, amountCents, amountLabel }
  */
+import { siteUrl } from './_lib/leads-store.js';
+
 function clean(s, max = 200) {
   return String(s || '')
     .trim()
@@ -19,10 +21,7 @@ function clean(s, max = 200) {
 }
 
 function siteBase(req) {
-  if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
-  const proto = req.headers['x-forwarded-proto'] || 'https';
-  const host = req.headers['x-forwarded-host'] || req.headers.host || 'blackrabbitlawn.com';
-  return `${proto}://${host}`.replace(/\/$/, '');
+  return siteUrl(req);
 }
 
 function dollars(cents) {
@@ -77,6 +76,7 @@ export default async function handler(req, res) {
   );
 
   const base = siteBase(req);
+  // cleanUrls + trailingSlash:false → /cut-my-grass (not /cut-my-grass/)
   const successUrl = `${base}/cut-my-grass?deposit=success&session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${base}/cut-my-grass?deposit=cancel`;
 

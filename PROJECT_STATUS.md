@@ -1,6 +1,6 @@
 # Black Rabbit / Cut My Grass — session handoff
 
-Last updated: 2026-07-20
+Last updated: 2026-07-21
 
 ## Live stack
 - **Domain:** `www.blackrabbitlawn.com` on **Vercel** (apex redirects to www). Not GitHub Pages for traffic.
@@ -9,30 +9,58 @@ Last updated: 2026-07-20
 
 ## What works
 - Marketing site + SEO landings + FAQ spacing
-- **Cut My Grass** (`/cut-my-grass/`) multi-step book flow
+- **Cut My Grass** (`/cut-my-grass`) multi-step book flow
 - Optional yard photos (client compress)
 - Lead accept + **browser Web3Forms** notify (server Web3Forms free tier blocks server IP)
-- Stripe **Checkout deposit** (`STRIPE_SECRET_KEY` = `sk_…` or **`rk_live_…`** restricted OK)
+- Stripe **Checkout deposit** (`STRIPE_SECRET_KEY` = `sk_…` or **`rk_live_…`** restricted OK) — live verified 2026-07-21
 - Deposit confirm → “DEPOSIT PAID” email path
-- **Track page** `/track/?t=…` + Admin status (texted / booked / **on the way** / done)
+- **Track page** `/track?t=…` + Admin status (texted / booked / **on the way** / done) — **needs `GITHUB_TOKEN`**
 - Branding: “Powered by **Black Rabbit**” (no “Landscaping” on CMG kicker)
 
+## Live dry-run findings (2026-07-21)
+| Step | Result |
+|------|--------|
+| Site / apex → www | OK (308 preserves query string) |
+| `POST /api/create-deposit` | OK — live Stripe Checkout, $25 |
+| `POST /api/lead` | Accepts lead; **server email fails** (expected free tier); **`saved: false`** |
+| `GET /api/track?t=…` right after book | **404 Not found** — root cause below |
+| `GET /api/lead` list | Returns warm memory on lead function only; `durable: false` |
+| `LEAD_ADMIN_TOKEN` | **Not set** (list is public — set token for PII) |
+
+### Root cause: track broken without durable storage
+`/api/lead` and `/api/track` are **separate Vercel serverless isolates**. In-memory `globalThis.__brLeads` is **not shared**. Without **`GITHUB_TOKEN`** writing `data/leads.json`, customer track links never resolve on another function.
+
+## Code fixes in this session (deploy to take effect)
+1. Shared store: `api/_lib/leads-store.js` (memory + GitHub) used by lead / track / confirm-deposit / create-deposit
+2. **confirm-deposit** now marks `deposit_paid` in **GitHub** (not only memory)
+3. Canonical **`SITE_URL`** helper defaults / rewrites apex → `https://www.blackrabbitlawn.com`
+4. Track / copy-link URLs use `/track?t=` (matches `trailingSlash: false`)
+5. Admin warns when durable storage is off
+6. Clearer 404 note when `GITHUB_TOKEN` missing
+
 ## Env vars (2026 Vercel · Production · exact names)
-| Name | Purpose |
-|------|---------|
-| `XAI_API_KEY` | Ask AI (`/api/chat`) — same key as old proxy is fine; must be **on 2026** |
-| `STRIPE_SECRET_KEY` | Deposits — **`sk_` or `rk_live_`**, not `pk_` |
-| `SITE_URL` | Prefer `https://www.blackrabbitlawn.com` |
-| `LEAD_ADMIN_TOKEN` | Optional; locks GET/PATCH leads; paste same value in Admin UI |
-| `STRIPE_DEPOSIT_AMOUNT_CENTS` | Optional; default `2500` ($25) |
-| `GITHUB_TOKEN` | Optional; durable `data/leads.json` + longer-lived track tokens |
-| `WEB3FORMS_KEY` | Optional override; free plan often needs **client-side** submit |
+| Name | Purpose | Priority |
+|------|---------|----------|
+| `XAI_API_KEY` | Ask AI (`/api/chat`) | required for chat |
+| `STRIPE_SECRET_KEY` | Deposits — **`sk_` or `rk_live_`**, not `pk_` | required for deposits |
+| `SITE_URL` | Prefer **`https://www.blackrabbitlawn.com`** | strongly recommended |
+| **`GITHUB_TOKEN`** | Durable `data/leads.json` — **required for `/track` + Admin across cold starts** | **do this next** |
+| `LEAD_ADMIN_TOKEN` | Locks GET/PATCH leads; paste same value in Admin UI | recommended (PII) |
+| `STRIPE_DEPOSIT_AMOUNT_CENTS` | Optional; default `2500` ($25) | optional |
+| `WEB3FORMS_KEY` | Optional override; free plan often needs **client-side** submit | optional |
 
 Env names are **exact**, not suggestions. Redeploy after every env change.
 
+### GITHUB_TOKEN setup (2 minutes)
+1. GitHub → Settings → Developer settings → Personal access tokens (fine-grained or classic)
+2. Classic: `repo` scope, or fine-grained: this repo + **Contents: Read and write**
+3. Vercel project **2026** → Settings → Environment Variables → Production (and Preview if you test there)
+4. Name: `GITHUB_TOKEN` · Value: the token · Save → **Redeploy**
+5. Book a test cut → Admin should show “durable storage on” → open track link → should load
+
 ## Key product URLs
-- Book: `/cut-my-grass/`
-- Track: `/track/?t=TOKEN`
+- Book: `/cut-my-grass`
+- Track: `/track?t=TOKEN`
 - APIs: `/api/lead`, `/api/create-deposit`, `/api/confirm-deposit`, `/api/track`, `/api/chat`
 
 ## Lessons learned
@@ -41,6 +69,7 @@ Env names are **exact**, not suggestions. Redeploy after every env change.
 3. “Could not deliver lead” was email/save — **before** Stripe.
 4. “Stripe isn’t configured” = missing `STRIPE_SECRET_KEY` on **this** project/Production or no redeploy.
 5. Restricted Stripe keys start with **`rk_`** — OK. Publishable **`pk_`** — do not use for server.
+6. **Serverless functions do not share memory** — track/admin durability needs `GITHUB_TOKEN` (or another shared store).
 
 ## Trademark / legal
 - Not filing yet. ~$850 quote for a filing is normal ballpark for one mark/class.
@@ -48,16 +77,18 @@ Env names are **exact**, not suggestions. Redeploy after every env change.
 - Use ™ informally when ready; ® only after federal registration.
 
 ## Next when we resume (priority)
-1. **Stabilize** — full live dry run: book → email → deposit → track → Admin “on the way”
-2. Confirm `SITE_URL=https://www.blackrabbitlawn.com` if track/return links wrong
-3. Tune deposit amount if desired
-4. **Build options:** Stripe webhook backup · SMS track link (Twilio) · recurring weekly option
-5. **Not now:** native app, multi-crew Uber network, $850 TM until ads/scale
+1. **You (Jerry):** set **`GITHUB_TOKEN`** + optional **`LEAD_ADMIN_TOKEN`** + confirm **`SITE_URL=https://www.blackrabbitlawn.com`** on Vercel → redeploy
+2. **Deploy** this branch’s track/store fixes
+3. **Full live dry run again:** book → client email → deposit ($25 test / refund) → track loads → Admin “On the way” → track updates
+4. Tune deposit amount if desired
+5. **Build options:** Stripe webhook backup · SMS track link (Twilio) · recurring weekly option
+6. **Not now:** native app, multi-crew Uber network, $850 TM until ads/scale
 
 ## Admin tips
 - Lead token field = `LEAD_ADMIN_TOKEN` (session)
 - Copy track link → text to customer
 - Status buttons drive `/track` pipeline
+- If meta says WARNING about GITHUB_TOKEN, track links will fail for customers
 
 ## Plugin
 - `npx plugins add vercel/vercel-plugin` installed (restart agents to load)
