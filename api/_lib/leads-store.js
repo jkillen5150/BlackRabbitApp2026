@@ -23,6 +23,13 @@ export function siteUrl(req) {
   return base;
 }
 
+/** Trim whitespace/newlines — common when pasting into Vercel. */
+export function githubToken() {
+  const t = process.env.GITHUB_TOKEN;
+  if (!t) return '';
+  return String(t).trim();
+}
+
 export function memoryLeads() {
   const g = globalThis;
   if (!g.__brLeads) g.__brLeads = [];
@@ -38,26 +45,74 @@ export function leadForStorage(lead) {
   };
 }
 
+function githubRepo() {
+  return {
+    owner: process.env.GITHUB_OWNER || 'jkillen5150',
+    repo: process.env.GITHUB_REPO || 'BlackRabbitApp2026',
+    path: 'data/leads.json'
+  };
+}
+
+function githubHeaders(token, extra) {
+  return Object.assign(
+    {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'User-Agent': 'black-rabbit-leads',
+      'X-GitHub-Api-Version': '2022-11-28'
+    },
+    extra || {}
+  );
+}
+
+/** Last GitHub store error (safe message, no secrets) — for API diagnostics. */
+export function lastGithubStoreError() {
+  return globalThis.__brGithubStoreError || null;
+}
+
+function setGithubStoreError(msg) {
+  globalThis.__brGithubStoreError = msg ? String(msg).slice(0, 300) : null;
+}
+
+function parseGithubError(status, bodyText) {
+  let msg = `GitHub HTTP ${status}`;
+  try {
+    const j = JSON.parse(bodyText || '{}');
+    if (j.message) msg = `GitHub ${status}: ${j.message}`;
+  } catch {
+    if (bodyText) msg = `GitHub ${status}: ${String(bodyText).slice(0, 160)}`;
+  }
+  if (status === 401 || status === 403) {
+    msg +=
+      ' — check GITHUB_TOKEN is valid, not expired, and has Contents: Read and write on this repo.';
+  }
+  return msg;
+}
+
+/**
+ * @returns {{ leads: any[], sha: string|null } | null}
+ */
 export async function githubGetLeads() {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) return null;
-  const owner = process.env.GITHUB_OWNER || 'jkillen5150';
-  const repo = process.env.GITHUB_REPO || 'BlackRabbitApp2026';
-  const path = 'data/leads.json';
+  const token = githubToken();
+  if (!token) {
+    setGithubStoreError('GITHUB_TOKEN not set');
+    return null;
+  }
+  const { owner, repo, path } = githubRepo();
   try {
     const res = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.github+json',
-          'User-Agent': 'black-rabbit-leads'
-        }
-      }
+      { headers: githubHeaders(token) }
     );
-    if (res.status === 404) return { leads: [], sha: null };
+    if (res.status === 404) {
+      setGithubStoreError(null);
+      return { leads: [], sha: null };
+    }
     if (!res.ok) {
-      console.error('GitHub get leads', res.status, await res.text());
+      const text = await res.text();
+      const err = parseGithubError(res.status, text);
+      setGithubStoreError(err);
+      console.error('GitHub get leads', err);
       return null;
     }
     const file = await res.json();
@@ -69,45 +124,53 @@ export async function githubGetLeads() {
     } catch {
       leads = [];
     }
+    setGithubStoreError(null);
     return { leads, sha: file.sha };
   } catch (e) {
-    console.error('GitHub get leads failed', e);
+    const err = 'GitHub get failed: ' + (e.message || String(e));
+    setGithubStoreError(err);
+    console.error(err);
     return null;
   }
 }
 
 export async function githubSaveLeads(leads, sha, message) {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) return false;
-  const owner = process.env.GITHUB_OWNER || 'jkillen5150';
-  const repo = process.env.GITHUB_REPO || 'BlackRabbitApp2026';
-  const path = 'data/leads.json';
+  const token = githubToken();
+  if (!token) {
+    setGithubStoreError('GITHUB_TOKEN not set');
+    return false;
+  }
+  const { owner, repo, path } = githubRepo();
   const content = Buffer.from(JSON.stringify(leads, null, 2) + '\n').toString('base64');
   try {
+    const body = {
+      message: String(message || `chore: update leads`).slice(0, 72),
+      content
+    };
+    // Existing file requires sha; omit only when creating
+    if (sha) body.sha = sha;
+
     const res = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
       {
         method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.github+json',
-          'Content-Type': 'application/json',
-          'User-Agent': 'black-rabbit-leads'
-        },
-        body: JSON.stringify({
-          message: String(message || `chore: update leads`).slice(0, 72),
-          content,
-          sha: sha || undefined
-        })
+        headers: githubHeaders(token, { 'Content-Type': 'application/json' }),
+        body: JSON.stringify(body)
       }
     );
     if (!res.ok) {
-      console.error('GitHub save leads', res.status, await res.text());
+      const text = await res.text();
+      const err = parseGithubError(res.status, text);
+      setGithubStoreError(err);
+      console.error('GitHub save leads', err);
       return false;
     }
+    setGithubStoreError(null);
     return true;
   } catch (e) {
-    console.error('GitHub save leads failed', e);
+    const err = 'GitHub save failed: ' + (e.message || String(e));
+    setGithubStoreError(err);
+    console.error(err);
     return false;
   }
 }
@@ -133,7 +196,11 @@ export async function loadAllLeads() {
   }
   leads = Array.from(byId.values());
   leads.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
-  return { leads, sha: gh?.sha ?? null, durable: !!process.env.GITHUB_TOKEN && gh !== null };
+  return {
+    leads,
+    sha: gh?.sha ?? null,
+    durable: !!githubToken() && gh !== null
+  };
 }
 
 export async function findLeadByTrackToken(token) {
@@ -228,11 +295,13 @@ export async function appendLead(lead) {
       );
     }
   } catch (e) {
-    console.error('Lead persist failed', e);
+    const err = 'Lead persist failed: ' + (e.message || String(e));
+    setGithubStoreError(err);
+    console.error(err);
   }
   return saved;
 }
 
 export function isDurableConfigured() {
-  return !!process.env.GITHUB_TOKEN;
+  return !!githubToken();
 }

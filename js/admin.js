@@ -141,7 +141,7 @@ async function loadLeads() {
         meta.style.color = '#666';
       } else {
         meta.textContent =
-          `${leads.length} lead(s) · WARNING: GITHUB_TOKEN not set — track links break after cold starts. Add a repo contents token on Vercel, then redeploy.${lock}`;
+          `${leads.length} lead(s) · WARNING: GITHUB_TOKEN not set or not working — track links break after cold starts. Fix token on Vercel (Contents: Read and write), redeploy.${lock}`;
         meta.style.color = '#8a5a00';
       }
     }

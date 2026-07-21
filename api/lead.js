@@ -16,6 +16,7 @@ import { randomBytes } from 'crypto';
 import {
   appendLead,
   isDurableConfigured,
+  lastGithubStoreError,
   leadForStorage,
   loadAllLeads,
   siteUrl,
@@ -260,6 +261,7 @@ export default async function handler(req, res) {
   const site = siteUrl(req);
 
   // Never hard-fail the customer after we have a lead id — client may also email via Web3Forms.
+  const storeError = saved ? null : lastGithubStoreError();
   return res.status(200).json({
     ok: true,
     lead: publicLead,
@@ -270,6 +272,7 @@ export default async function handler(req, res) {
     emailed,
     saved,
     durable: isDurableConfigured(),
+    storeError,
     accepted: true,
     emailError: emailed ? null : emailError,
     jerryPhone: JERRY_PHONE,
