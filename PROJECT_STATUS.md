@@ -96,7 +96,8 @@ Env names are **exact**, not suggestions. Redeploy after every env change.
 2. **SMS track link (Twilio)** — auto-text customer `/track?t=…` after book / after deposit  
 3. **Recurring weekly option** — Cut My Grass choice + lead field for weekly/biweekly  
 4. **Tune deposit amount** — `STRIPE_DEPOSIT_AMOUNT_CENTS` if $25 feels wrong  
-5. **Ads / traffic** — only after a few real closed jobs and known close rate (not code)
+5. **Ads / traffic** — only after a few real closed jobs and known close rate (not code)  
+6. **Physical / clone backup** — see **`BACKUP.md`** (ZIP/bundle to USB + secrets in password manager + domain auto-renew)
 
 ## Not now
 - Native app  

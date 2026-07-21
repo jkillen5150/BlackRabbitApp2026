@@ -44,6 +44,10 @@ You do **not** fine-tune a model. Each chat request gets a **briefing packet**:
 
 That’s “teaching the site,” not machine-learning training. Add new FAQs or services anytime.
 
+## Backup & recovery
+
+If the host or laptop dies: **`BACKUP.md`** — clone/ZIP, secrets checklist, “tits up” recovery table, low-tech phone fallback.
+
 ## One-piece deploy (Vercel)
 
 GitHub Pages can’t run the chat function. Keep **everything on Vercel**:
