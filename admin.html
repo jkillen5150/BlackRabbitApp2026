@@ -43,7 +43,7 @@
       <h2>📋 Follow-up quotes (from chat + Cut My Grass)</h2>
       <p style="color:#666;font-size:0.9rem;margin-top:0;">
         Customers who booked Cut My Grass or said “quote” / “connect me” in Ask AI. You also get an email for each one.
-        When <code>LEAD_ADMIN_TOKEN</code> is set on Vercel, the public lead list is locked — paste that same token below (stored only in this browser session).
+        When <code>LEAD_ADMIN_TOKEN</code> is set on Vercel, paste that same value once below — it stays on <strong>this device</strong> (no pop-up loop).
       </p>
       <div class="lead-token-row">
         <label for="lead-admin-token">Lead admin token</label>
@@ -54,9 +54,9 @@
             name="lead-admin-token"
             autocomplete="off"
             spellcheck="false"
-            placeholder="Paste LEAD_ADMIN_TOKEN from Vercel"
+            placeholder="Paste LEAD_ADMIN_TOKEN from Vercel (once)"
           >
-          <button type="button" class="btn btn-outline" id="btn-save-lead-token">Save for session</button>
+          <button type="button" class="btn btn-outline" id="btn-save-lead-token">Save on this device</button>
           <button type="button" class="btn btn-solid" id="btn-refresh-leads">Refresh leads</button>
         </div>
         <span id="leads-meta" style="font-size:0.85rem;color:#666;display:block;margin-top:8px;"></span>

@@ -29,15 +29,16 @@ const JERRY_PHONE = '407-951-1663';
 
 /** When LEAD_ADMIN_TOKEN is set, block unauthenticated list/update of PII. */
 function requireLeadAdmin(req, res) {
-  const secret = process.env.LEAD_ADMIN_TOKEN;
+  // Trim — Vercel paste / client headers often pick up stray newlines
+  const secret = String(process.env.LEAD_ADMIN_TOKEN || '').trim();
   if (!secret) return true;
-  const header = String(req.headers['x-lead-token'] || '');
+  const header = String(req.headers['x-lead-token'] || '').trim();
   const auth = String(req.headers.authorization || '');
   const bearer = auth.match(/^Bearer\s+(.+)$/i)?.[1]?.trim() || '';
   if (header === secret || bearer === secret) return true;
   res.status(401).json({
     error: 'Unauthorized',
-    note: 'Set X-Lead-Token to match LEAD_ADMIN_TOKEN on Vercel (Admin can store it for this browser session).'
+    note: 'Set X-Lead-Token to match LEAD_ADMIN_TOKEN on Vercel (paste once in Admin — Save on this device).'
   });
   return false;
 }

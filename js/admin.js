@@ -24,19 +24,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     const meta = document.getElementById('leads-meta');
     if (meta) {
       meta.textContent = val
-        ? 'Lead token saved for this browser session. Refreshing…'
-        : 'Lead token cleared for this session.';
+        ? 'Lead token saved on this device. Loading leads…'
+        : 'Lead token cleared on this device.';
       meta.style.color = val ? '#2e5a2e' : '#666';
+    }
+    if (input) {
+      input.classList.remove('lead-token-needed');
+      if (val) input.placeholder = 'Token saved on this device (edit to change)';
     }
     loadLeads();
   });
 
-  // Prefill token field if already saved this session (does not reveal full secret length only)
+  // Enter in token field = save + load (no extra clicks)
+  document.getElementById('lead-admin-token')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('btn-save-lead-token')?.click();
+    }
+  });
+
+  // Prefill from localStorage so you are not re-prompted every visit
   const tokenInput = document.getElementById('lead-admin-token');
   const existing = getLeadToken();
   if (tokenInput && existing) {
     tokenInput.value = existing;
-    tokenInput.placeholder = 'Token saved for this session (edit to change)';
+    tokenInput.placeholder = 'Token saved on this device (edit to change)';
   }
 
   await BRContent.load();
@@ -68,48 +80,79 @@ async function refreshAll() {
 
 const LEAD_TOKEN_KEY = 'br_lead_token';
 
+/** Prefer localStorage so token survives reloads/tabs; migrate old sessionStorage once. */
 function getLeadToken() {
   try {
-    return sessionStorage.getItem(LEAD_TOKEN_KEY) || '';
+    let t = localStorage.getItem(LEAD_TOKEN_KEY) || '';
+    if (!t) {
+      t = sessionStorage.getItem(LEAD_TOKEN_KEY) || '';
+      if (t) {
+        localStorage.setItem(LEAD_TOKEN_KEY, t);
+        sessionStorage.removeItem(LEAD_TOKEN_KEY);
+      }
+    }
+    return (t || '').trim();
   } catch {
     return '';
   }
 }
 
 function setLeadToken(token) {
+  const t = String(token || '').trim();
   try {
-    if (token) sessionStorage.setItem(LEAD_TOKEN_KEY, token);
-    else sessionStorage.removeItem(LEAD_TOKEN_KEY);
+    if (t) {
+      localStorage.setItem(LEAD_TOKEN_KEY, t);
+      sessionStorage.removeItem(LEAD_TOKEN_KEY);
+    } else {
+      localStorage.removeItem(LEAD_TOKEN_KEY);
+      sessionStorage.removeItem(LEAD_TOKEN_KEY);
+    }
   } catch {
-    /* ignore */
+    /* ignore private mode quirks */
   }
+}
+
+/** Use saved token, or whatever is currently in the input (auto-save on request). */
+function resolveLeadToken() {
+  const input = document.getElementById('lead-admin-token');
+  const typed = input && input.value ? String(input.value).trim() : '';
+  const saved = getLeadToken();
+  if (typed && typed !== saved) {
+    setLeadToken(typed);
+    return typed;
+  }
+  return saved || typed;
 }
 
 function leadAuthHeaders(extra) {
   const headers = Object.assign({}, extra || {});
-  const token = getLeadToken();
+  const token = resolveLeadToken();
   if (token) headers['X-Lead-Token'] = token;
   return headers;
 }
 
-async function ensureLeadTokenOn401(res) {
-  if (res.status !== 401) return false;
+function showLeadLockedUi(reason) {
+  const list = document.getElementById('leads-list');
+  const meta = document.getElementById('leads-meta');
   const input = document.getElementById('lead-admin-token');
   if (input) {
-    input.focus();
     input.classList.add('lead-token-needed');
+    input.focus();
   }
-  const entered = window.prompt(
-    'Lead list is locked. Paste LEAD_ADMIN_TOKEN from Vercel (same value you set in Project → Settings → Environment Variables):'
-  );
-  if (!entered) return false;
-  const token = entered.trim();
-  setLeadToken(token);
-  if (input) {
-    input.value = token;
-    input.classList.remove('lead-token-needed');
+  if (meta) {
+    meta.textContent =
+      reason ||
+      'Locked — paste LEAD_ADMIN_TOKEN above, click “Save on this device”, then Refresh.';
+    meta.style.color = '#8a5a00';
   }
-  return true;
+  if (list) {
+    list.innerHTML =
+      '<div class="empty-state">' +
+      '<strong>Lead list is locked.</strong> Paste the same <code>LEAD_ADMIN_TOKEN</code> you set on Vercel into the field above, ' +
+      'click <strong>Save on this device</strong> once. No more pop-ups — it stays on this browser until you clear it. ' +
+      'Public booking still works without this token.' +
+      '</div>';
+  }
 }
 
 async function loadLeads() {
@@ -118,22 +161,25 @@ async function loadLeads() {
   if (!list) return;
   list.innerHTML = '<p style="color:#666">Loading…</p>';
   try {
-    let res = await fetch('/api/lead', { cache: 'no-store', headers: leadAuthHeaders() });
-    if (res.status === 401 && (await ensureLeadTokenOn401(res))) {
-      res = await fetch('/api/lead', { cache: 'no-store', headers: leadAuthHeaders() });
-    }
+    // Sync input → localStorage before fetch so one paste is enough
+    resolveLeadToken();
+
+    const res = await fetch('/api/lead', { cache: 'no-store', headers: leadAuthHeaders() });
     if (res.status === 401) {
-      if (meta) {
-        meta.textContent = 'Locked — set LEAD_ADMIN_TOKEN on Vercel, then paste it above.';
-        meta.style.color = '#8a5a00';
-      }
-      list.innerHTML =
-        '<div class="empty-state">Lead list is protected. Add <code>LEAD_ADMIN_TOKEN</code> in Vercel env, redeploy, paste the same token above, then Refresh. Public visitors cannot list leads without it. New Cut My Grass / chat leads still POST and email you normally.</div>';
+      const hadToken = !!getLeadToken();
+      showLeadLockedUi(
+        hadToken
+          ? 'Token rejected — does not match LEAD_ADMIN_TOKEN on Vercel (or Vercel needs a redeploy after you rotated). Paste the new value, Save on this device, Refresh.'
+          : 'Locked — paste LEAD_ADMIN_TOKEN above, Save on this device, then Refresh.'
+      );
       return;
     }
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     const leads = data.leads || [];
+    const input = document.getElementById('lead-admin-token');
+    if (input) input.classList.remove('lead-token-needed');
+
     if (meta) {
       const lock = getLeadToken() ? ' · token OK' : '';
       if (data.durable) {
@@ -221,17 +267,17 @@ async function loadLeads() {
     list.querySelectorAll('[data-status]').forEach((btn) => {
       btn.addEventListener('click', async () => {
         try {
-          let res = await fetch('/api/lead', {
+          resolveLeadToken();
+          const res = await fetch('/api/lead', {
             method: 'PATCH',
             headers: leadAuthHeaders({ 'Content-Type': 'application/json' }),
             body: JSON.stringify({ id: btn.dataset.id, status: btn.dataset.status })
           });
-          if (res.status === 401 && (await ensureLeadTokenOn401(res))) {
-            res = await fetch('/api/lead', {
-              method: 'PATCH',
-              headers: leadAuthHeaders({ 'Content-Type': 'application/json' }),
-              body: JSON.stringify({ id: btn.dataset.id, status: btn.dataset.status })
-            });
+          if (res.status === 401) {
+            showLeadLockedUi(
+              'Status update locked — paste the current LEAD_ADMIN_TOKEN, Save on this device, then try again.'
+            );
+            return;
           }
           if (!res.ok) throw new Error('HTTP ' + res.status);
           loadLeads();
