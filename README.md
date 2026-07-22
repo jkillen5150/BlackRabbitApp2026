@@ -104,6 +104,10 @@ python3 -m http.server 8765
 
 Admin edits save in **this browser only** (localStorage), keyed to the current `data/content.json` fingerprint. After you export, commit, and redeploy a new `content.json`, any **stale** local draft is dropped automatically so the new site content shows. Export before redeploy if you still need local-only changes.
 
+### Session handoff & next checklist
+
+See **`PROJECT_STATUS.md`** — live stack, Porch Mode™, 30-new-user goal, env names (`xai_api_key`), and a **next-session checklist**. Distribution: Facebook Reels/posts already in progress; repo stays public; `data/leads.json` is gitignored.
+
 ### Cut My Grass (v1)
 
 Fast booking UX at **`/cut-my-grass/`**, branded as a product of Black Rabbit:

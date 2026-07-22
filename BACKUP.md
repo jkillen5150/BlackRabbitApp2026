@@ -44,7 +44,9 @@ If the laptop, Vercel, or a bad day takes the site down, this is how you get bac
 
 4. **Domain** — confirm auto-renew is on at the registrar.
 
-5. **Monthly (optional)** — new ZIP or bundle after a quiet week; confirm `data/leads.json` still looks right on GitHub.
+5. **Monthly (optional)** — new ZIP or bundle after a quiet week. Leads are **gitignored** locally; durable list still lives via `GITHUB_TOKEN` on GitHub when configured (don’t commit PII).
+
+6. **Product goal reminder** — by ~**2026-08-21** renew **`xai_api_key`** and score **30 new users** (see `PROJECT_STATUS.md`). Facebook Reels/posts already part of distribution.
 
 ## If things go tits up
 
