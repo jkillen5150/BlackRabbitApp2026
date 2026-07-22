@@ -12,3 +12,6 @@ dist/
 .vercel/
 .turbo/
 *.swp
+
+# Customer PII — never commit (Admin/track use GITHUB_TOKEN store or memory)
+data/leads.json

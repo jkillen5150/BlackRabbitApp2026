@@ -1,13 +1,16 @@
 # Black Rabbit / Cut My Grass — session handoff
 
-Last updated: 2026-07-21
+Last updated: 2026-07-22
 
 ## ⚠️ Token expiry (king note)
+- **`xai_api_key` (Vercel label) — 30-day expiry.** Replaced ~**2026-07-22** (correct name is lowercase `xai_api_key`, not a mislabeled key). Rotate / replace by ~**2026-08-21** (or xAI console expiry). When it dies, Ask AI returns *“Chat not configured”* or xAI auth errors. Fix: console.x.ai → new key → Vercel env **`xai_api_key`** → **Redeploy**. Code also accepts legacy `XAI_API_KEY` if present.
+- **Same window = product goal:** **30 new users** on the site by key renew (~2026-08-21). See **🎯 30-day goal** below.
+- **Live probe 2026-07-22:** chat **OK** after key replace (`POST /api/chat`).
 - **`GITHUB_TOKEN` set to no expiration / indefinitely** (~2026-07-21). Does not auto-rotate.
-- **Live probe 2026-07-21:** token present but **`GitHub 403: Resource not accessible by personal access token`** — needs **Contents: Read and write** on `BlackRabbitApp2026` (or classic **`repo`** scope). Expiry is fine; **permissions are not**.
+- **Live probe 2026-07-22:** durable leads + track work (`saved: true`, `durable: true`). Earlier 403 was scopes; Contents R/W / `repo` must stay on.
 - If track/Admin durable ever die: fix PAT scopes, update Vercel, redeploy.
 - Still treat the PAT like a password — only in Vercel env, never in the repo.
-- **`LEAD_ADMIN_TOKEN`** does not auto-expire (openssl string you control).
+- **`LEAD_ADMIN_TOKEN`** does not auto-expire (openssl string you control). Live **401** gate verified 2026-07-22.
 
 ## Live stack
 - **Domain:** `www.blackrabbitlawn.com` on **Vercel** (apex redirects to www). Not GitHub Pages for traffic.
@@ -16,12 +19,13 @@ Last updated: 2026-07-21
 
 ## What works
 - Marketing site + SEO landings + FAQ spacing
+- **Ask AI** (`/api/chat` + `assistant.html`) — live verified 2026-07-22 (**`XAI_API_KEY`**, 30-day expiry); personality **Porch Mode™** in `data/ai-knowledge.json`
 - **Cut My Grass** (`/cut-my-grass`) multi-step book flow
 - Optional yard photos (client compress)
 - Lead accept + **browser Web3Forms** notify (server Web3Forms free tier blocks server IP)
 - Stripe **Checkout deposit** (`STRIPE_SECRET_KEY` = `sk_…` or **`rk_live_…`** restricted OK) — live verified 2026-07-21
 - Deposit confirm → “DEPOSIT PAID” email path
-- **Track page** `/track?t=…` + Admin status (texted / booked / **on the way** / done) — **needs `GITHUB_TOKEN`**
+- **Track page** `/track?t=…` + Admin status (texted / booked / **on the way** / done) — **needs `GITHUB_TOKEN`** (durable verified 2026-07-22)
 - Branding: “Powered by **Black Rabbit**” (no “Landscaping” on CMG kicker)
 
 ## Live dry-run findings (2026-07-21)
@@ -48,7 +52,7 @@ Last updated: 2026-07-21
 ## Env vars (2026 Vercel · Production · exact names)
 | Name | Purpose | Priority |
 |------|---------|----------|
-| `XAI_API_KEY` | Ask AI (`/api/chat`) | required for chat |
+| **`xai_api_key`** | Ask AI (`/api/chat`) — **30-day expiry** (replaced ~2026-07-22 → renew ~2026-08-21). Vercel label is lowercase. | required for chat |
 | `STRIPE_SECRET_KEY` | Deposits — **`sk_` or `rk_live_`**, not `pk_` | required for deposits |
 | `SITE_URL` | Prefer **`https://www.blackrabbitlawn.com`** | strongly recommended |
 | **`GITHUB_TOKEN`** | Durable `data/leads.json` — **required for `/track` + Admin across cold starts**. **No expiration** (set ~2026-07-21). | set on Vercel |
@@ -90,13 +94,40 @@ Env names are **exact**, not suggestions. Redeploy after every env change.
 - [x] Stripe Checkout deposit ($25)
 - [x] Customer `/track` pipeline + Admin status buttons
 - [x] Cut My Grass book flow + client Web3Forms backup
+- [x] Ask AI live (`xai_api_key` on Vercel, 30-day)
+
+## 🎯 30-day goal (key window)
+
+| | |
+|--|--|
+| **Window** | **2026-07-22 → 2026-08-21** (same ~30 days as `xai_api_key` before renew) |
+| **Goal** | **30 new users** |
+| **“New user” means** | Someone who **hadn’t used the site before this window** — first real touch via web: Ask AI, quote form, **Cut My Grass** book, track link from a new book, or first-time call/text that started from the site. **Not** fire-drill / test leads. **Not** you. Repeat visits by the same person still count as **one** new user. |
+| **North-star stretch** | As many of those 30 as possible become **real jobs** (book → deposit → cut → review) |
+| **Count** | Unique new names/phones in Admin leads + first-time site-sourced texts. Optional: Vercel Analytics / GA later for “new visitors.” Primary: **unique first-timers**, not pageviews. |
+| **Key renew day** | ~**2026-08-21** — rotate **`xai_api_key`** **and** score: _Did we hit **30 new users**?_ |
+
+### 30-day play (keep it simple)
+1. **Week 1** — Warm intros that still count as **new to the site** (neighbors/past customers who never booked online). Aim first **5 new** users.
+2. **Weeks 2–3** — Reach people who don’t know the URL yet: yard signs / truck / Nextdoor / Facebook Yelm–Rainier + CMG link. Close jobs; ask for Google reviews (reviews pull more **new** users).
+3. **Week 4** — Double down on channels that brought first-timers. Don’t build Uber-for-lawn until **30 new** proved demand.
+4. **Day 30** — Renew xAI key, score **/30 new**, decide ads vs organic.
+
+### Scoreboard (fill as you go)
+| Checkpoint | Date | **New users** | Leads | Jobs closed | Notes |
+|------------|------|---------------|-------|-------------|--------|
+| Start | 2026-07-22 | **0 / 30** | — | — | Goal: 30 new users |
+| Week 1 | | / 30 | | | |
+| Week 2 | | / 30 | | | |
+| Week 3 | | / 30 | | | |
+| **Day 30 / key renew** | ~2026-08-21 | **/ 30** | | | Renew `xai_api_key` |
 
 ## TODO — optional upgrades (build when volume hurts)
 1. **Stripe webhook backup** — mark deposit paid + email Jerry even if customer never returns to the success URL  
 2. **SMS track link (Twilio)** — auto-text customer `/track?t=…` after book / after deposit  
 3. **Recurring weekly option** — Cut My Grass choice + lead field for weekly/biweekly  
 4. **Tune deposit amount** — `STRIPE_DEPOSIT_AMOUNT_CENTS` if $25 feels wrong  
-5. **Ads / traffic** — only after a few real closed jobs and known close rate (not code)  
+5. **Ads / traffic** — after a few real closed jobs and known close rate (supports the 30-user goal, not before product proof)  
 6. **Physical / clone backup** — see **`BACKUP.md`** (ZIP/bundle to USB + secrets in password manager + domain auto-renew)
 
 ## Not now
@@ -105,9 +136,10 @@ Env names are **exact**, not suggestions. Redeploy after every env change.
 - $850 trademark filing until ads/scale  
 
 ## Next when we resume (ops)
-1. Confirm **`SITE_URL=https://www.blackrabbitlawn.com`** if return/track links ever go wrong  
+1. **30-day goal** — **30 new users**; log scoreboard weekly  
 2. Real jobs: book → deposit → track → Admin → Google review ask  
-3. Pull first item off **TODO — optional upgrades** when ready to build  
+3. ~**2026-08-21** — renew **`xai_api_key`** + score **new users / 30**  
+4. Pull first item off **TODO — optional upgrades** when volume hurts  
 
 ## Admin tips
 - Lead token field = `LEAD_ADMIN_TOKEN` → **Save on this device** (localStorage)

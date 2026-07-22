@@ -244,54 +244,63 @@
     <div id="site-nav-mount"></div>
 
     <header class="hero">
+        <p class="hero-welcome">Welcome — kick your boots off</p>
         <div class="logo-circle">
             <img src="logo.jpg" alt="Black Rabbit Landscaping — lawn care in Yelm, Washington" width="160" height="160">
         </div>
         <h1>Lawn Care &amp; Landscaping in Yelm, WA</h1>
         <p class="hero-brand">Black Rabbit Landscaping</p>
-        <p>Yelm • Rainier • Lacey • Roy • Olympia • Thurston County</p>
+        <p class="hero-tagline">Local yard care that feels like a neighbor stopped by — simple, fair, and done right.</p>
+        <p class="hero-areas">Yelm • Rainier • Lacey • Roy • Olympia • Thurston County</p>
         <div class="trust-badges" role="group" aria-label="Credentials">
             <span class="trust-badge"><span class="trust-check" aria-hidden="true">✓</span> Licensed</span>
             <span class="trust-badge"><span class="trust-check" aria-hidden="true">✓</span> Bonded</span>
             <span class="trust-badge"><span class="trust-check" aria-hidden="true">✓</span> Insured</span>
         </div>
         <div class="hero-ctas">
-            <a class="hero-cta primary" href="/cut-my-grass/">Try Cut My Grass</a>
-            <a class="hero-cta ghost" href="#service-form">Request a Quote</a>
-            <a class="hero-cta ghost" href="service-area.html">Service Map</a>
+            <a class="hero-cta primary" href="/cut-my-grass/">Book a cut</a>
+            <a class="hero-cta ghost" href="#service-form">Get a free quote</a>
+            <a class="hero-cta ghost" href="service-area.html">See our map</a>
         </div>
     </header>
+
+    <div class="welcome-porch" role="region" aria-label="Welcome">
+        <div class="welcome-porch-inner">
+            <p><strong>Glad you found us.</strong> No pressure, no dark patterns — just solid lawn care with Jerry on the other end of the line.</p>
+            <p class="welcome-porch-note">Book online in a few taps, or text anytime: <a href="tel:+14079511663">(407) 951-1663</a></p>
+        </div>
+    </div>
 
     <div class="quick-links">
         <a class="quick-link-card" href="/cut-my-grass/">
             <div class="icon">✂️</div>
             <strong>Cut My Grass</strong>
-            <span>Book a cut in taps</span>
+            <span>Book a cut, cozy &amp; quick</span>
         </a>
         <a class="quick-link-card" href="testimonials.html">
             <div class="icon">⭐</div>
             <strong>Testimonials</strong>
-            <span>What clients say</span>
+            <span>Neighbors who trust us</span>
         </a>
         <a class="quick-link-card" href="portfolio.html">
             <div class="icon">📸</div>
             <strong>Portfolio</strong>
-            <span>Before & after work</span>
+            <span>Yards we&rsquo;ve loved on</span>
         </a>
         <a class="quick-link-card" href="service-area.html">
             <div class="icon">📍</div>
             <strong>Service Map</strong>
-            <span>Yelm to Lacey & beyond</span>
+            <span>Yelm to Lacey &amp; beyond</span>
         </a>
         <a class="quick-link-card" href="assistant.html">
-            <div class="icon">🤖</div>
+            <div class="icon">🐰</div>
             <strong>Ask AI</strong>
-            <span>Lawn care Q&amp;A</span>
+            <span>Questions? We&rsquo;re here</span>
         </a>
         <a class="quick-link-card" href="login.html">
             <div class="icon">🔐</div>
             <strong>Client Login</strong>
-            <span>Customers & admin</span>
+            <span>Your space, when you need it</span>
         </a>
     </div>
 
@@ -300,7 +309,7 @@
         <h2 id="services-heading">Lawn care services near you</h2>
         <p>
             Black Rabbit is owner-operated lawn care and landscaping for the South Sound.
-            Jerry handles quotes and scheduling directly — simple, affordable, and reliable.
+            Jerry handles quotes and scheduling himself — simple, affordable, reliable, and a little more personal than the big crews.
         </p>
         <div class="seo-grid">
             <div class="seo-card">
@@ -362,10 +371,10 @@
 
     <!-- Rotating reviews -->
     <section class="reviews-section" aria-labelledby="reviews-heading">
-        <h2 class="section-title" id="reviews-heading">What Clients Are Saying</h2>
+        <h2 class="section-title" id="reviews-heading">Kind words from the neighborhood</h2>
         <p class="section-sub">
             <strong>11 five-star Google reviews</strong> from yards across Yelm, Rainier, Lacey, Roy &amp; Thurston County.
-            <a href="testimonials.html">Read all testimonials</a>.
+            <a href="testimonials.html">Read the full porch talk</a>.
         </p>
 
         <div class="reviews-carousel-wrap">
@@ -423,12 +432,12 @@
     <!-- SERVICE REQUEST FORM -->
     <section class="service-request" id="service-form">
         <a href="#service-form" style="text-decoration: none; color: inherit;">
-            <h2>Request Service Now</h2>
+            <h2>Tell us about your yard</h2>
         </a>
 
-        <p style="text-align: center; color: #555; margin-bottom: 35px;">
-            Professional lawn care, gardens &amp; tree services.<br>
-            Get a fast, no-obligation quote for the Yelm, Rainier, Lacey &amp; Olympia area.
+        <p class="form-lead">
+            No-obligation quote — lawn care, cleanups, and the little jobs that stack up.
+            Yelm, Rainier, Lacey, Olympia &amp; the South Sound. We&rsquo;ll reply like a neighbor, not a call center.
         </p>
 
         <form action="https://api.web3forms.com/submit" method="POST">
@@ -467,7 +476,7 @@
                 <textarea name="message" rows="4" placeholder="Lawn is getting tall, company coming this weekend..."></textarea>
             </div>
 
-            <button type="submit" class="submit-btn">Send Request</button>
+            <button type="submit" class="submit-btn">Send my request</button>
             <p style="text-align: center; font-size: 0.9em; color: #666; margin-top: 20px;">We look forward to serving you.</p>
         </form>
     </section>

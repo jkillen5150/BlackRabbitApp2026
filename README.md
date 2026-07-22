@@ -32,6 +32,8 @@ Ask AI can **interview** a customer (name → phone → address → need), then:
 
 **Track page + Admin list durability:** set **`GITHUB_TOKEN`** (repo **Contents: Read and write** on this repo) on Vercel so leads append to `data/leads.json`. **Required for customer `/track` links** — `/api/lead` and `/api/track` are separate serverless functions and do **not** share memory. Without the token, book → track returns “Not found” after a cold start. You still get **emails** either way (browser Web3Forms backup on Cut My Grass).
 
+**`data/leads.json` is gitignored** (customer PII — never commit). Shape reference: `data/leads.example.json`. Durable runtime still reads/writes that path via the GitHub API when `GITHUB_TOKEN` is set.
+
 **Lead list privacy:** set **`LEAD_ADMIN_TOKEN`** on Vercel (Project → Settings → Environment Variables → Production + Preview). Use a long random string. When set, `GET`/`PATCH` `/api/lead` require header `X-Lead-Token`. In Admin, paste the same token under **Lead admin token** (session only). Public **POST** of new leads (Cut My Grass / Ask AI) still works without the token.
 
 ## Making the AI smarter (no “training”)
@@ -55,7 +57,7 @@ GitHub Pages can’t run the chat function. Keep **everything on Vercel**:
 1. Import **jkillen5150/BlackRabbitApp2026** in [vercel.com](https://vercel.com) (or link the existing project to this repo).
 2. Framework preset: **Other** (static + `api/`).
 3. Project env vars:
-   - **`XAI_API_KEY`** — xAI key for Ask AI
+   - **`xai_api_key`** — xAI key for Ask AI (Vercel label; **30-day expiry** — replaced ~2026-07-22; renew ~2026-08-21, then redeploy). Code also accepts `XAI_API_KEY`.
    - **`STRIPE_SECRET_KEY`** — `sk_…` or `rk_live_…` for Cut My Grass deposits
    - **`SITE_URL`** — prefer `https://www.blackrabbitlawn.com` (canonical host)
    - **`GITHUB_TOKEN`** — **required for `/track`** + durable Admin lead list (repo contents write)

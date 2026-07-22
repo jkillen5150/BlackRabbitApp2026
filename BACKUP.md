@@ -7,7 +7,7 @@ If the laptop, Vercel, or a bad day takes the site down, this is how you get bac
 | Layer | Where it lives | Notes |
 |--------|----------------|--------|
 | Code & site | GitHub `jkillen5150/BlackRabbitApp2026` | Clone / ZIP anytime |
-| Lead list | `data/leads.json` (via `GITHUB_TOKEN`) | Also in git history when saves work |
+| Lead list | `data/leads.json` via `GITHUB_TOKEN` (durable API) | **Gitignored** — do not commit. Old history may still have test leads. |
 | Secrets | **Vercel env only** — not in the repo | Stripe, xAI, tokens |
 | Payments | Stripe Dashboard | Survives site outages |
 | Domain | Registrar + Vercel DNS | Point DNS elsewhere if needed |
@@ -31,7 +31,7 @@ If the laptop, Vercel, or a bad day takes the site down, this is how you get bac
 
 3. **Secrets in a password manager** (never commit these)
    - `STRIPE_SECRET_KEY`
-   - `XAI_API_KEY`
+   - `xai_api_key` — **30-day expiry** (Vercel label; replaced ~2026-07-22; renew ~2026-08-21 at console.x.ai → update Vercel → redeploy). Legacy name `XAI_API_KEY` also works in code.
    - `GITHUB_TOKEN`
    - `LEAD_ADMIN_TOKEN`
    - `SITE_URL` (= `https://www.blackrabbitlawn.com`)

@@ -1,6 +1,6 @@
 /**
  * Black Rabbit AI — Vercel serverless function at /api/chat
- * Env: XAI_API_KEY
+ * Env: xai_api_key (Vercel label) or XAI_API_KEY — either works
  *
  * Knowledge: data/ai-knowledge.json
  * Contact: 407-951-1663 only — never "connect you to Jerry" without the digits.
@@ -131,6 +131,13 @@ function buildSystemPrompt(k) {
   const contact = k.contact || `Jerry's direct number is ${JERRY_PHONE}.`;
   const areasNote = k.areasNote || '';
   const phone = k.business?.realPhone || k.business?.phone || JERRY_PHONE;
+  const persona = k.personality || {};
+  const personaName = persona.name || 'Porch Mode™';
+  const personaLine = persona.oneLiner || 'Laid-back convivial lawn-care chat.';
+  const personaVibe = (persona.vibe || []).map((s) => `- ${s}`).join('\n');
+  const personaDo = (persona.do || []).map((s) => `- ${s}`).join('\n');
+  const personaDont = (persona.dont || []).map((s) => `- ${s}`).join('\n');
+  const personaSamples = (persona.sampleLines || []).map((s) => `- "${s}"`).join('\n');
   const cityUrls = k.cityPages?.urls || {};
   const cityPageLines = Object.entries(cityUrls)
     .map(([town, url]) => `- ${town}: ${url}`)
@@ -147,13 +154,32 @@ function buildSystemPrompt(k) {
 Owner: ${k.business.owner}. Tagline: "${k.business.tagline}".
 Website: ${k.business.website}.
 
+## PERSONALITY (official name)
+**${personaName}**
+${personaLine}
+${persona.era ? `Era note: ${persona.era}` : ''}
+
+### ${personaName} vibe
+${personaVibe || '- Warm, laid-back, lightly funny. Neighbor energy.'}
+
+### Do
+${personaDo || '- Answer first; optional warmth after.'}
+
+### Don't
+${personaDont || '- No corporate fluff; no phone-number hostage loops.'}
+
+### Tone samples (adapt, don't copy robotically)
+${personaSamples || '- "Straight answer, then a human next step."'}
+
+If asked your personality/mode/name: say **${personaName}** — kick your boots off, ask lawn stuff, get a straight answer with a little warmth.
+
 ## ASSISTANT BEHAVIOR (CRITICAL — read first)
 ${behavior || `- Always answer the user's actual question first.
 - Only ask for their name/phone when they want a quote, to schedule, or Jerry to contact them.
 - Informational questions do NOT require collecting their phone number.
 - Never loop on demanding a phone number.`}
 
-Answer first. Help fully. Contact collection is optional and only for quote/schedule/callback intent.
+Answer first. Help fully. Stay in ${personaName}. Contact collection is optional and only for quote/schedule/callback intent.
 
 ## FORBIDDEN PHRASES — never say these
 - "Would you like me to connect you to Jerry"
@@ -216,9 +242,9 @@ ${book}
 ## Site pages
 ${pages}
 
-## Voice
+## Voice (${personaName})
 ${voice}
-Emojis: 😅😬 when pressed; 😁😊 friendly; 🙃 playful; 🌱✂️💬📞 as fits. 1–3 max.
+Emojis: 😅😬 when pressed; 😁😊 friendly; 🙃 playful; 🌱✂️💬📞 as fits. 1–3 max. Humor is seasoning, not the whole meal.
 
 ## Rules
 ${rules}
@@ -239,7 +265,7 @@ ${reviews}
 4. Only list real services and towns from this briefing.
 5. Licensed/bonded/insured: YES — fully licensed, bonded, and insured. State this clearly when asked about credentials, insurance, liability, or professionalism.
 6. "Good work isn't cheap, and cheap work isn't good" when it fits.
-7. Short answers; face emojis OK.
+7. Short answers; face emojis OK; ${personaName} always on.
 8. Never trap the user in a phone-number collection loop.`;
 }
 
@@ -256,8 +282,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  if (!process.env.XAI_API_KEY) {
-    console.error('Missing XAI_API_KEY');
+  // Vercel name is xai_api_key; also accept XAI_API_KEY (legacy / docs)
+  const xaiKey = String(
+    process.env.xai_api_key || process.env.XAI_API_KEY || ''
+  ).trim();
+
+  if (!xaiKey) {
+    console.error('Missing xai_api_key (or XAI_API_KEY)');
     return res.status(500).json({
       error: 'Chat not configured',
       choices: [
@@ -325,7 +356,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.XAI_API_KEY}`
+        Authorization: `Bearer ${xaiKey}`
       },
       body: JSON.stringify({
         model: 'grok-4',
