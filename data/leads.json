@@ -8,9 +8,12 @@
     "need": "Cut My Grass request · Service: One-time cut · When: ASAP / this week · Notes: Gates and dragons and a mineshaft · Photos: 1 attached · Payment: card deposit via Stripe Checkout (applied to final quote)",
     "urgency": "ASAP / this week",
     "source": "cut-my-grass",
-    "status": "new",
+    "status": "deposit_paid",
     "photoCount": 1,
-    "depositPaid": false,
-    "createdAt": "2026-07-22T16:33:27.570Z"
+    "depositPaid": true,
+    "createdAt": "2026-07-22T16:33:27.570Z",
+    "depositAmountCents": 2500,
+    "depositSessionId": "cs_live_a1IOZAKfVFhODTL1wApfpdGqufR2lapzcWDakJIVpxMxpMiRU1ZwjUBvXq",
+    "updatedAt": "2026-07-22T16:34:23.169Z"
   }
 ]
