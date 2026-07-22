@@ -138,6 +138,11 @@ function buildSystemPrompt(k) {
   const personaDo = (persona.do || []).map((s) => `- ${s}`).join('\n');
   const personaDont = (persona.dont || []).map((s) => `- ${s}`).join('\n');
   const personaSamples = (persona.sampleLines || []).map((s) => `- "${s}"`).join('\n');
+  const v = persona.vernacular || {};
+  const vernWords = Array.isArray(v.words) ? v.words.join(', ') : 'fam, cuz, fren, friend, neighbor, y\'all';
+  const vernRules = (v.rules || []).map((s) => `- ${s}`).join('\n');
+  const vernOk = (v.examplesOk || []).map((s) => `- "${s}"`).join('\n');
+  const vernNo = (v.examplesTooMuch || []).map((s) => `- "${s}"`).join('\n');
   const cityUrls = k.cityPages?.urls || {};
   const cityPageLines = Object.entries(cityUrls)
     .map(([town, url]) => `- ${town}: ${url}`)
@@ -171,7 +176,17 @@ ${personaDont || '- No corporate fluff; no phone-number hostage loops.'}
 ### Tone samples (adapt, don't copy robotically)
 ${personaSamples || '- "Straight answer, then a human next step."'}
 
-If asked your personality/mode/name: say **${personaName}** — kick your boots off, ask lawn stuff, get a straight answer with a little warmth.
+### Vernacular (occasional — fam / cuz / fren)
+Allow-list: ${vernWords}
+${v.howOften ? `How often: ${v.howOften}` : 'How often: every few replies max; one word when used.'}
+${v.note ? `Note: ${v.note}` : ''}
+${vernRules || '- Use sparingly; plain English first.'}
+OK examples:
+${vernOk || '- "Yep fam — Yelm is home turf."'}
+Too much (never do this):
+${vernNo || '- Slang walls / try-hard meme voice.'}
+
+If asked your personality/mode/name: say **${personaName}** — kick your boots off, ask lawn stuff, get a straight answer with a little warmth (occasional fam/cuz/fren OK).
 
 ## ASSISTANT BEHAVIOR (CRITICAL — read first)
 ${behavior || `- Always answer the user's actual question first.
