@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cut My Grass — Yard Sign Mockup (18×24)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #2e5a2e;
+      --green-dark: #1e3d1e;
+      --cream: #f7f3eb;
+      --cream-deep: #efe8dc;
+      --amber: #c4a574;
+      --ink: #1c1a17;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Montserrat, system-ui, sans-serif;
+      background: #2a2a2a;
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    .page-ui {
+      max-width: 920px;
+      margin: 0 auto 20px;
+      color: #ddd;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .page-ui h1 { color: #fff; font-size: 1.25rem; margin-bottom: 6px; }
+    .page-ui a { color: #9fdf9f; }
+    .page-ui code {
+      background: #111;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* 24" × 18" landscape at ~96dpi preview (scaled). Real print: export PDF at full size. */
+    .sign-stage {
+      display: flex;
+      justify-content: center;
+      margin: 16px auto;
+      filter: drop-shadow(0 18px 40px rgba(0,0,0,.45));
+    }
+
+    /* Aspect 24:18 = 4:3 landscape */
+    .sign {
+      width: min(96vw, 900px);
+      aspect-ratio: 24 / 18;
+      background: linear-gradient(145deg, #1a3320 0%, #1e3d1e 42%, #16301a 100%);
+      color: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      border: 3px solid #0f2214;
+    }
+
+    .sign::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 80% at 15% 20%, rgba(196, 165, 116, 0.12), transparent 55%),
+        radial-gradient(ellipse 50% 60% at 90% 90%, rgba(46, 90, 46, 0.35), transparent 50%);
+      pointer-events: none;
+    }
+
+    .left {
+      position: relative;
+      z-index: 1;
+      padding: 7% 6% 7% 8%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3.5%;
+    }
+
+    .kicker {
+      font-size: clamp(11px, 1.7vw, 15px);
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+
+    .headline {
+      font-size: clamp(28px, 5.4vw, 58px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .headline span {
+      display: block;
+      color: #e8f5e8;
+    }
+
+    .sub {
+      font-size: clamp(13px, 2vw, 20px);
+      font-weight: 600;
+      line-height: 1.25;
+      color: #d8e8d8;
+      max-width: 18ch;
+    }
+
+    .phone {
+      margin-top: 2%;
+      font-size: clamp(16px, 2.5vw, 26px);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .phone small {
+      display: block;
+      font-size: 0.55em;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 2px;
+    }
+
+    .brand-line {
+      font-size: clamp(11px, 1.5vw, 14px);
+      font-weight: 600;
+      color: rgba(255,255,255,0.78);
+      margin-top: auto;
+    }
+
+    .right {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6% 7% 6% 4%;
+      background: linear-gradient(180deg, rgba(247,243,235,0.98), rgba(239,232,220,0.98));
+      clip-path: polygon(8% 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .qr-wrap {
+      background: #fff;
+      padding: 6%;
+      border-radius: 4%;
+      box-shadow: 0 8px 28px rgba(28, 26, 23, 0.12);
+      width: 72%;
+      max-width: 280px;
+    }
+
+    .qr-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+    }
+
+    .scan {
+      margin-top: 5%;
+      text-align: center;
+      color: var(--green-dark);
+    }
+
+    .scan strong {
+      display: block;
+      font-size: clamp(14px, 2.1vw, 20px);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .scan span {
+      display: block;
+      margin-top: 4px;
+      font-size: clamp(11px, 1.5vw, 14px);
+      font-weight: 600;
+      color: #5c564e;
+    }
+
+    .trust {
+      margin-top: 4%;
+      font-size: clamp(10px, 1.3vw, 12px);
+      font-weight: 600;
+      color: #6b645c;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    .accent-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 10px;
+      background: linear-gradient(180deg, var(--amber), #a8844f);
+      z-index: 2;
+    }
+
+    /* Compact alt layout for comparison */
+    .alt-label {
+      max-width: 920px;
+      margin: 36px auto 10px;
+      color: #aaa;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .sign.alt {
+      grid-template-columns: 1fr;
+      background: var(--cream);
+      color: var(--ink);
+      border-color: var(--green-dark);
+    }
+
+    .sign.alt::before { display: none; }
+
+    .sign.alt .stack {
+      padding: 6% 8%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 3%;
+      height: 100%;
+      justify-content: space-between;
+    }
+
+    .sign.alt .kicker { color: var(--green); }
+    .sign.alt .headline { color: var(--green-dark); font-size: clamp(32px, 6vw, 64px); }
+    .sign.alt .sub { color: #5c564e; max-width: none; }
+    .sign.alt .qr-row {
+      display: flex;
+      align-items: center;
+      gap: 5%;
+      width: 100%;
+      justify-content: center;
+    }
+    .sign.alt .qr-wrap {
+      width: 32%;
+      max-width: 200px;
+      padding: 3%;
+    }
+    .sign.alt .cta-side {
+      text-align: left;
+    }
+    .sign.alt .phone { color: var(--green-dark); }
+    .sign.alt .phone small { color: var(--green); }
+    .sign.alt .brand-line { color: #5c564e; margin-top: 0; }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .page-ui, .alt-label, .sign.alt, .no-print { display: none !important; }
+      .sign-stage { margin: 0; filter: none; }
+      .sign {
+        width: 24in;
+        height: 18in;
+        max-width: none;
+        border-radius: 0;
+        border: none;
+        page-break-after: always;
+      }
+      @page { size: 24in 18in; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-ui no-print">
+    <h1>Sexy yard-sign mockups — Cut My Grass</h1>
+    <p>
+      Real QR points to <code>https://www.blackrabbitlawn.com/cut-my-grass</code>
+      (<a href="cmg-yard-sign-qr.png">PNG</a>). Open this file in Chrome → phone-scan the QR on screen →
+      File → Print → save PDF for VistaPrint upload (or screenshot the top sign).
+    </p>
+    <p><strong>Design A</strong> (recommended): dark green split, cream QR panel — high contrast, “premium lawn” energy.</p>
+  </div>
+
+  <div class="sign-stage">
+    <div class="sign" role="img" aria-label="Cut My Grass yard sign design A">
+      <div class="accent-bar" aria-hidden="true"></div>
+      <div class="left">
+        <p class="kicker">Yelm &amp; South Sound</p>
+        <h2 class="headline">Cut My<br /><span>Grass</span></h2>
+        <p class="sub">Book a lawn cut in a few taps.</p>
+        <p class="phone"><small>Call / text</small>(407) 951-1663</p>
+        <p class="brand-line">Powered by Black Rabbit · LBI</p>
+      </div>
+      <div class="right">
+        <div class="qr-wrap">
+          <img src="cmg-yard-sign-qr.png" width="512" height="512" alt="QR code to book Cut My Grass online" />
+        </div>
+        <p class="scan"><strong>Scan to book</strong><span>Works on any phone camera</span></p>
+        <p class="trust">Owner-operated · Fair quotes</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="alt-label no-print">Design B — light “clean lawn care” (good if you want a softer look)</p>
+  <div class="sign-stage no-print">
+    <div class="sign alt" role="img" aria-label="Cut My Grass yard sign design B">
+      <div class="stack">
+        <div>
+          <p class="kicker">Yelm &amp; South Sound</p>
+          <h2 class="headline">Cut My Grass</h2>
+          <p class="sub">Scan · book · Jerry confirms</p>
+        </div>
+        <div class="qr-row">
+          <div class="qr-wrap">
+            <img src="cmg-yard-sign-qr.png" width="512" height="512" alt="QR code to book Cut My Grass online" />
+          </div>
+          <div class="cta-side">
+            <p class="phone"><small>Call / text</small>(407) 951-1663</p>
+            <p class="brand-line" style="margin-top:8px">Powered by Black Rabbit · LBI</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-ui no-print" style="margin-top:28px">
+    <p><strong>Why this looks “sexy” and still scans:</strong> one big idea, two colors max + amber accent, huge type, QR in a white box with padding, phone as backup if they won’t scan.</p>
+  </div>
+</body>
+</html>

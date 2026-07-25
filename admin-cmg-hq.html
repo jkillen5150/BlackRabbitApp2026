@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMG Launch HQ (Admin) | Black Rabbit</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Private Cut My Grass launch kit — admin only.">
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+  <style>
+    body.admin-page.cmg-hq { background: #f3ebe0; }
+    .cmg-hq-shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px 64px; }
+    .cmg-hq-top {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start;
+      justify-content: space-between; margin-bottom: 16px;
+    }
+    .cmg-hq-top h1 { margin: 0; font-size: 1.55rem; color: var(--green-dark); }
+    .cmg-hq-top p { margin: 6px 0 0; color: #5c564e; font-size: 0.95rem; }
+    .cmg-badge {
+      display: inline-block; background: #1e3d1e; color: #e8f5e8;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
+    }
+    .cmg-tabs {
+      display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 14px;
+      position: sticky; top: 0; z-index: 5; background: rgba(243,235,224,0.94);
+      padding: 10px 0; backdrop-filter: blur(6px); border-bottom: 1px solid #ddd4c6;
+    }
+    .cmg-tabs button {
+      border: 1px solid #c9bfae; background: #fffcf7; color: #1e3d1e;
+      font-family: inherit; font-weight: 600; font-size: 0.82rem;
+      padding: 8px 12px; border-radius: 999px; cursor: pointer;
+    }
+    .cmg-tabs button:hover { border-color: var(--green); }
+    .cmg-tabs button.active {
+      background: var(--green-dark); color: #fff; border-color: var(--green-dark);
+    }
+    .cmg-panel { display: none; }
+    .cmg-panel.active { display: block; }
+    .cmg-card {
+      background: #fffcf7; border: 1px solid #e4d9c8; border-radius: 16px;
+      padding: 18px 18px 16px; margin-bottom: 14px;
+      box-shadow: 0 8px 28px rgba(46, 40, 28, 0.06);
+    }
+    .cmg-card h2 {
+      margin: 0 0 10px; font-size: 1.15rem; color: var(--green-dark);
+    }
+    .cmg-card h3 {
+      margin: 18px 0 8px; font-size: 1rem; color: var(--green);
+    }
+    .cmg-card p, .cmg-card li { color: #2c2924; line-height: 1.55; }
+    .cmg-card ul, .cmg-card ol { padding-left: 1.2rem; }
+    .cmg-muted { color: #5c564e !important; font-size: 0.92rem; }
+    .cmg-grid {
+      display: grid; gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .cmg-stat {
+      background: linear-gradient(145deg, #1e3d1e, #2e5a2e); color: #e8f5e8;
+      border-radius: 14px; padding: 14px 16px;
+    }
+    .cmg-stat strong { display: block; font-size: 0.75rem; letter-spacing: 0.06em;
+      text-transform: uppercase; opacity: 0.8; margin-bottom: 4px; }
+    .cmg-stat span { font-size: 1.05rem; font-weight: 700; line-height: 1.3; word-break: break-word; }
+    .cmg-stat a { color: #c4e8c4; }
+    table.cmg-table {
+      width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 10px 0;
+    }
+    table.cmg-table th, table.cmg-table td {
+      border: 1px solid #e4d9c8; padding: 8px 10px; text-align: left; vertical-align: top;
+    }
+    table.cmg-table th { background: #efe8dc; color: #1e3d1e; }
+    .cmg-callout {
+      border-left: 4px solid var(--amber); background: #fff8ee;
+      padding: 12px 14px; border-radius: 0 12px 12px 0; margin: 12px 0;
+    }
+    .cmg-warn {
+      border-left-color: #b45309; background: #fff7ed;
+    }
+    .cmg-ok {
+      border-left-color: var(--green); background: #eef5ee;
+    }
+    .cmg-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .cmg-copy-box {
+      background: #1c1a17; color: #f0ebe3; border-radius: 12px;
+      padding: 14px 16px; font-size: 0.88rem; line-height: 1.5;
+      white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .cmg-checklist label {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 8px 0; border-bottom: 1px solid #efe8dc; cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .cmg-checklist input { margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0; }
+    .cmg-sign-frame {
+      width: 100%; min-height: 520px; border: 0; border-radius: 12px;
+      background: #2a2a2a;
+    }
+    .cmg-qr-row {
+      display: flex; flex-wrap: wrap; gap: 20px; align-items: center;
+    }
+    .cmg-qr-row img {
+      width: 180px; height: 180px; background: #fff; padding: 10px;
+      border-radius: 12px; border: 1px solid #e4d9c8;
+    }
+    .cmg-doc-view {
+      max-height: 70vh; overflow: auto; background: #1c1a17; color: #e8e4dc;
+      border-radius: 12px; padding: 16px; font-size: 0.82rem; line-height: 1.45;
+      white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .cmg-doc-view.loading { opacity: 0.7; }
+    .ascii-layout {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem; background: #efe8dc; padding: 12px; border-radius: 10px;
+      overflow-x: auto; white-space: pre; color: #1c1a17;
+    }
+  </style>
+</head>
+<body data-page="admin" class="admin-page cmg-hq">
+  <div id="site-nav-mount"></div>
+
+  <div class="cmg-hq-shell">
+    <div class="cmg-hq-top">
+      <div>
+        <span class="cmg-badge">Admin only · noindex</span>
+        <h1>Cut My Grass — Launch HQ</h1>
+        <p>Secret go-public kit on blackrabbitlawn.com: domain, print, sexy sign, budget, vanity 301, full blueprint.</p>
+      </div>
+      <div class="cmg-actions">
+        <a class="btn btn-outline" href="admin.html">← Admin dashboard</a>
+        <a class="btn btn-solid" href="cut-my-grass/" target="_blank" rel="noopener">Open live CMG</a>
+        <button type="button" class="btn btn-outline" id="btn-logout">Log out</button>
+      </div>
+    </div>
+
+    <div class="cmg-grid" style="margin-bottom:8px">
+      <div class="cmg-stat">
+        <strong>Book URL (freeze)</strong>
+        <span><a id="cmg-url-link" href="https://www.blackrabbitlawn.com/cut-my-grass" target="_blank" rel="noopener">www.blackrabbitlawn.com/cut-my-grass</a></span>
+      </div>
+      <div class="cmg-stat">
+        <strong>Phone</strong>
+        <span><a href="tel:+14079511663">(407) 951-1663</a></span>
+      </div>
+      <div class="cmg-stat">
+        <strong>Print shop</strong>
+        <span>Nisqually Post &amp; Print · 360-810-8600</span>
+      </div>
+      <div class="cmg-stat">
+        <strong>Workflow</strong>
+        <span>4/6 claims verified · ~$100–300 lean launch</span>
+      </div>
+    </div>
+
+    <nav class="cmg-tabs" role="tablist" aria-label="Launch HQ sections">
+      <button type="button" class="active" data-tab="overview">Overview</button>
+      <button type="button" data-tab="domain">Domain</button>
+      <button type="button" data-tab="print">Print &amp; QR</button>
+      <button type="button" data-tab="sign">Sexy sign</button>
+      <button type="button" data-tab="budget">Budget / VistaPrint</button>
+      <button type="button" data-tab="vanity">Vanity 301</button>
+      <button type="button" data-tab="checklist">Checklists</button>
+      <button type="button" data-tab="docs">Full docs</button>
+    </nav>
+
+    <!-- OVERVIEW -->
+    <section class="cmg-panel active" id="tab-overview" role="tabpanel">
+      <div class="cmg-card">
+        <h2>Bottom line</h2>
+        <p><strong>Cut My Grass is already live.</strong> Going public means distribution + print + discipline — not a rebuild or a new company domain.</p>
+        <div class="cmg-callout cmg-ok">
+          Keep product at <strong>https://www.blackrabbitlawn.com/cut-my-grass</strong>.
+          Optional later: vanity domain (e.g. getcutmygrass.com) that <strong>301s</strong> here. Stay on GoDaddy for registration; site stays on Vercel.
+        </div>
+        <h3>Win on three differentiators</h3>
+        <ol>
+          <li><strong>Same named operator</strong> (Jerry) every visit — not marketplace reassignment</li>
+          <li><strong>One clear local price</strong> — no client “trust fees”; $25 deposit applies to quote</li>
+          <li><strong>Hyperlocal reliability</strong> — Yelm / South Sound vs FB DMs and national apps</li>
+        </ol>
+        <h3>MVP already shipped</h3>
+        <p class="cmg-muted">Book flow → durable lead → optional $25 Stripe → track page → you text/call to confirm. Marketplace, Twilio SMS, paid ads, trademark = later.</p>
+        <h3>30-day north star</h3>
+        <p>~<strong>30 new site first-timers</strong> by ~2026-08-21 (also rotate <code>xai_api_key</code>). FB Reels + neighbors + first yard signs. No paid ads yet.</p>
+      </div>
+      <div class="cmg-card">
+        <h2>Do this week</h2>
+        <ol>
+          <li>Phone-scan CMG on <strong>cellular</strong> (full book path)</li>
+          <li>Order <strong>5 single-sided 18×24</strong> online (VistaPrint etc.) if local quote is high — or call Nisqually Post &amp; Print</li>
+          <li>Every Reel/post: CMG link + phone</li>
+          <li>Skip buying cutmygrass.com for launch (registered through 2029, not free)</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- DOMAIN -->
+    <section class="cmg-panel" id="tab-domain" role="tabpanel">
+      <div class="cmg-card">
+        <h2>cutmygrass.com status</h2>
+        <table class="cmg-table">
+          <tr><th>Fact</th><th>Status</th></tr>
+          <tr><td>Registered</td><td><strong>Yes</strong> — 2011 → expires 2029-10-04 · GoDaddy / Domains By Proxy / NameBright NS</td></tr>
+          <tr><td>Live lawn site</td><td><strong>No</strong> — parked / aftermarket pattern, does not resolve to a business site</td></tr>
+          <tr><td>Free to claim</td><td><strong>No</strong> — aftermarket only if you ever want it</td></tr>
+        </table>
+        <h3>Name collisions (don’t ignore)</h3>
+        <ul>
+          <li><strong>cut-my-grass.com</strong> — live Cincinnati HDI Home</li>
+          <li><strong>cutmygrass.com.au</strong> — Australia</li>
+          <li><strong>justcutmygrass.com</strong> / <strong>pleasecutmygrass.com</strong> (LawnLink) / <strong>cutmygrass.net</strong></li>
+        </ul>
+        <h3>Recommendation</h3>
+        <table class="cmg-table">
+          <tr><th>Priority</th><th>Domain</th><th>Action</th></tr>
+          <tr><td>1</td><td>blackrabbitlawn.com</td><td><strong>Canonical</strong> — keep</td></tr>
+          <tr><td>2</td><td>getcutmygrass.com (alts: book… / …wa)</td><td>Optional CTA · <strong>301 → /cut-my-grass</strong></td></tr>
+          <tr><td>3</td><td>cutmygrass.com</td><td>Skip for launch unless aftermarket is cheap on purpose</td></tr>
+        </table>
+        <div class="cmg-callout">
+          Brand architecture: <strong>Option A</strong> path now. <strong>Option C</strong> vanity 301 when print needs short URL. Defer subdomain and full brand split.
+        </div>
+      </div>
+      <div class="cmg-card">
+        <h2>GoDaddy vs migrate</h2>
+        <ul>
+          <li><strong>Stay on GoDaddy</strong> as registrar for blackrabbitlawn.com</li>
+          <li>Site already on <strong>Vercel</strong> — only A/CNAME for web</li>
+          <li><strong>Never wipe MX</strong> when touching DNS (email risk)</li>
+          <li>Transfer registrar later only for cost/UX after DNS is documented</li>
+          <li><strong>Never paste GoDaddy passwords into chat or this page’s notes</strong></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PRINT -->
+    <section class="cmg-panel" id="tab-print" role="tabpanel">
+      <div class="cmg-card">
+        <h2>Print shop (verified)</h2>
+        <p><strong>Nisqually Post &amp; Print</strong> (not “Print Shop”)<br>
+          12820 Yelm Hwy SE Ste C, Olympia, WA 98513<br>
+          <a href="tel:+13608108600">360-810-8600</a> ·
+          <a href="https://www.nisquallypostandprint.com/" target="_blank" rel="noopener">nisquallypostandprint.com</a></p>
+        <p class="cmg-muted">Site has listed ~$19.80 single-sided 24×18 + H-stake; hours have been Tue/Wed/Fri style — <strong>confirm before you drive</strong>. Double-sided + small card runs: get a written quote.</p>
+      </div>
+      <div class="cmg-card">
+        <h2>QR (real)</h2>
+        <div class="cmg-qr-row">
+          <img src="docs/cmg-yard-sign-qr.png" width="512" height="512" alt="QR code to Cut My Grass booking">
+          <div>
+            <p><strong>Payload:</strong><br><code>https://www.blackrabbitlawn.com/cut-my-grass</code></p>
+            <p class="cmg-muted">Scan with your phone camera on cellular before ordering print.</p>
+            <div class="cmg-actions">
+              <a class="btn btn-solid" href="docs/cmg-yard-sign-qr.png" download="cut-my-grass-qr.png">Download QR PNG</a>
+              <button type="button" class="btn btn-outline" data-copy="https://www.blackrabbitlawn.com/cut-my-grass">Copy book URL</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cmg-card">
+        <h2>Sign copy (lock this)</h2>
+        <div class="cmg-copy-box" id="sign-copy">YELM &amp; SOUTH SOUND
+CUT MY GRASS
+Book a lawn cut in a few taps.
+(407) 951-1663
+Powered by Black Rabbit · LBI
+SCAN TO BOOK</div>
+        <div class="cmg-actions">
+          <button type="button" class="btn btn-solid" data-copy-from="sign-copy">Copy sign text</button>
+        </div>
+        <h3>Do not put on the sign</h3>
+        <ul>
+          <li>Fixed “always $40” guarantees</li>
+          <li>Marketplace / Uber-for-lawn language</li>
+          <li>Two different URLs / two QRs</li>
+          <li>Vanity domain until 301 is live and tested</li>
+        </ul>
+      </div>
+      <div class="cmg-card">
+        <h2>Email / text the print shop</h2>
+        <div class="cmg-copy-box" id="shop-brief">Hi — I'd like a quote for 5–10 outdoor corrugated yard signs, 24×18, double-sided if possible, with H-stakes.
+Artwork: headline CUT MY GRASS, sub "Book a lawn cut in a few taps", line "Powered by Black Rabbit", phone (407) 951-1663, large QR pointing to:
+https://www.blackrabbitlawn.com/cut-my-grass
+High contrast, weatherproof. Can you price single- vs double-sided and turnaround? I can supply a QR PNG. Thanks — Jerry, Black Rabbit Landscaping / Yelm area.</div>
+        <div class="cmg-actions">
+          <button type="button" class="btn btn-solid" data-copy-from="shop-brief">Copy shop brief</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEXY SIGN -->
+    <section class="cmg-panel" id="tab-sign" role="tabpanel">
+      <div class="cmg-card">
+        <h2>What makes it look expensive</h2>
+        <table class="cmg-table">
+          <tr><th>Do</th><th>Skip</th></tr>
+          <tr><td>One headline: CUT MY GRASS</td><td>Paragraphs / 5 services</td></tr>
+          <tr><td>Deep green + cream + amber accent</td><td>Rainbow / clip-art mower</td></tr>
+          <tr><td>QR in pure white box ≥ 3"</td><td>Tiny QR on grass photo</td></tr>
+          <tr><td>Phone as backup</td><td>URL typed in micro type</td></tr>
+          <tr><td>Powered by Black Rabbit (small)</td><td>Logo fighting the headline</td></tr>
+        </table>
+        <p class="cmg-muted">Colors: green <code>#1e3d1e</code> · cream <code>#f7f3eb</code> · amber <code>#c4a574</code></p>
+        <div class="ascii-layout">LEFT dark green          RIGHT cream
+Yelm &amp; South Sound      [ white card ]
+CUT MY GRASS               BIG QR
+Book in a few taps      SCAN TO BOOK
+(407) 951-1663          Owner-operated
+Powered by Black Rabbit</div>
+      </div>
+      <div class="cmg-card">
+        <h2>Live mockup (Design A + B)</h2>
+        <p class="cmg-muted">Scroll inside the frame. Scan the QR on screen. Open full page to print/PDF.</p>
+        <iframe class="cmg-sign-frame" title="Yard sign mockup" src="docs/cmg-yard-sign-mockup.html"></iframe>
+        <div class="cmg-actions">
+          <a class="btn btn-solid" href="docs/cmg-yard-sign-mockup.html" target="_blank" rel="noopener">Open mockup full page</a>
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-qr.png" download>QR PNG</a>
+        </div>
+      </div>
+      <div class="cmg-card">
+        <h2>Canva / VistaPrint 5-minute build</h2>
+        <ol>
+          <li>Custom size <strong>24 × 18 in</strong> landscape</li>
+          <li>Left ~60% fill <code>#1e3d1e</code>, right cream <code>#f7f3eb</code></li>
+          <li>Headline Montserrat ExtraBold / Impact-style</li>
+          <li>Upload QR PNG into white square (≥ 3.5&quot; on physical print)</li>
+          <li>Amber accent bar on left edge</li>
+          <li>Export <strong>PDF Print</strong> → upload to printer</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- BUDGET -->
+    <section class="cmg-panel" id="tab-budget" role="tabpanel">
+      <div class="cmg-card">
+        <h2>If locals want too much money</h2>
+        <p>Online (VistaPrint, Signs on the Cheap, Amazon packs, Staples) is a normal path. Compare <strong>cart total with shipping</strong> for qty 5 + stakes.</p>
+        <table class="cmg-table">
+          <tr><th>Budget</th><th>Do this</th></tr>
+          <tr><td>$0–15</td><td>No yard signs. Reels + Nextdoor + paper QR in truck cab only</td></tr>
+          <tr><td>~$25–50</td><td>2–5 single-sided 18×24 (sale) or 1–2 signs + cheap cards</td></tr>
+          <tr><td>~$50–100</td><td><strong>Best starter:</strong> 5–10 single-sided + wire stakes</td></tr>
+          <tr><td>$100+</td><td>Only after first batch gets jobs</td></tr>
+        </table>
+        <h3>VistaPrint without overpaying</h3>
+        <ol>
+          <li>Yard signs → 18×24 corrugated</li>
+          <li><strong>Single-sided first</strong></li>
+          <li>Order 5+ (shipping kills 1–2 sign orders)</li>
+          <li>Add H-stakes if needed</li>
+          <li>Standard shipping · your QR + text · skip designer upsells</li>
+        </ol>
+        <div class="cmg-callout cmg-ok">
+          Launch-lean cash target: <strong>~$100–300</strong> total (optional vanity .com $10–25 + signs ~$75–250 + cards). Hosting assumed $0 incremental on current Vercel. AI workflow cost ≈ subscription usage, not a separate big bill.
+        </div>
+      </div>
+      <div class="cmg-card">
+        <h2>Cash ranges (non-AI)</h2>
+        <table class="cmg-table">
+          <tr><th>Item</th><th>Range</th></tr>
+          <tr><td>Vanity .com</td><td>~$10–25/yr</td></tr>
+          <tr><td>5–10 yard signs</td><td>~$75–250 (confirm)</td></tr>
+          <tr><td>Cards 50–100</td><td>~$20–60</td></tr>
+          <tr><td>cutmygrass.com aftermarket</td><td>UNVERIFIED — quote only if pursuing</td></tr>
+          <tr><td>Paid ads</td><td>$0 now; later test ~$100–300/mo if capacity known</td></tr>
+          <tr><td>Trademark</td><td>~$850+ deferred</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- VANITY -->
+    <section class="cmg-panel" id="tab-vanity" role="tabpanel">
+      <div class="cmg-card">
+        <h2>Optional vanity domain → Vercel 301</h2>
+        <p>Only after QR + signs work. Goal: short door, not a second website.</p>
+        <ol>
+          <li>Pick name: <strong>getcutmygrass.com</strong> (alts book… / …wa) — confirm at cart</li>
+          <li>Register on <strong>GoDaddy</strong> (you log in — not chat)</li>
+          <li>Vercel project → Domains → Add vanity</li>
+          <li>DNS: A apex + CNAME www as Vercel shows (edit the <em>new</em> domain only)</li>
+          <li>Force <strong>301/308</strong> → <code>https://www.blackrabbitlawn.com/cut-my-grass</code></li>
+          <li>Verify in incognito before any new print with short URL</li>
+        </ol>
+        <div class="cmg-callout cmg-warn">
+          Never reverse-proxy dual-index two full sites. One canonical host: blackrabbitlawn.com.
+          Don’t touch MX on blackrabbitlawn.com while adding vanity DNS.
+        </div>
+        <h3>vercel.json host redirect example</h3>
+        <p class="cmg-muted">Only merge carefully with existing rules when you own the domain:</p>
+        <div class="cmg-copy-box">{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "getcutmygrass.com" }],
+      "destination": "https://www.blackrabbitlawn.com/cut-my-grass",
+      "permanent": true
+    }
+  ]
+}</div>
+      </div>
+    </section>
+
+    <!-- CHECKLISTS -->
+    <section class="cmg-panel" id="tab-checklist" role="tabpanel">
+      <div class="cmg-card">
+        <h2>QR &amp; print checklist</h2>
+        <p class="cmg-muted">Checks save on this device only (localStorage).</p>
+        <div class="cmg-checklist" id="check-print" data-store="cmg_hq_print_v1"></div>
+      </div>
+      <div class="cmg-card">
+        <h2>30 / 60 / 90 days</h2>
+        <div class="cmg-checklist" id="check-launch" data-store="cmg_hq_launch_v1"></div>
+      </div>
+      <div class="cmg-card">
+        <h2>Ops smoke (launch-critical env)</h2>
+        <div class="cmg-checklist" id="check-ops" data-store="cmg_hq_ops_v1"></div>
+      </div>
+    </section>
+
+    <!-- FULL DOCS -->
+    <section class="cmg-panel" id="tab-docs" role="tabpanel">
+      <div class="cmg-card">
+        <h2>Full blueprint + print guide (from repo)</h2>
+        <p class="cmg-muted">Loaded from <code>/docs/</code> on this site. Admin login still required to open this page.</p>
+        <div class="cmg-actions">
+          <button type="button" class="btn btn-solid" id="btn-load-blueprint">Load blueprint</button>
+          <button type="button" class="btn btn-outline" id="btn-load-print">Load print / vanity guide</button>
+          <a class="btn btn-outline" href="docs/cut-my-grass-public-blueprint.md" target="_blank" rel="noopener">Raw blueprint .md</a>
+          <a class="btn btn-outline" href="docs/cmg-print-and-vanity-domain.md" target="_blank" rel="noopener">Raw print guide .md</a>
+        </div>
+        <pre class="cmg-doc-view" id="doc-view" aria-live="polite">Tap a load button to pull the full text…</pre>
+      </div>
+      <div class="cmg-card">
+        <h2>Workflow note</h2>
+        <p>Multi-agent research workflow: <code>cut-my-grass-public-blueprint</code> · ~9 min · domain + market + Yelm print + blueprint + adversarial verify.</p>
+        <p class="cmg-muted">Scripts: <code>.grok/workflows/cut-my-grass-public-blueprint.rhai</code> and <code>~/.grok/workflows/</code></p>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/site-common.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.BRAuth || !BRAuth.requireAdmin()) return;
+
+      document.getElementById('btn-logout')?.addEventListener('click', () => {
+        BRAuth.logout();
+        window.location.href = 'login.html?role=admin';
+      });
+
+      // Tabs
+      const tabs = document.querySelectorAll('.cmg-tabs button');
+      const panels = document.querySelectorAll('.cmg-panel');
+      tabs.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-tab');
+          tabs.forEach((b) => b.classList.toggle('active', b === btn));
+          panels.forEach((p) => p.classList.toggle('active', p.id === 'tab-' + id));
+          try { sessionStorage.setItem('cmg_hq_tab', id); } catch (_) {}
+        });
+      });
+      try {
+        const saved = sessionStorage.getItem('cmg_hq_tab');
+        if (saved) {
+          const b = document.querySelector('.cmg-tabs button[data-tab="' + saved + '"]');
+          if (b) b.click();
+        }
+      } catch (_) {}
+
+      // Copy helpers
+      async function copyText(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); } catch (_) {}
+          ta.remove();
+          return true;
+        }
+      }
+      document.querySelectorAll('[data-copy]').forEach((el) => {
+        el.addEventListener('click', async () => {
+          await copyText(el.getAttribute('data-copy') || '');
+          const prev = el.textContent;
+          el.textContent = 'Copied!';
+          setTimeout(() => { el.textContent = prev; }, 1400);
+        });
+      });
+      document.querySelectorAll('[data-copy-from]').forEach((el) => {
+        el.addEventListener('click', async () => {
+          const src = document.getElementById(el.getAttribute('data-copy-from'));
+          await copyText(src ? src.textContent : '');
+          const prev = el.textContent;
+          el.textContent = 'Copied!';
+          setTimeout(() => { el.textContent = prev; }, 1400);
+        });
+      });
+
+      // Checklists
+      const LISTS = {
+        'check-print': [
+          'Book URL frozen: https://www.blackrabbitlawn.com/cut-my-grass',
+          'QR scanned on cellular — Step 1 of CMG opens',
+          'Full book → lead path works on phone',
+          'Optional deposit cancel-safe path works',
+          'Downloaded QR PNG for Canva / printer',
+          'Shop brief sent or VistaPrint cart ready (qty 5+)',
+          'Proof scan from paper/PDF before full print run',
+          'First sign on truck (own property)'
+        ],
+        'check-launch': [
+          '0–30: FB Reels/posts every week with CMG link + phone',
+          '0–30: 3–5 frens dry-run real URL',
+          '0–30: Nextdoor / neighbor / past-customer wave',
+          '0–30: First yard-sign batch ordered / placed',
+          '0–30: Ask Google review after each closed job',
+          '0–30: Score new users toward ~30 by key rotate',
+          '31–60: Measure lead → booked → closed',
+          '31–60: Optional vanity domain + 301 only if needed',
+          '61–90: Paid ads only if capacity + close rate known',
+          'Later: trademark / cutmygrass.com aftermarket only if justified'
+        ],
+        'check-ops': [
+          'GITHUB_TOKEN live (durable leads / track)',
+          'STRIPE_SECRET_KEY on Vercel Production',
+          'LEAD_ADMIN_TOKEN set + saved in Admin',
+          'SITE_URL prefers https://www.blackrabbitlawn.com',
+          'xai_api_key calendar: rotate ~2026-08-21',
+          'Admin leads list loads',
+          'Smoke: home, /cut-my-grass, /assistant, phone answer'
+        ]
+      };
+
+      Object.keys(LISTS).forEach((listId) => {
+        const root = document.getElementById(listId);
+        if (!root) return;
+        const key = root.getAttribute('data-store');
+        let state = {};
+        try { state = JSON.parse(localStorage.getItem(key) || '{}'); } catch (_) { state = {}; }
+        LISTS[listId].forEach((label, i) => {
+          const id = listId + '-' + i;
+          const wrap = document.createElement('label');
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.checked = !!state[i];
+          input.addEventListener('change', () => {
+            state[i] = input.checked;
+            try { localStorage.setItem(key, JSON.stringify(state)); } catch (_) {}
+          });
+          const span = document.createElement('span');
+          span.textContent = label;
+          wrap.appendChild(input);
+          wrap.appendChild(span);
+          root.appendChild(wrap);
+        });
+      });
+
+      // Full docs fetch
+      const view = document.getElementById('doc-view');
+      async function loadDoc(path, title) {
+        if (!view) return;
+        view.classList.add('loading');
+        view.textContent = 'Loading ' + title + '…';
+        try {
+          const res = await fetch(path, { cache: 'no-store' });
+          if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+          const text = await res.text();
+          view.textContent = text;
+        } catch (e) {
+          view.textContent = 'Could not load ' + path + ' — ' + (e && e.message ? e.message : e) +
+            '\n\nOpen the raw .md link above, or confirm /docs is deployed.';
+        } finally {
+          view.classList.remove('loading');
+        }
+      }
+      document.getElementById('btn-load-blueprint')?.addEventListener('click', () => {
+        loadDoc('docs/cut-my-grass-public-blueprint.md', 'blueprint');
+      });
+      document.getElementById('btn-load-print')?.addEventListener('click', () => {
+        loadDoc('docs/cmg-print-and-vanity-domain.md', 'print guide');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -18,6 +18,7 @@ Serving Yelm, Rainier, Lacey, Roy, Olympia, Tenino & Thurston County.
 | **Ask AI** (full-page chat) | `assistant.html` |
 | Customer / admin login | `login.html` |
 | Admin CMS | `admin.html` |
+| CMG Launch HQ (admin-only kit) | `admin-cmg-hq.html` |
 | Customer dashboard | `customer.html` |
 | Quote thank-you | `thankyou.html` |
 | Chat API | `api/chat.js` → `POST /api/chat` |

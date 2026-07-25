@@ -5,6 +5,9 @@ Allow: /
 # Private / utility surfaces
 Disallow: /admin
 Disallow: /admin.html
+Disallow: /admin-cmg-hq
+Disallow: /admin-cmg-hq.html
+Disallow: /docs/
 Disallow: /login
 Disallow: /login.html
 Disallow: /customer
