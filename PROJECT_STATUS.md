@@ -109,6 +109,7 @@ Last updated: 2026-07-27 (evening) · **tabled for reading / distribution**
 6. Physical/clone backup — **`BACKUP.md`**
 7. Private leads store (if API-written `leads.json` on public repo is a problem)
 8. **Implement picture upload for recent work** — current photo upload system is a little janky; needs a cleaner flow for portfolio / recent jobs
+9. **Vistaprint pitch file (PDF + PNG)** — create an actual downloadable pitch / yard-sign file ready for Vistaprint (print-ready PDF + PNG). Current mockup exists; need final downloadable assets.
 
 ## Not now / tabled
 - Native app
@@ -152,6 +153,7 @@ Last updated: 2026-07-27 (evening) · **tabled for reading / distribution**
 ### Build later (not default next step)
 - [ ] Stripe webhook / SMS track / marketplace comeback — only when volume hurts
 - [ ] Picture upload for recent work (photo system is janky)
+- [ ] Vistaprint pitch file — actual downloadable PDF + PNG for print
 
 ## Admin tips
 - Lead token = `LEAD_ADMIN_TOKEN` → **Save on this device**
