@@ -1,6 +1,6 @@
 # Black Rabbit / Cut My Grass — session handoff
 
-Last updated: 2026-07-22 (evening) · **tabled for reading / distribution**
+Last updated: 2026-07-27 (evening) · **tabled for reading / distribution**
 
 ## ⚠️ Token expiry (king note)
 - **`xai_api_key` (Vercel label) — 30-day expiry.** Replaced ~**2026-07-22**. Rotate by ~**2026-08-21** (or xAI console). Dead key → *“Chat not configured”* / auth errors. Fix: console.x.ai → new key → Vercel **`xai_api_key`** → **Redeploy**. Code also accepts legacy `XAI_API_KEY`.
@@ -108,6 +108,7 @@ Last updated: 2026-07-22 (evening) · **tabled for reading / distribution**
 5. Paid ads (after close rate known)
 6. Physical/clone backup — **`BACKUP.md`**
 7. Private leads store (if API-written `leads.json` on public repo is a problem)
+8. **Implement picture upload for recent work** — current photo upload system is a little janky; needs a cleaner flow for portfolio / recent jobs
 
 ## Not now / tabled
 - Native app
@@ -150,6 +151,7 @@ Last updated: 2026-07-22 (evening) · **tabled for reading / distribution**
 
 ### Build later (not default next step)
 - [ ] Stripe webhook / SMS track / marketplace comeback — only when volume hurts
+- [ ] Picture upload for recent work (photo system is janky)
 
 ## Admin tips
 - Lead token = `LEAD_ADMIN_TOKEN` → **Save on this device**
