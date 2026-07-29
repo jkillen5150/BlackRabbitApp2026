@@ -453,20 +453,26 @@ RIGHT 40%  cream panel (angled edge optional)
   Owner-operated · Fair quotes
 ```
 
-### Ready-made mockup (real QR)
+### Ready-made mockup + downloadable PNGs (real QR)
 
 | File | What |
 |------|------|
-| `docs/cmg-yard-sign-mockup.html` | Open in Chrome — Design A (dark/sexy) + Design B (light) |
+| `docs/cmg-yard-sign-design-a.png` | **Design A** print PNG (24×18 · 3600×2700) — dark split, recommended |
+| `docs/cmg-yard-sign-design-b.png` | **Design B** print PNG (24×18 · 3600×2700) — light / clean |
+| `docs/cmg-yard-sign-design-a-thumb.png` | Web preview of A |
+| `docs/cmg-yard-sign-design-b-thumb.png` | Web preview of B |
+| `docs/cmg-yard-sign-mockup.html` | Live HTML mockup — Design A + B |
 | `docs/cmg-yard-sign-qr.png` | Scannable QR → live booking URL |
 
-**How to use for VistaPrint / Canva**
+**Admin downloads:** CMG Launch HQ → **Sexy sign** or **Full docs** tabs.
 
-1. Open `cmg-yard-sign-mockup.html` in a browser.  
-2. Phone-scan the QR on screen (must open CMG).  
-3. Screenshot Design A **or** Print → PDF (print CSS targets 24×18).  
-4. Or rebuild in Canva: custom size **18×24 in**, paste same text + upload `cmg-yard-sign-qr.png`.  
-5. Export PDF → upload to printer.
+**How to use for VistaPrint / local print**
+
+1. Download Design A or B PNG from Launch HQ (or the paths above).  
+2. Phone-scan the QR on the PNG / mockup before ordering (must open CMG).  
+3. Upload the PNG to VistaPrint / Nisqually Post & Print (or export PDF from the printer).  
+4. Or rebuild in Canva: custom size **24×18 in**, paste same text + upload `cmg-yard-sign-qr.png`.  
+5. Export PDF → upload if the shop prefers PDF.
 
 ### Canva 5-minute version
 

@@ -116,6 +116,28 @@
       font-size: 0.78rem; background: #efe8dc; padding: 12px; border-radius: 10px;
       overflow-x: auto; white-space: pre; color: #1c1a17;
     }
+    .cmg-concept-grid {
+      display: grid; gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      margin-top: 12px;
+    }
+    .cmg-concept-card {
+      background: #1c1a17; border-radius: 14px; overflow: hidden;
+      border: 1px solid #2a2620;
+    }
+    .cmg-concept-card img {
+      display: block; width: 100%; height: auto; background: #2a2a2a;
+    }
+    .cmg-concept-meta {
+      padding: 12px 14px 14px; background: #fffcf7; border-top: 1px solid #e4d9c8;
+    }
+    .cmg-concept-meta strong {
+      display: block; color: var(--green-dark); font-size: 0.98rem; margin-bottom: 4px;
+    }
+    .cmg-concept-meta p {
+      margin: 0 0 10px; color: #5c564e; font-size: 0.85rem; line-height: 1.4;
+    }
+    .cmg-concept-meta .cmg-actions { margin-top: 0; }
   </style>
 </head>
 <body data-page="admin" class="admin-page cmg-hq">
@@ -184,6 +206,16 @@
         <p class="cmg-muted">Book flow → durable lead → optional $25 Stripe → track page → you text/call to confirm. Marketplace, Twilio SMS, paid ads, trademark = later.</p>
         <h3>30-day north star</h3>
         <p>~<strong>30 new site first-timers</strong> by ~2026-08-21 (also rotate <code>xai_api_key</code>). FB Reels + neighbors + first yard signs. No paid ads yet.</p>
+      </div>
+      <div class="cmg-card">
+        <h2>Sign concept PNGs</h2>
+        <p class="cmg-muted">Two yard-sign concepts ready to download (also under <strong>Sexy sign</strong> and <strong>Full docs</strong>).</p>
+        <div class="cmg-actions">
+          <a class="btn btn-solid" href="docs/cmg-yard-sign-design-a.png" download="cut-my-grass-yard-sign-design-a.png">Download Design A PNG</a>
+          <a class="btn btn-solid" href="docs/cmg-yard-sign-design-b.png" download="cut-my-grass-yard-sign-design-b.png">Download Design B PNG</a>
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-qr.png" download="cut-my-grass-qr.png">QR PNG</a>
+          <button type="button" class="btn btn-outline" data-tab-jump="sign">Open Sexy sign tab</button>
+        </div>
       </div>
       <div class="cmg-card">
         <h2>Do this week</h2>
@@ -311,11 +343,67 @@ Book in a few taps      SCAN TO BOOK
 Powered by Black Rabbit</div>
       </div>
       <div class="cmg-card">
+        <h2>Download sign concepts (PNG)</h2>
+        <p class="cmg-muted">
+          Print-ready <strong>24×18 landscape</strong> PNGs (3600×2700 · ~150 DPI) with the real booking QR baked in.
+          Upload to VistaPrint / local shop, or open on your phone. These are the two concepts from the mockup.
+        </p>
+        <div class="cmg-concept-grid">
+          <article class="cmg-concept-card">
+            <img
+              src="docs/cmg-yard-sign-design-a-thumb.png"
+              alt="Cut My Grass yard sign Design A — dark green split with cream QR panel"
+              width="900"
+              height="675"
+              loading="lazy"
+            >
+            <div class="cmg-concept-meta">
+              <strong>Design A — dark split (recommended)</strong>
+              <p>Deep green + cream QR panel · amber accent · high contrast “premium lawn” energy.</p>
+              <div class="cmg-actions">
+                <a
+                  class="btn btn-solid"
+                  href="docs/cmg-yard-sign-design-a.png"
+                  download="cut-my-grass-yard-sign-design-a.png"
+                >Download Design A PNG</a>
+              </div>
+            </div>
+          </article>
+          <article class="cmg-concept-card">
+            <img
+              src="docs/cmg-yard-sign-design-b-thumb.png"
+              alt="Cut My Grass yard sign Design B — light clean layout"
+              width="900"
+              height="675"
+              loading="lazy"
+            >
+            <div class="cmg-concept-meta">
+              <strong>Design B — light / clean</strong>
+              <p>Cream field, centered headline, QR + phone side-by-side — softer neighborhood look.</p>
+              <div class="cmg-actions">
+                <a
+                  class="btn btn-solid"
+                  href="docs/cmg-yard-sign-design-b.png"
+                  download="cut-my-grass-yard-sign-design-b.png"
+                >Download Design B PNG</a>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="cmg-actions">
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-qr.png" download="cut-my-grass-qr.png">QR only PNG</a>
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-design-a.png" download="cut-my-grass-yard-sign-design-a.png">A full-res</a>
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-design-b.png" download="cut-my-grass-yard-sign-design-b.png">B full-res</a>
+        </div>
+      </div>
+      <div class="cmg-card">
         <h2>Live mockup (Design A + B)</h2>
-        <p class="cmg-muted">Scroll inside the frame. Scan the QR on screen. Open full page to print/PDF.</p>
+        <p class="cmg-muted">Scroll inside the frame. Scan the QR on screen. Open full page to print/PDF. Prefer the PNG downloads above for shops.</p>
         <iframe class="cmg-sign-frame" title="Yard sign mockup" src="docs/cmg-yard-sign-mockup.html"></iframe>
         <div class="cmg-actions">
           <a class="btn btn-solid" href="docs/cmg-yard-sign-mockup.html" target="_blank" rel="noopener">Open mockup full page</a>
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-design-a.png" download="cut-my-grass-yard-sign-design-a.png">Design A PNG</a>
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-design-b.png" download="cut-my-grass-yard-sign-design-b.png">Design B PNG</a>
           <a class="btn btn-outline" href="docs/cmg-yard-sign-qr.png" download>QR PNG</a>
         </div>
       </div>
@@ -422,6 +510,51 @@ Powered by Black Rabbit</div>
     <!-- FULL DOCS -->
     <section class="cmg-panel" id="tab-docs" role="tabpanel">
       <div class="cmg-card">
+        <h2>Yard-sign concept PNGs (download)</h2>
+        <p class="cmg-muted">
+          Same files as <strong>Sexy sign</strong> — print-ready for VistaPrint / Nisqually Post &amp; Print.
+          QR points to <code>https://www.blackrabbitlawn.com/cut-my-grass</code>.
+        </p>
+        <div class="cmg-concept-grid">
+          <article class="cmg-concept-card">
+            <img
+              src="docs/cmg-yard-sign-design-a-thumb.png"
+              alt="Design A preview"
+              width="900"
+              height="675"
+              loading="lazy"
+            >
+            <div class="cmg-concept-meta">
+              <strong>Design A PNG</strong>
+              <p>3600×2700 · dark green split · recommended first order.</p>
+              <div class="cmg-actions">
+                <a class="btn btn-solid" href="docs/cmg-yard-sign-design-a.png" download="cut-my-grass-yard-sign-design-a.png">Download Design A</a>
+              </div>
+            </div>
+          </article>
+          <article class="cmg-concept-card">
+            <img
+              src="docs/cmg-yard-sign-design-b-thumb.png"
+              alt="Design B preview"
+              width="900"
+              height="675"
+              loading="lazy"
+            >
+            <div class="cmg-concept-meta">
+              <strong>Design B PNG</strong>
+              <p>3600×2700 · light cream layout · alternate look.</p>
+              <div class="cmg-actions">
+                <a class="btn btn-solid" href="docs/cmg-yard-sign-design-b.png" download="cut-my-grass-yard-sign-design-b.png">Download Design B</a>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="cmg-actions">
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-qr.png" download="cut-my-grass-qr.png">QR only PNG</a>
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-mockup.html" target="_blank" rel="noopener">HTML mockup</a>
+        </div>
+      </div>
+      <div class="cmg-card">
         <h2>Full blueprint + print guide (from repo)</h2>
         <p class="cmg-muted">Loaded from <code>/docs/</code> on this site. Admin login still required to open this page.</p>
         <div class="cmg-actions">
@@ -454,20 +587,23 @@ Powered by Black Rabbit</div>
       // Tabs
       const tabs = document.querySelectorAll('.cmg-tabs button');
       const panels = document.querySelectorAll('.cmg-panel');
+      function activateTab(id) {
+        if (!id) return;
+        const btn = document.querySelector('.cmg-tabs button[data-tab="' + id + '"]');
+        if (!btn) return;
+        tabs.forEach((b) => b.classList.toggle('active', b === btn));
+        panels.forEach((p) => p.classList.toggle('active', p.id === 'tab-' + id));
+        try { sessionStorage.setItem('cmg_hq_tab', id); } catch (_) {}
+      }
       tabs.forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-tab');
-          tabs.forEach((b) => b.classList.toggle('active', b === btn));
-          panels.forEach((p) => p.classList.toggle('active', p.id === 'tab-' + id));
-          try { sessionStorage.setItem('cmg_hq_tab', id); } catch (_) {}
-        });
+        btn.addEventListener('click', () => activateTab(btn.getAttribute('data-tab')));
+      });
+      document.querySelectorAll('[data-tab-jump]').forEach((el) => {
+        el.addEventListener('click', () => activateTab(el.getAttribute('data-tab-jump')));
       });
       try {
         const saved = sessionStorage.getItem('cmg_hq_tab');
-        if (saved) {
-          const b = document.querySelector('.cmg-tabs button[data-tab="' + saved + '"]');
-          if (b) b.click();
-        }
+        if (saved) activateTab(saved);
       } catch (_) {}
 
       // Copy helpers
