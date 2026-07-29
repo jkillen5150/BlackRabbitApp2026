@@ -444,7 +444,7 @@ LEFT 60%  dark green
   huge: CUT MY GRASS
   short line: Book a lawn cut in a few taps.
   phone: (407) 951-1663
-  small: Powered by Black Rabbit · LBI
+  small: Powered by Black Rabbit · Licensed Bonded Insured
 
 RIGHT 40%  cream panel (angled edge optional)
   white card
@@ -498,7 +498,7 @@ YELM & SOUTH SOUND
 CUT MY GRASS
 Book a lawn cut in a few taps.
 (407) 951-1663
-Powered by Black Rabbit · LBI
+Powered by Black Rabbit · Licensed Bonded Insured
 SCAN TO BOOK
 ```
 
