@@ -327,27 +327,44 @@
     }
   }
 
+  function looksLikeHeic(file) {
+    const type = String((file && file.type) || '');
+    const name = String((file && file.name) || '');
+    return /heic|heif/i.test(type) || /\.heic$/i.test(name) || /\.heif$/i.test(name);
+  }
+
   /** Lightweight JPEG compress for phone uploads (no content-store dep). */
   function compressImageFile(file) {
     return new Promise((resolve, reject) => {
-      const type = String(file.type || '');
-      const name = String(file.name || '');
-      if (/heic|heif/i.test(type) || /\.heic$/i.test(name) || /\.heif$/i.test(name)) {
-        reject(
-          new Error(
-            'iPhone HEIC isn’t supported here. Export as JPEG, or Camera → Formats → Most Compatible.'
-          )
-        );
+      if (!file) {
+        reject(new Error('Please choose an image file (JPEG or PNG works best).'));
         return;
       }
-      if (type && !type.startsWith('image/')) {
+      if (typeof file.size === 'number' && file.size === 0) {
+        reject(new Error('That photo came through empty. Try another shot from your gallery.'));
+        return;
+      }
+
+      const type = String(file.type || '');
+      // Empty MIME is common on mobile galleries — only reject clear non-images
+      if (type && !type.startsWith('image/') && type !== 'application/octet-stream') {
         reject(new Error('That file is not an image. Use JPEG or PNG.'));
         return;
       }
 
-      const url = URL.createObjectURL(file);
-      const img = new Image();
-      img.onload = () => {
+      const failOpen = () => {
+        if (looksLikeHeic(file)) {
+          reject(
+            new Error(
+              'iPhone HEIC isn’t supported here. Export as JPEG, or Camera → Formats → Most Compatible.'
+            )
+          );
+        } else {
+          reject(new Error('Could not open that image. Try JPEG or PNG from your gallery.'));
+        }
+      };
+
+      const paint = (img, revoke) => {
         try {
           const maxEdge = 960;
           let w = img.naturalWidth || img.width;
@@ -374,7 +391,6 @@
             dataUrl = canvas.toDataURL('image/jpeg', 0.48);
           }
           if (dataUrl.length > 320000) {
-            // second pass smaller
             const canvas2 = document.createElement('canvas');
             canvas2.width = Math.max(1, Math.round(w * 0.75));
             canvas2.height = Math.max(1, Math.round(h * 0.75));
@@ -388,14 +404,62 @@
           }
           resolve(dataUrl);
         } catch (e) {
-          reject(e instanceof Error ? e : new Error('Could not process photo.'));
+          if (looksLikeHeic(file)) {
+            reject(
+              new Error(
+                'iPhone HEIC isn’t supported here. Export as JPEG, or Camera → Formats → Most Compatible.'
+              )
+            );
+          } else {
+            reject(e instanceof Error ? e : new Error('Could not process photo.'));
+          }
         } finally {
-          URL.revokeObjectURL(url);
+          if (typeof revoke === 'function') revoke();
         }
       };
+
+      // Prefer createImageBitmap (orientation) when available
+      if (typeof createImageBitmap === 'function') {
+        createImageBitmap(file, { imageOrientation: 'from-image' })
+          .catch(() => createImageBitmap(file))
+          .then((bmp) => {
+            paint(bmp, () => {
+              try {
+                bmp.close();
+              } catch {
+                /* ignore */
+              }
+            });
+          })
+          .catch(() => {
+            // Fall through to Image + object URL
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => paint(img, () => URL.revokeObjectURL(url));
+            img.onerror = () => {
+              URL.revokeObjectURL(url);
+              // Last resort: FileReader (some WebViews)
+              const reader = new FileReader();
+              reader.onerror = failOpen;
+              reader.onload = () => {
+                const img2 = new Image();
+                img2.onload = () => paint(img2);
+                img2.onerror = failOpen;
+                img2.src = reader.result;
+              };
+              reader.readAsDataURL(file);
+            };
+            img.src = url;
+          });
+        return;
+      }
+
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => paint(img, () => URL.revokeObjectURL(url));
       img.onerror = () => {
         URL.revokeObjectURL(url);
-        reject(new Error('Could not open that image. Try JPEG or PNG.'));
+        failOpen();
       };
       img.src = url;
     });

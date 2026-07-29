@@ -1895,14 +1895,14 @@ a { color: var(--green); }
   margin: 0 auto 24px;
 }
 
-/* Admin file upload */
-.form-group input[type="file"] {
+/* Admin file upload — large mobile-friendly dropzone (gallery, not forced camera) */
+.form-group input[type="file"]:not(.photo-dropzone-input) {
   padding: 10px;
   background: #fafafa;
   cursor: pointer;
 }
 
-.form-group input[type="file"]::file-selector-button {
+.form-group input[type="file"]:not(.photo-dropzone-input)::file-selector-button {
   margin-right: 12px;
   padding: 8px 14px;
   border: none;
@@ -1914,11 +1914,121 @@ a { color: var(--green); }
   cursor: pointer;
 }
 
+.photo-dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 148px;
+  padding: 16px;
+  border: 2px dashed #b7c9b7;
+  border-radius: 14px;
+  background: #f6faf6;
+  text-align: center;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  overflow: hidden;
+}
+
+.photo-dropzone:hover,
+.photo-dropzone:focus-within {
+  border-color: var(--green);
+  background: #eef5ee;
+}
+
+.photo-dropzone.is-dragover {
+  border-color: var(--green);
+  background: #e4f0e4;
+  box-shadow: inset 0 0 0 2px rgba(30, 61, 30, 0.12);
+}
+
+.photo-dropzone.is-busy {
+  border-style: solid;
+  border-color: #8a5a00;
+  background: #fff8e8;
+}
+
+.photo-dropzone.is-error {
+  border-color: #a33;
+  background: #fff5f5;
+}
+
+.photo-dropzone.has-preview {
+  min-height: 180px;
+  padding: 10px;
+  border-style: solid;
+  border-color: #1e3d1e;
+  background: #111;
+}
+
+.photo-dropzone-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 0; /* reduce iOS native control chrome */
+  z-index: 2;
+}
+
+.photo-dropzone-ui {
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  max-width: 28rem;
+  z-index: 1;
+}
+
+.photo-dropzone-icon {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.photo-dropzone-title {
+  font-size: 1.05rem;
+  color: #1e3d1e;
+}
+
+.photo-dropzone-hint {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.35;
+}
+
+.photo-dropzone-preview {
+  display: block;
+  max-width: 100%;
+  max-height: 220px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  z-index: 1;
+}
+
 .file-status {
   margin: 8px 0 0;
   font-size: 0.85rem;
   color: #666;
   line-height: 1.35;
+}
+
+.file-status.is-busy {
+  color: #8a5a00;
+  font-weight: 600;
+}
+
+.file-status.is-ok {
+  color: #2e5a2e;
+  font-weight: 600;
+}
+
+.file-status.is-error {
+  color: #a33;
+  font-weight: 600;
 }
 
 body.admin-page .site-fabs,

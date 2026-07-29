@@ -123,7 +123,8 @@
         <p class="cmg-hint cmg-hint-tight">A quick shot helps quote faster. JPEG/PNG — we shrink them on your phone.</p>
         <div class="cmg-photo-row">
           <label class="cmg-photo-add">
-            <input type="file" id="cmg-photos" accept="image/*" capture="environment" multiple hidden>
+            <!-- No capture=: forces camera on many phones and hides the gallery -->
+            <input type="file" id="cmg-photos" accept="image/*" multiple hidden>
             <span class="cmg-photo-add-inner">
               <span class="cmg-photo-plus" aria-hidden="true">+</span>
               <span>Add photo</span>

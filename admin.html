@@ -38,7 +38,7 @@
       Edits save in this browser as a <strong>local draft</strong> (preview on this device only).
       Use <strong>Export content.json</strong>, replace <code>data/content.json</code> in the repo, and redeploy so everyone sees your updates.
       After a redeploy, stale local drafts are discarded automatically so the new site content shows up.
-      Photos are compressed in your browser and saved in this device’s local draft. Prefer JPEG/PNG (iPhone HEIC may not work). Export + redeploy to publish.
+      Photos are compressed in your browser as soon as you pick them (gallery-friendly — no forced camera). Prefer JPEG/PNG (iPhone HEIC may still fail). Export + redeploy to publish.
       <br><br>
       <strong>Chat leads:</strong> Ask AI can interview customers and email you. They also show below when the API is live.
       Optional: set <code>GITHUB_TOKEN</code> on Vercel so the follow-up list stays durable in <code>data/leads.json</code>.
@@ -128,6 +128,10 @@
     <!-- Portfolio -->
     <section class="admin-panel">
       <h2>📸 Portfolio photos</h2>
+      <p style="color:#666;font-size:0.9rem;margin-top:0;">
+        Tap the box to open your <strong>photo library</strong> (or files). We compress on this device, then save a local draft.
+        Prefer JPEG/PNG. Export + redeploy so the public site shows new shots.
+      </p>
       <form id="form-portfolio">
         <div class="admin-row">
           <div class="form-group">
@@ -143,17 +147,33 @@
           <label>Description</label>
           <textarea name="description" rows="2" placeholder="What you did on this job…"></textarea>
         </div>
-        <div class="admin-row">
-          <div class="form-group">
-            <label for="portfolio-photo">Upload photo</label>
-            <input id="portfolio-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp,image/*" capture="environment">
-            <p id="portfolio-photo-status" class="file-status">No file chosen yet.</p>
-            <img id="portfolio-photo-preview" class="preview-thumb" alt="" hidden style="margin-top:10px;width:120px;height:90px;">
+        <div class="form-group">
+          <label for="portfolio-photo">Upload photo</label>
+          <!--
+            No capture= attribute: capture forces the camera on many phones and blocks
+            the gallery. accept=image/* keeps Android/iOS pickers happy.
+          -->
+          <div class="photo-dropzone" id="portfolio-dropzone">
+            <input
+              id="portfolio-photo"
+              name="photo"
+              type="file"
+              accept="image/*"
+              class="photo-dropzone-input"
+            >
+            <div class="photo-dropzone-ui" id="portfolio-dropzone-ui">
+              <span class="photo-dropzone-icon" aria-hidden="true">📷</span>
+              <strong class="photo-dropzone-title">Tap to choose from gallery</strong>
+              <span class="photo-dropzone-hint">Phone photos, camera roll, or desktop files · JPEG/PNG best</span>
+            </div>
+            <img id="portfolio-photo-preview" class="photo-dropzone-preview" alt="Selected portfolio photo" hidden>
           </div>
-          <div class="form-group">
-            <label>Or image URL / path</label>
-            <input name="imageUrl" placeholder="IMG_9650.jpeg or https://…">
-          </div>
+          <p id="portfolio-photo-status" class="file-status" role="status" aria-live="polite">No file chosen yet.</p>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-clear-photo" hidden style="margin-top:8px;">Clear photo</button>
+        </div>
+        <div class="form-group">
+          <label for="portfolio-image-url">Or image URL / path (optional)</label>
+          <input id="portfolio-image-url" name="imageUrl" placeholder="IMG_9650.jpeg or https://…">
         </div>
         <button type="submit" class="btn btn-solid">Add portfolio item</button>
       </form>

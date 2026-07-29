@@ -258,23 +258,64 @@
     });
   }
 
+  function looksLikeHeic(file) {
+    const type = String((file && file.type) || '');
+    const name = String((file && file.name) || '');
+    return /heic|heif/i.test(type) || /\.heic$/i.test(name) || /\.heif$/i.test(name);
+  }
+
+  function heicHelpMessage() {
+    return (
+      'iPhone HEIC photos often fail in the browser. In Photos, share/export as JPEG, ' +
+      'or set Settings → Camera → Formats → Most Compatible, then try again.'
+    );
+  }
+
+  /** Load via <img> + object URL (works for most phone gallery JPEGs). */
   function loadImageElement(file) {
     return new Promise((resolve, reject) => {
       const url = URL.createObjectURL(file);
       const img = new Image();
-      img.onload = () => {
+      let settled = false;
+      const finish = (fn, arg) => {
+        if (settled) return;
+        settled = true;
         URL.revokeObjectURL(url);
-        resolve(img);
+        fn(arg);
       };
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        reject(new Error('Could not open that image. Try JPEG or PNG.'));
-      };
+      img.onload = () => finish(resolve, img);
+      img.onerror = () =>
+        finish(reject, new Error('Could not open that image. Try JPEG or PNG.'));
+      // Some mobile browsers need decode() after src is set
       img.src = url;
+      if (typeof img.decode === 'function') {
+        img.decode().then(() => finish(resolve, img)).catch(() => {
+          /* wait for onload/onerror */
+        });
+      }
     });
   }
 
-  /** Prefer createImageBitmap with EXIF orientation when the browser supports it */
+  /** FileReader data-URL fallback when object URL / ImageBitmap fails (older WebViews). */
+  function loadImageViaFileReader(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Could not read that file.'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () =>
+          reject(new Error('Could not open that image. Try JPEG or PNG.'));
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /**
+   * Prefer createImageBitmap (EXIF orientation) → Image + object URL → FileReader.
+   * Phone gallery picks often have empty MIME types; we still attempt decode.
+   */
   async function loadDrawable(file) {
     if (typeof createImageBitmap === 'function') {
       try {
@@ -283,11 +324,15 @@
         try {
           return await createImageBitmap(file);
         } catch {
-          /* fall through to Image() */
+          /* fall through */
         }
       }
     }
-    return loadImageElement(file);
+    try {
+      return await loadImageElement(file);
+    } catch {
+      return loadImageViaFileReader(file);
+    }
   }
 
   function drawScaledToDataUrl(img, maxEdge, quality) {
@@ -319,6 +364,7 @@
   /**
    * Resize + compress a photo for localStorage drafts.
    * Phone photos (3–12MB) are reduced to a JPEG data URL that usually fits.
+   * Tries to decode first (including some HEIC cases on iOS Safari) before failing.
    */
   async function compressImageFile(file, options) {
     const opts = options || {};
@@ -326,19 +372,20 @@
     const quality = opts.quality == null ? 0.72 : opts.quality;
     const maxDataUrlChars = opts.maxDataUrlChars || 900000;
 
-    if (!file || !file.size) {
+    if (!file) {
       throw new Error('Please choose an image file (JPEG or PNG works best).');
     }
-
-    // HEIC and some camera formats fail canvas decode in browsers — fail clearly
-    const type = String(file.type || '');
-    const name = String(file.name || '');
-    if (/heic|heif/i.test(type) || /\.heic$/i.test(name) || /\.heif$/i.test(name)) {
+    // size can be 0 briefly on some mobile pickers — only reject missing File objects
+    if (typeof file.size === 'number' && file.size === 0) {
       throw new Error(
-        'iPhone HEIC photos aren’t supported here. In Photos, share/export as JPEG, or set Camera → Formats → Most Compatible.'
+        'That photo came through empty. Try again, or pick a different shot from your gallery.'
       );
     }
-    if (type && !type.startsWith('image/')) {
+
+    const type = String(file.type || '');
+    const name = String(file.name || '');
+    // Empty MIME is common on Android/iOS gallery — only reject clear non-images
+    if (type && !type.startsWith('image/') && type !== 'application/octet-stream') {
       throw new Error('That file is not an image. Use JPEG or PNG.');
     }
 
@@ -346,9 +393,12 @@
     try {
       img = await loadDrawable(file);
     } catch (err) {
+      if (looksLikeHeic(file)) {
+        throw new Error(heicHelpMessage());
+      }
       throw err instanceof Error
         ? err
-        : new Error('Could not open that image. Try JPEG or PNG.');
+        : new Error('Could not open that image. Try JPEG or PNG from your gallery.');
     }
 
     try {
@@ -373,6 +423,13 @@
         );
       }
       return dataUrl;
+    } catch (err) {
+      if (looksLikeHeic(file)) {
+        throw new Error(heicHelpMessage());
+      }
+      throw err instanceof Error
+        ? err
+        : new Error('Could not process that image. Try JPEG or PNG.');
     } finally {
       if (img && typeof img.close === 'function') {
         try {

@@ -317,28 +317,167 @@ function wireForms() {
     await refreshAll();
   });
 
+  /**
+   * Portfolio photo upload — process as soon as the gallery returns a file.
+   * Pending compressed data URL lives here so submit does not re-read a flaky File.
+   */
+  let portfolioPendingImage = null;
+  let portfolioObjectUrl = null;
+  let portfolioCompressGen = 0;
+
   const photoInput = document.getElementById('portfolio-photo');
   const photoStatus = document.getElementById('portfolio-photo-status');
   const photoPreview = document.getElementById('portfolio-photo-preview');
-  if (photoInput && photoStatus) {
+  const photoDropzone = document.getElementById('portfolio-dropzone');
+  const photoDropzoneUi = document.getElementById('portfolio-dropzone-ui');
+  const btnClearPhoto = document.getElementById('btn-clear-photo');
+
+  function setPhotoStatus(msg, kind) {
+    if (!photoStatus) return;
+    photoStatus.textContent = msg || '';
+    photoStatus.classList.remove('is-error', 'is-ok', 'is-busy');
+    if (kind) photoStatus.classList.add(kind);
+  }
+
+  function revokePortfolioObjectUrl() {
+    if (portfolioObjectUrl) {
+      try {
+        URL.revokeObjectURL(portfolioObjectUrl);
+      } catch {
+        /* ignore */
+      }
+      portfolioObjectUrl = null;
+    }
+  }
+
+  function clearPortfolioPhotoUi() {
+    portfolioPendingImage = null;
+    portfolioCompressGen += 1;
+    revokePortfolioObjectUrl();
+    if (photoPreview) {
+      photoPreview.hidden = true;
+      photoPreview.removeAttribute('src');
+    }
+    if (photoDropzoneUi) photoDropzoneUi.hidden = false;
+    if (photoDropzone) photoDropzone.classList.remove('has-preview', 'is-busy', 'is-error');
+    if (btnClearPhoto) btnClearPhoto.hidden = true;
+    if (photoInput) photoInput.value = '';
+    setPhotoStatus('No file chosen yet.');
+  }
+
+  function showPortfolioPreview(src, fromObjectUrl) {
+    if (!photoPreview) return;
+    if (!fromObjectUrl) revokePortfolioObjectUrl();
+    photoPreview.src = src;
+    photoPreview.hidden = false;
+    if (photoDropzoneUi) photoDropzoneUi.hidden = true;
+    if (photoDropzone) photoDropzone.classList.add('has-preview');
+    if (btnClearPhoto) btnClearPhoto.hidden = false;
+  }
+
+  async function processPortfolioFile(file) {
+    if (!file) {
+      clearPortfolioPhotoUi();
+      return;
+    }
+
+    const gen = ++portfolioCompressGen;
+    portfolioPendingImage = null;
+    if (photoDropzone) {
+      photoDropzone.classList.add('is-busy');
+      photoDropzone.classList.remove('is-error');
+    }
+
+    const label = file.name || 'photo';
+    const mb = file.size ? (file.size / (1024 * 1024)).toFixed(1) : '?';
+    setPhotoStatus(`Loading “${label}” (${mb} MB)…`, 'is-busy');
+
+    // Quick visual so the gallery pick feels responsive while we compress
+    revokePortfolioObjectUrl();
+    try {
+      portfolioObjectUrl = URL.createObjectURL(file);
+      showPortfolioPreview(portfolioObjectUrl, true);
+      photoPreview.onerror = () => {
+        // HEIC / odd formats: hide broken thumb until compress finishes
+        if (photoPreview && photoPreview.src === portfolioObjectUrl) {
+          photoPreview.hidden = true;
+          if (photoDropzoneUi) photoDropzoneUi.hidden = false;
+        }
+      };
+    } catch {
+      /* preview optional */
+    }
+
+    if (file.size > 20 * 1024 * 1024) {
+      if (photoDropzone) {
+        photoDropzone.classList.remove('is-busy');
+        photoDropzone.classList.add('is-error');
+      }
+      setPhotoStatus('That photo is over 20MB. Pick a smaller shot or use an image URL.', 'is-error');
+      portfolioPendingImage = null;
+      return;
+    }
+
+    setPhotoStatus(`Compressing “${label}”…`, 'is-busy');
+    try {
+      const dataUrl = await BRContent.compressImageFile(file);
+      if (gen !== portfolioCompressGen) return; // superseded by a newer pick
+      portfolioPendingImage = dataUrl;
+      showPortfolioPreview(dataUrl, false);
+      const kb = Math.round((dataUrl.length * 0.75) / 1024);
+      setPhotoStatus(`Ready (~${kb} KB). Add a title, then tap “Add portfolio item”.`, 'is-ok');
+      if (photoDropzone) {
+        photoDropzone.classList.remove('is-busy', 'is-error');
+      }
+    } catch (err) {
+      if (gen !== portfolioCompressGen) return;
+      console.error(err);
+      portfolioPendingImage = null;
+      if (photoDropzone) {
+        photoDropzone.classList.remove('is-busy');
+        photoDropzone.classList.add('is-error');
+      }
+      setPhotoStatus(
+        (err && err.message) || 'Could not load that photo. Try JPEG/PNG from your gallery.',
+        'is-error'
+      );
+    } finally {
+      // Allow re-selecting the same file from the gallery
+      if (photoInput) photoInput.value = '';
+    }
+  }
+
+  if (photoInput) {
     photoInput.addEventListener('change', () => {
       const f = photoInput.files && photoInput.files[0];
-      if (!f) {
-        photoStatus.textContent = 'No file chosen yet.';
-        if (photoPreview) {
-          photoPreview.hidden = true;
-          photoPreview.removeAttribute('src');
-        }
-        return;
-      }
-      const mb = (f.size / (1024 * 1024)).toFixed(1);
-      photoStatus.textContent = `Selected: ${f.name} (${mb} MB) — will be compressed on save.`;
-      if (photoPreview) {
-        const url = URL.createObjectURL(f);
-        photoPreview.src = url;
-        photoPreview.hidden = false;
-        photoPreview.onload = () => URL.revokeObjectURL(url);
-      }
+      if (!f) return;
+      processPortfolioFile(f);
+    });
+  }
+
+  if (btnClearPhoto) {
+    btnClearPhoto.addEventListener('click', () => clearPortfolioPhotoUi());
+  }
+
+  // Desktop: drag & drop onto the zone
+  if (photoDropzone) {
+    ['dragenter', 'dragover'].forEach((evt) => {
+      photoDropzone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        photoDropzone.classList.add('is-dragover');
+      });
+    });
+    ['dragleave', 'drop'].forEach((evt) => {
+      photoDropzone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        photoDropzone.classList.remove('is-dragover');
+      });
+    });
+    photoDropzone.addEventListener('drop', (e) => {
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) processPortfolioFile(f);
     });
   }
 
@@ -347,8 +486,7 @@ function wireForms() {
     const form = e.target;
     const submitBtn = form.querySelector('button[type="submit"]');
     const fd = new FormData(form);
-    const file = fd.get('photo');
-    let image = String(fd.get('imageUrl') || '').trim();
+    let image = portfolioPendingImage || String(fd.get('imageUrl') || '').trim();
 
     const setBusy = (busy) => {
       if (!submitBtn) return;
@@ -358,24 +496,27 @@ function wireForms() {
 
     try {
       setBusy(true);
-      if (file && typeof file === 'object' && file.size) {
-        // Phone photos are often 4–12MB; we compress before saving to local draft
-        if (file.size > 20 * 1024 * 1024) {
-          alert('That photo is over 20MB. Pick a smaller shot or paste an image URL.');
-          return;
-        }
-        if (photoStatus) photoStatus.textContent = 'Compressing photo…';
-        image = await BRContent.compressImageFile(file);
-        if (photoStatus) {
-          const kb = Math.round((image.length * 0.75) / 1024);
-          photoStatus.textContent = `Ready (~${kb} KB compressed). Saving…`;
+
+      // Fallback: file still on the input (e.g. compress not finished / older path)
+      if (!image) {
+        const file = fd.get('photo');
+        if (file && typeof file === 'object' && file.size) {
+          if (file.size > 20 * 1024 * 1024) {
+            alert('That photo is over 20MB. Pick a smaller shot or paste an image URL.');
+            return;
+          }
+          setPhotoStatus('Compressing photo…', 'is-busy');
+          image = await BRContent.compressImageFile(file);
+          portfolioPendingImage = image;
         }
       }
+
       if (!image) {
-        alert('Add a photo file or an image URL.');
+        alert('Add a photo from your gallery (or an image URL), wait until it says Ready, then submit.');
         return;
       }
 
+      setPhotoStatus('Saving to local draft…', 'is-busy');
       const data = await BRContent.load();
       data.portfolio.unshift({
         id: BRContent.uid('port'),
@@ -388,20 +529,20 @@ function wireForms() {
       const result = BRContent.save(data);
       if (!result || result.ok === false) {
         alert((result && result.error) || 'Could not save photo.');
-        if (photoStatus) photoStatus.textContent = 'Save failed — try a smaller photo or image URL.';
+        setPhotoStatus('Save failed — try a smaller photo or image URL.', 'is-error');
         return;
       }
       form.reset();
-      if (photoStatus) photoStatus.textContent = 'No file chosen yet.';
-      if (photoPreview) {
-        photoPreview.hidden = true;
-        photoPreview.removeAttribute('src');
-      }
+      clearPortfolioPhotoUi();
+      setPhotoStatus('Saved to local draft. Export content.json + redeploy to publish.', 'is-ok');
       await refreshAll();
     } catch (err) {
       console.error(err);
       alert((err && err.message) || 'Could not add that photo. Try JPEG/PNG or an image URL.');
-      if (photoStatus) photoStatus.textContent = 'Upload failed. Try JPEG or PNG.';
+      setPhotoStatus(
+        (err && err.message) || 'Upload failed. Try JPEG or PNG from your gallery.',
+        'is-error'
+      );
     } finally {
       setBusy(false);
     }
