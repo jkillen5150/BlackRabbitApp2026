@@ -318,19 +318,22 @@ function wireForms() {
   });
 
   /**
-   * Portfolio photo upload — process as soon as the gallery returns a file.
-   * Pending compressed data URL lives here so submit does not re-read a flaky File.
+   * Portfolio photo upload — multi-select from gallery.
+   * Pending compressed data URLs live here so submit does not re-read flaky Files.
+   * Picking again appends (up to MAX_PORTFOLIO_BATCH).
    */
-  let portfolioPendingImage = null;
-  let portfolioObjectUrl = null;
+  const MAX_PORTFOLIO_BATCH = 12;
+  /** @type {{ dataUrl: string, name: string }[]} */
+  let portfolioPending = [];
   let portfolioCompressGen = 0;
 
   const photoInput = document.getElementById('portfolio-photo');
   const photoStatus = document.getElementById('portfolio-photo-status');
-  const photoPreview = document.getElementById('portfolio-photo-preview');
+  const photoPreviews = document.getElementById('portfolio-photo-previews');
   const photoDropzone = document.getElementById('portfolio-dropzone');
   const photoDropzoneUi = document.getElementById('portfolio-dropzone-ui');
   const btnClearPhoto = document.getElementById('btn-clear-photo');
+  const btnAddPortfolio = document.getElementById('btn-add-portfolio');
 
   function setPhotoStatus(msg, kind) {
     if (!photoStatus) return;
@@ -339,119 +342,231 @@ function wireForms() {
     if (kind) photoStatus.classList.add(kind);
   }
 
-  function revokePortfolioObjectUrl() {
-    if (portfolioObjectUrl) {
-      try {
-        URL.revokeObjectURL(portfolioObjectUrl);
-      } catch {
-        /* ignore */
-      }
-      portfolioObjectUrl = null;
+  function totalPendingKb() {
+    return Math.round(
+      portfolioPending.reduce((sum, p) => sum + (p.dataUrl.length * 0.75) / 1024, 0)
+    );
+  }
+
+  function updateDropzoneChrome() {
+    const n = portfolioPending.length;
+    if (photoDropzone) {
+      photoDropzone.classList.toggle('has-preview', n > 0);
     }
+    if (photoDropzoneUi) {
+      // Keep the add affordance visible so multi-pass picks stay obvious
+      if (n > 0) {
+        photoDropzoneUi.hidden = false;
+        const title = photoDropzoneUi.querySelector('.photo-dropzone-title');
+        const hint = photoDropzoneUi.querySelector('.photo-dropzone-hint');
+        if (title) title.textContent = 'Tap to add more photos';
+        if (hint) {
+          hint.textContent =
+            n +
+            ' ready · up to ' +
+            MAX_PORTFOLIO_BATCH +
+            ' in one batch · JPEG/PNG best';
+        }
+      } else {
+        photoDropzoneUi.hidden = false;
+        const title = photoDropzoneUi.querySelector('.photo-dropzone-title');
+        const hint = photoDropzoneUi.querySelector('.photo-dropzone-hint');
+        if (title) title.textContent = 'Tap to choose from gallery';
+        if (hint) {
+          hint.textContent = 'Select multiple · camera roll or desktop files · JPEG/PNG best';
+        }
+      }
+    }
+    if (btnClearPhoto) btnClearPhoto.hidden = n === 0;
+    if (btnAddPortfolio) {
+      btnAddPortfolio.textContent =
+        n > 1 ? 'Add ' + n + ' portfolio items' : 'Add portfolio item(s)';
+    }
+  }
+
+  function renderPortfolioPreviews() {
+    if (!photoPreviews) {
+      updateDropzoneChrome();
+      return;
+    }
+    if (!portfolioPending.length) {
+      photoPreviews.hidden = true;
+      photoPreviews.innerHTML = '';
+      updateDropzoneChrome();
+      return;
+    }
+    photoPreviews.hidden = false;
+    photoPreviews.innerHTML = portfolioPending
+      .map((p, i) => {
+        const label = BRContent.escapeHtml(p.name || 'Photo ' + (i + 1));
+        return (
+          '<div class="photo-preview-thumb">' +
+          '<img src="' +
+          BRContent.escapeAttr(p.dataUrl) +
+          '" alt="' +
+          label +
+          '">' +
+          '<button type="button" class="photo-preview-remove" data-i="' +
+          i +
+          '" aria-label="Remove ' +
+          label +
+          '">×</button>' +
+          '<span class="photo-preview-label">' +
+          (i + 1) +
+          '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    photoPreviews.querySelectorAll('.photo-preview-remove').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const i = Number(btn.getAttribute('data-i'));
+        if (!Number.isFinite(i)) return;
+        portfolioPending.splice(i, 1);
+        renderPortfolioPreviews();
+        if (!portfolioPending.length) {
+          setPhotoStatus('No files chosen yet.');
+        } else {
+          setPhotoStatus(
+            portfolioPending.length +
+              ' photo' +
+              (portfolioPending.length > 1 ? 's' : '') +
+              ' ready (~' +
+              totalPendingKb() +
+              ' KB). Add a title, then save.',
+            'is-ok'
+          );
+        }
+      });
+    });
+    updateDropzoneChrome();
   }
 
   function clearPortfolioPhotoUi() {
-    portfolioPendingImage = null;
+    portfolioPending = [];
     portfolioCompressGen += 1;
-    revokePortfolioObjectUrl();
-    if (photoPreview) {
-      photoPreview.hidden = true;
-      photoPreview.removeAttribute('src');
-    }
-    if (photoDropzoneUi) photoDropzoneUi.hidden = false;
     if (photoDropzone) photoDropzone.classList.remove('has-preview', 'is-busy', 'is-error');
-    if (btnClearPhoto) btnClearPhoto.hidden = true;
     if (photoInput) photoInput.value = '';
-    setPhotoStatus('No file chosen yet.');
+    renderPortfolioPreviews();
+    setPhotoStatus('No files chosen yet.');
   }
 
-  function showPortfolioPreview(src, fromObjectUrl) {
-    if (!photoPreview) return;
-    if (!fromObjectUrl) revokePortfolioObjectUrl();
-    photoPreview.src = src;
-    photoPreview.hidden = false;
-    if (photoDropzoneUi) photoDropzoneUi.hidden = true;
-    if (photoDropzone) photoDropzone.classList.add('has-preview');
-    if (btnClearPhoto) btnClearPhoto.hidden = false;
-  }
+  async function processPortfolioFiles(fileList) {
+    const files = Array.from(fileList || []).filter(Boolean);
+    if (!files.length) return;
 
-  async function processPortfolioFile(file) {
-    if (!file) {
-      clearPortfolioPhotoUi();
+    const room = MAX_PORTFOLIO_BATCH - portfolioPending.length;
+    if (room <= 0) {
+      setPhotoStatus(
+        'Max ' + MAX_PORTFOLIO_BATCH + ' photos per batch. Remove some or save first.',
+        'is-error'
+      );
+      if (photoInput) photoInput.value = '';
       return;
     }
 
+    const take = files.slice(0, room);
+    const skippedOverCap = files.length - take.length;
     const gen = ++portfolioCompressGen;
-    portfolioPendingImage = null;
+
     if (photoDropzone) {
       photoDropzone.classList.add('is-busy');
       photoDropzone.classList.remove('is-error');
     }
 
-    const label = file.name || 'photo';
-    const mb = file.size ? (file.size / (1024 * 1024)).toFixed(1) : '?';
-    setPhotoStatus(`Loading “${label}” (${mb} MB)…`, 'is-busy');
+    let added = 0;
+    const errors = [];
 
-    // Quick visual so the gallery pick feels responsive while we compress
-    revokePortfolioObjectUrl();
-    try {
-      portfolioObjectUrl = URL.createObjectURL(file);
-      showPortfolioPreview(portfolioObjectUrl, true);
-      photoPreview.onerror = () => {
-        // HEIC / odd formats: hide broken thumb until compress finishes
-        if (photoPreview && photoPreview.src === portfolioObjectUrl) {
-          photoPreview.hidden = true;
-          if (photoDropzoneUi) photoDropzoneUi.hidden = false;
-        }
-      };
-    } catch {
-      /* preview optional */
+    for (let i = 0; i < take.length; i++) {
+      if (gen !== portfolioCompressGen) return;
+      const file = take[i];
+      const label = file.name || 'photo ' + (i + 1);
+      setPhotoStatus(
+        'Compressing ' + (i + 1) + ' of ' + take.length + ' — “' + label + '”…',
+        'is-busy'
+      );
+
+      if (file.size > 20 * 1024 * 1024) {
+        errors.push(label + ' (over 20MB)');
+        continue;
+      }
+
+      try {
+        const dataUrl = await BRContent.compressImageFile(file);
+        if (gen !== portfolioCompressGen) return;
+        portfolioPending.push({
+          dataUrl,
+          name: label
+        });
+        added += 1;
+        renderPortfolioPreviews();
+      } catch (err) {
+        console.error(err);
+        errors.push(label + (err && err.message ? ': ' + err.message : ''));
+      }
     }
 
-    if (file.size > 20 * 1024 * 1024) {
-      if (photoDropzone) {
-        photoDropzone.classList.remove('is-busy');
+    if (photoInput) photoInput.value = '';
+    if (gen !== portfolioCompressGen) return;
+
+    if (photoDropzone) {
+      photoDropzone.classList.remove('is-busy');
+      if (errors.length && !portfolioPending.length) {
         photoDropzone.classList.add('is-error');
+      } else {
+        photoDropzone.classList.remove('is-error');
       }
-      setPhotoStatus('That photo is over 20MB. Pick a smaller shot or use an image URL.', 'is-error');
-      portfolioPendingImage = null;
+    }
+
+    const parts = [];
+    if (portfolioPending.length) {
+      parts.push(
+        portfolioPending.length +
+          ' photo' +
+          (portfolioPending.length > 1 ? 's' : '') +
+          ' ready (~' +
+          totalPendingKb() +
+          ' KB)'
+      );
+    }
+    if (added && portfolioPending.length > added) {
+      parts.push('added ' + added + ' this pick');
+    }
+    if (skippedOverCap > 0) {
+      parts.push(skippedOverCap + ' skipped (batch full)');
+    }
+    if (errors.length) {
+      parts.push(
+        errors.length +
+          ' failed' +
+          (errors.length <= 2 ? ' — ' + errors.join('; ') : '')
+      );
+    }
+
+    if (!portfolioPending.length) {
+      setPhotoStatus(
+        errors.length
+          ? errors[0]
+          : 'Could not load those photos. Try JPEG/PNG from your gallery.',
+        'is-error'
+      );
       return;
     }
 
-    setPhotoStatus(`Compressing “${label}”…`, 'is-busy');
-    try {
-      const dataUrl = await BRContent.compressImageFile(file);
-      if (gen !== portfolioCompressGen) return; // superseded by a newer pick
-      portfolioPendingImage = dataUrl;
-      showPortfolioPreview(dataUrl, false);
-      const kb = Math.round((dataUrl.length * 0.75) / 1024);
-      setPhotoStatus(`Ready (~${kb} KB). Add a title, then tap “Add portfolio item”.`, 'is-ok');
-      if (photoDropzone) {
-        photoDropzone.classList.remove('is-busy', 'is-error');
-      }
-    } catch (err) {
-      if (gen !== portfolioCompressGen) return;
-      console.error(err);
-      portfolioPendingImage = null;
-      if (photoDropzone) {
-        photoDropzone.classList.remove('is-busy');
-        photoDropzone.classList.add('is-error');
-      }
-      setPhotoStatus(
-        (err && err.message) || 'Could not load that photo. Try JPEG/PNG from your gallery.',
-        'is-error'
-      );
-    } finally {
-      // Allow re-selecting the same file from the gallery
-      if (photoInput) photoInput.value = '';
-    }
+    setPhotoStatus(
+      parts.join(' · ') + '. Add a title, then tap save. Tap the box again to add more.',
+      errors.length ? 'is-busy' : 'is-ok'
+    );
   }
 
   if (photoInput) {
     photoInput.addEventListener('change', () => {
-      const f = photoInput.files && photoInput.files[0];
-      if (!f) return;
-      processPortfolioFile(f);
+      const list = photoInput.files;
+      if (!list || !list.length) return;
+      processPortfolioFiles(list);
     });
   }
 
@@ -459,7 +574,7 @@ function wireForms() {
     btnClearPhoto.addEventListener('click', () => clearPortfolioPhotoUi());
   }
 
-  // Desktop: drag & drop onto the zone
+  // Desktop: drag & drop (multi) onto the zone
   if (photoDropzone) {
     ['dragenter', 'dragover'].forEach((evt) => {
       photoDropzone.addEventListener(evt, (e) => {
@@ -476,8 +591,8 @@ function wireForms() {
       });
     });
     photoDropzone.addEventListener('drop', (e) => {
-      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-      if (f) processPortfolioFile(f);
+      const list = e.dataTransfer && e.dataTransfer.files;
+      if (list && list.length) processPortfolioFiles(list);
     });
   }
 
@@ -486,59 +601,86 @@ function wireForms() {
     const form = e.target;
     const submitBtn = form.querySelector('button[type="submit"]');
     const fd = new FormData(form);
-    let image = portfolioPendingImage || String(fd.get('imageUrl') || '').trim();
+    const urlFallback = String(fd.get('imageUrl') || '').trim();
 
-    const setBusy = (busy) => {
+    const setBusy = (busy, label) => {
       if (!submitBtn) return;
       submitBtn.disabled = busy;
-      submitBtn.textContent = busy ? 'Adding photo…' : 'Add portfolio item';
+      submitBtn.textContent = busy
+        ? label || 'Adding photos…'
+        : portfolioPending.length > 1
+          ? 'Add ' + portfolioPending.length + ' portfolio items'
+          : 'Add portfolio item(s)';
     };
 
     try {
       setBusy(true);
 
-      // Fallback: file still on the input (e.g. compress not finished / older path)
-      if (!image) {
-        const file = fd.get('photo');
-        if (file && typeof file === 'object' && file.size) {
-          if (file.size > 20 * 1024 * 1024) {
-            alert('That photo is over 20MB. Pick a smaller shot or paste an image URL.');
-            return;
-          }
-          setPhotoStatus('Compressing photo…', 'is-busy');
-          image = await BRContent.compressImageFile(file);
-          portfolioPendingImage = image;
-        }
+      // Fallback: files still on the input if user submitted mid-flow
+      if (!portfolioPending.length && photoInput && photoInput.files && photoInput.files.length) {
+        await processPortfolioFiles(photoInput.files);
       }
 
-      if (!image) {
-        alert('Add a photo from your gallery (or an image URL), wait until it says Ready, then submit.');
+      /** @type {string[]} */
+      let images = portfolioPending.map((p) => p.dataUrl);
+      if (!images.length && urlFallback) {
+        images = [urlFallback];
+      }
+
+      if (!images.length) {
+        alert(
+          'Add one or more photos from your gallery (or an image URL), wait until they say Ready, then submit.'
+        );
         return;
       }
 
-      setPhotoStatus('Saving to local draft…', 'is-busy');
+      const baseTitle = String(fd.get('title') || '').trim();
+      const location = String(fd.get('location') || '').trim();
+      const description = String(fd.get('description') || '').trim();
+      const date = new Date().toISOString().slice(0, 10);
+      const multi = images.length > 1;
+
+      setPhotoStatus(
+        multi ? 'Saving ' + images.length + ' photos to local draft…' : 'Saving to local draft…',
+        'is-busy'
+      );
+
       const data = await BRContent.load();
-      data.portfolio.unshift({
+      const newItems = images.map((image, i) => ({
         id: BRContent.uid('port'),
-        title: String(fd.get('title') || '').trim(),
-        location: String(fd.get('location') || '').trim(),
-        description: String(fd.get('description') || '').trim(),
+        title: multi ? baseTitle + ' (' + (i + 1) + ')' : baseTitle,
+        location,
+        description,
         image,
-        date: new Date().toISOString().slice(0, 10)
-      });
+        date
+      }));
+      // Keep selection order at the front of the list
+      data.portfolio = newItems.concat(data.portfolio || []);
+
       const result = BRContent.save(data);
       if (!result || result.ok === false) {
-        alert((result && result.error) || 'Could not save photo.');
-        setPhotoStatus('Save failed — try a smaller photo or image URL.', 'is-error');
+        alert((result && result.error) || 'Could not save photo(s).');
+        setPhotoStatus(
+          'Save failed — try fewer/smaller photos, or use image URL(s).',
+          'is-error'
+        );
         return;
       }
+      const savedCount = newItems.length;
       form.reset();
       clearPortfolioPhotoUi();
-      setPhotoStatus('Saved to local draft. Export content.json + redeploy to publish.', 'is-ok');
+      setPhotoStatus(
+        savedCount > 1
+          ? 'Saved ' +
+              savedCount +
+              ' items to local draft. Export content.json + redeploy to publish.'
+          : 'Saved to local draft. Export content.json + redeploy to publish.',
+        'is-ok'
+      );
       await refreshAll();
     } catch (err) {
       console.error(err);
-      alert((err && err.message) || 'Could not add that photo. Try JPEG/PNG or an image URL.');
+      alert((err && err.message) || 'Could not add those photos. Try JPEG/PNG or an image URL.');
       setPhotoStatus(
         (err && err.message) || 'Upload failed. Try JPEG or PNG from your gallery.',
         'is-error'

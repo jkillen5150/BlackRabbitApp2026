@@ -1954,11 +1954,12 @@ a { color: var(--green); }
 }
 
 .photo-dropzone.has-preview {
-  min-height: 180px;
-  padding: 10px;
+  min-height: 160px;
+  padding: 12px;
   border-style: solid;
   border-color: #1e3d1e;
-  background: #111;
+  background: #f0f6f0;
+  gap: 12px;
 }
 
 .photo-dropzone-input {
@@ -1998,15 +1999,77 @@ a { color: var(--green); }
   line-height: 1.35;
 }
 
-.photo-dropzone-preview {
-  display: block;
+/* Multi-select thumbnail strip */
+.photo-preview-grid {
+  position: relative;
+  z-index: 3; /* above file input so × remove works */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
   max-width: 100%;
-  max-height: 220px;
-  width: auto;
-  height: auto;
-  object-fit: contain;
+}
+
+.photo-preview-thumb {
+  position: relative;
+  width: 88px;
+  height: 88px;
   border-radius: 10px;
-  z-index: 1;
+  overflow: hidden;
+  background: #111;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  flex: 0 0 auto;
+}
+
+.photo-preview-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-preview-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-family: inherit;
+}
+
+.photo-preview-remove:hover,
+.photo-preview-remove:focus-visible {
+  background: #a33;
+  outline: none;
+}
+
+.photo-preview-label {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .file-status {

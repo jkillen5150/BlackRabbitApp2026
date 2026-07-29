@@ -129,8 +129,8 @@
     <section class="admin-panel">
       <h2>📸 Portfolio photos</h2>
       <p style="color:#666;font-size:0.9rem;margin-top:0;">
-        Tap the box to open your <strong>photo library</strong> (or files). We compress on this device, then save a local draft.
-        Prefer JPEG/PNG. Export + redeploy so the public site shows new shots.
+        Tap the box to open your <strong>photo library</strong> — multi-select is on (pick several at once, or add more in another pass).
+        We compress on this device, then save a local draft. Prefer JPEG/PNG. Export + redeploy so the public site shows new shots.
       </p>
       <form id="form-portfolio">
         <div class="admin-row">
@@ -148,10 +148,10 @@
           <textarea name="description" rows="2" placeholder="What you did on this job…"></textarea>
         </div>
         <div class="form-group">
-          <label for="portfolio-photo">Upload photo</label>
+          <label for="portfolio-photo">Upload photos</label>
           <!--
             No capture= attribute: capture forces the camera on many phones and blocks
-            the gallery. accept=image/* keeps Android/iOS pickers happy.
+            the gallery. accept=image/* + multiple keeps Android/iOS multi-pick happy.
           -->
           <div class="photo-dropzone" id="portfolio-dropzone">
             <input
@@ -159,23 +159,24 @@
               name="photo"
               type="file"
               accept="image/*"
+              multiple
               class="photo-dropzone-input"
             >
             <div class="photo-dropzone-ui" id="portfolio-dropzone-ui">
               <span class="photo-dropzone-icon" aria-hidden="true">📷</span>
               <strong class="photo-dropzone-title">Tap to choose from gallery</strong>
-              <span class="photo-dropzone-hint">Phone photos, camera roll, or desktop files · JPEG/PNG best</span>
+              <span class="photo-dropzone-hint">Select multiple · camera roll or desktop files · JPEG/PNG best</span>
             </div>
-            <img id="portfolio-photo-preview" class="photo-dropzone-preview" alt="Selected portfolio photo" hidden>
+            <div id="portfolio-photo-previews" class="photo-preview-grid" hidden></div>
           </div>
-          <p id="portfolio-photo-status" class="file-status" role="status" aria-live="polite">No file chosen yet.</p>
-          <button type="button" class="btn btn-outline btn-sm" id="btn-clear-photo" hidden style="margin-top:8px;">Clear photo</button>
+          <p id="portfolio-photo-status" class="file-status" role="status" aria-live="polite">No files chosen yet.</p>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-clear-photo" hidden style="margin-top:8px;">Clear all photos</button>
         </div>
         <div class="form-group">
-          <label for="portfolio-image-url">Or image URL / path (optional)</label>
+          <label for="portfolio-image-url">Or single image URL / path (optional)</label>
           <input id="portfolio-image-url" name="imageUrl" placeholder="IMG_9650.jpeg or https://…">
         </div>
-        <button type="submit" class="btn btn-solid">Add portfolio item</button>
+        <button type="submit" class="btn btn-solid" id="btn-add-portfolio">Add portfolio item(s)</button>
       </form>
       <h3>Current portfolio</h3>
       <ul class="admin-list" id="list-portfolio"></ul>
