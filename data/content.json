@@ -301,6 +301,106 @@
       "note": "Approximate location"
     },
     {
+      "id": "pin-job-11",
+      "type": "client",
+      "label": "Past service \u00b7 Rainier area",
+      "address": "Rainier area",
+      "lat": 46.851,
+      "lng": -122.651,
+      "city": "Rainier",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-12",
+      "type": "client",
+      "label": "Past service \u00b7 Lacey area",
+      "address": "Lacey area",
+      "lat": 46.985,
+      "lng": -122.815,
+      "city": "Lacey",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-13",
+      "type": "client",
+      "label": "Past service \u00b7 Yelm area",
+      "address": "Yelm area",
+      "lat": 46.957,
+      "lng": -122.582,
+      "city": "Yelm",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-14",
+      "type": "client",
+      "label": "Past service \u00b7 Lacey area",
+      "address": "Lacey area",
+      "lat": 46.994,
+      "lng": -122.79,
+      "city": "Lacey",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-15",
+      "type": "client",
+      "label": "Past service \u00b7 Yelm area",
+      "address": "Yelm area",
+      "lat": 46.936,
+      "lng": -122.609,
+      "city": "Yelm",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-16",
+      "type": "client",
+      "label": "Past service \u00b7 Yelm area",
+      "address": "Yelm area",
+      "lat": 46.861,
+      "lng": -122.576,
+      "city": "Yelm",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-17",
+      "type": "client",
+      "label": "Past service \u00b7 Yelm area",
+      "address": "Yelm area",
+      "lat": 46.96,
+      "lng": -122.578,
+      "city": "Yelm",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-18",
+      "type": "client",
+      "label": "Past service \u00b7 Yelm area",
+      "address": "Yelm area",
+      "lat": 46.94,
+      "lng": -122.59,
+      "city": "Yelm",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-19",
+      "type": "client",
+      "label": "Past service \u00b7 Roy area",
+      "address": "Roy area",
+      "lat": 46.946,
+      "lng": -122.559,
+      "city": "Roy",
+      "note": "Approximate location"
+    },
+    {
+      "id": "pin-job-20",
+      "type": "client",
+      "label": "Past service \u00b7 Roy area",
+      "address": "Roy area",
+      "lat": 46.987,
+      "lng": -122.482,
+      "city": "Roy",
+      "note": "Approximate location"
+    },
+    {
       "id": "pin-tenino",
       "type": "city",
       "label": "Tenino",

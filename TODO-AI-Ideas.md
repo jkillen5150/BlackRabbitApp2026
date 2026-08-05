@@ -8,7 +8,7 @@ Last updated: August 3, 2026
 
 - [ ] Build the “Cut My Grass” agent flow (exact messaging already drafted)
 - [ ] Implement the refined pricing algorithm
-  - Minimum price: $40
+  - Minimum price: $45 (public: service starts at $45 a cut)
   - Cleanup: $4 per full bag
   - Human override always available
 - [ ] Make the quote experience feel agentic (not just a form)
@@ -24,7 +24,7 @@ Last updated: August 3, 2026
 ### Pricing Algorithm (Current Version)
 1. Serviceable Sq Ft = Lot Size – House Size
 2. Base = Serviceable × 0.0056
-3. Single Cut = Base × 1.10 → round to nearest $5 → min $40
+3. Single Cut = Base × 1.10 → round to nearest $5 → min $45
 4. Bi-weekly = Single × 2.15
 5. Weekly = Single × 4.30
 6. Apply 15% discount → round UP to nearest $5

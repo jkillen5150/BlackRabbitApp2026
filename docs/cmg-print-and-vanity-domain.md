@@ -80,7 +80,7 @@ https://www.blackrabbitlawn.com/cut-my-grass
 
 **Do not put on the sign**
 
-- Fixed “always $40” guarantees (quotes vary by yard)
+- Fixed “always $45” guarantees (starts at $45; quotes still vary by yard)
 - Marketplace / “Uber for lawn” language
 - A second URL (home + CMG) — **one QR destination only**
 - Vanity domain text **until** 301 is live and tested (Part C)

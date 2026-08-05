@@ -1,16 +1,26 @@
 {
+  "updatedAt": "YYYY-MM-DD",
+  "note": "Private ops roster template — copy to customers.json (gitignored).",
   "customers": [
     {
       "id": "cust-example",
-      "name": "Example Customer",
+      "name": "Example Client",
       "address": "123 Example St SE",
       "city": "Yelm",
       "state": "WA",
       "zip": "98597",
       "phone": "",
-      "notes": "Private ops list — copy to customers.json (gitignored)",
+      "frequency": "Bi-weekly",
+      "price": 100,
+      "priceNote": "$100",
+      "nextService": "2026-08-01",
       "status": "active",
+      "type": "recurring",
+      "notes": "",
+      "mapPinId": null,
       "addedAt": "2026-08-05"
     }
-  ]
+  ],
+  "projects": [],
+  "groups": []
 }

@@ -16,7 +16,7 @@
 
 - Serviceable Sq Ft = Lot Size – House Size
 - Base = Serviceable × 0.0056
-- Single Cut = Base × 1.10 → round to nearest $5 → **minimum $40**
+- Single Cut = Base × 1.10 → round to nearest $5 → **minimum $45** (public messaging: service starts at $45 a cut)
 - Bi-weekly = Single × 2.15
 - Weekly = Single × 4.30
 - Apply 15% discount → round **UP** to nearest $5
@@ -37,7 +37,7 @@ def calculate_lawn_prices(lot_sqft: float, house_sqft: float, bags: int = 0) -> 
     # Single cut
     single = base_price * 1.10
     single = round(single / 5) * 5
-    single = max(single, 40)          # Minimum $40
+    single = max(single, 45)          # Minimum $45
 
     # Frequency
     biweekly = single * 2.15
@@ -69,7 +69,7 @@ function calculateLawnPrices(lotSqft, houseSqft, bags = 0) {
 
   let single = basePrice * 1.10;
   single = Math.round(single / 5) * 5;
-  single = Math.max(single, 40);          // Minimum $40
+  single = Math.max(single, 45);          // Minimum $45
 
   const biweekly = single * 2.15;
   const weekly = single * 4.30;
