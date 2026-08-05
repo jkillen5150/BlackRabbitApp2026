@@ -401,6 +401,16 @@
       "note": "Approximate location"
     },
     {
+      "id": "pin-job-21",
+      "type": "client",
+      "label": "Past service \u00b7 Spanaway area",
+      "address": "Spanaway area",
+      "lat": 47.063,
+      "lng": -122.398,
+      "city": "Spanaway",
+      "note": "Approximate location"
+    },
+    {
       "id": "pin-tenino",
       "type": "city",
       "label": "Tenino",
