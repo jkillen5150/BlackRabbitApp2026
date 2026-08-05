@@ -1,0 +1,16 @@
+{
+  "customers": [
+    {
+      "id": "cust-example",
+      "name": "Example Customer",
+      "address": "123 Example St SE",
+      "city": "Yelm",
+      "state": "WA",
+      "zip": "98597",
+      "phone": "",
+      "notes": "Private ops list — copy to customers.json (gitignored)",
+      "status": "active",
+      "addedAt": "2026-08-05"
+    }
+  ]
+}

@@ -291,6 +291,16 @@
       "note": "Approximate location"
     },
     {
+      "id": "pin-job-10",
+      "type": "client",
+      "label": "Past service \u00b7 Lacey area",
+      "address": "Lacey area",
+      "lat": 46.984,
+      "lng": -122.817,
+      "city": "Lacey",
+      "note": "Approximate location"
+    },
+    {
       "id": "pin-tenino",
       "type": "city",
       "label": "Tenino",
