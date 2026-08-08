@@ -1,6 +1,26 @@
 {
   "reviews": [
     {
+      "id": "rev-jackson-hauserman",
+      "name": "Jackson Hauserman",
+      "location": "",
+      "rating": 5,
+      "text": "Jerry is the man! You're in good hands.",
+      "source": "Google",
+      "date": "2026-08-07",
+      "featured": true
+    },
+    {
+      "id": "rev-jessica-baker",
+      "name": "Jessica Baker",
+      "location": "",
+      "rating": 5,
+      "text": "Great price. Jerry came in and helped me next day with my overgrown yard. He was reasonably priced. My yard looks amazing because of him. I can't thank him enough.",
+      "source": "Google",
+      "date": "2026-08-05",
+      "featured": true
+    },
+    {
       "id": "rev-william-beasley",
       "name": "William Beasley",
       "location": "",
