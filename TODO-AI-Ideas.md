@@ -13,9 +13,9 @@ Last updated: August 10, 2026
   - Human override always available
 - [ ] Make the quote experience feel agentic (not just a form)
 
-## High Priority — Ops Backend & Agentic Automation (new)
+## High Priority — Ops Backend & Agentic Automation
 
-- [ ] Set up Google Sheets as live ops backend ("Black Rabbit Ops 2026")
+- [ ] Set up Google Sheets as live ops backend ("Black Rabbit Ops 2026" / existing Client Database)
   - Tabs: Leads, Jobs/Schedule, Clients
   - Core columns for Leads: Timestamp | Source | Name | Phone | Address | Service | Notes/Photos | Status | Track token | Deposit paid? | Assigned | Next action
 - [ ] Extend `/api/lead` (and status updates) to automatically append/update rows in the Google Sheet via service account
@@ -28,6 +28,74 @@ Last updated: August 10, 2026
   - Suggest next actions / flag silent leads
   - Keep human (Jerry) as final decision maker
 - [ ] Competitive positioning note: Use the Sheet + agent to stay more reliable and personal than LawnStarter / GreenPal / Plowz & Mowz (faster response, transparent status, owner-operated feel) while reducing admin time
+
+## High Priority — Commercial Pipeline & Door-Knocking Agents (new)
+
+**Primary Sheet:** Black Rabbit PNW • Client Database (existing centerpiece)
+Add new tab: **Commercial Pipeline**
+
+### Research / List-Building Agent (First Agent – Outline)
+**Job Title:** Commercial Research Associate  
+**Role:** Find and maintain a clean list of commercial properties, property managers, and brokers in the core service area (Yelm, Rainier, Lacey, Olympia, Tumwater, Tenino, Roy + nearby) that are realistic targets for ongoing grounds maintenance, seasonal cleanups, or project work.
+
+**Core Responsibilities:**
+1. Build and continuously refresh a target list of:
+   - Multi-family / apartment complexes
+   - Retail centers & strip malls
+   - Office parks / light commercial
+   - Industrial / light industrial sites
+   - Larger HOAs or managed communities
+   - Properties with visible maintenance needs or recent ownership changes
+2. Enrich each entry with:
+   - Property address + city
+   - Estimated size / complexity
+   - Property management company (if any)
+   - Decision-maker or broker name + contact method (email / LinkedIn / phone when available)
+   - Recent signals (new listing, renovation, tenant turnover, online complaints, etc.)
+   - Suggested outreach angle
+3. Output everything cleanly into the **Commercial Pipeline** tab of the Client Database sheet.
+4. Flag high-priority or high-fit targets for human review.
+
+**Tools the agent should use:**
+- Web search + page browsing (county assessor, commercial listing sites, Google Maps, Chamber directories, LinkedIn)
+- Structured output to Google Sheet
+- Optional later: public data APIs or simple scrapers if we decide to harden it
+
+**Guardrails:**
+- Hyper-local only (stay inside realistic driving / service radius)
+- Quality over quantity (better 40 solid targets than 400 noise)
+- No automated cold email or LinkedIn spam — agent researches and drafts; Jerry reviews and sends
+- Always note source of information for later verification
+
+**Success metric for v1:** Deliver a usable first batch of 25–40 enriched commercial targets that Jerry can review and start personalized outreach from.
+
+### Follow-on Agents (later)
+- Enrichment / Contact Finder Agent
+- Outreach Drafting Agent (personalized short messages referencing specific properties)
+- Follow-up & Tracking Agent (logs touches back into the same Commercial Pipeline tab)
+
+### Commercial Pipeline Tab – Suggested Columns
+| Column | Purpose |
+|--------|--------|
+| ID | Simple sequential |
+| Property / Company Name | |
+| Address | |
+| City | |
+| Type (Multi-family / Retail / Office / Industrial / HOA / Other) | |
+| Est. Size / Complexity | |
+| Property Manager / Owner | |
+| Decision Maker | |
+| Contact Method (Email / LinkedIn / Phone) | |
+| Contact Details | |
+| Recent Signal / Why Target | |
+| Suggested Angle | |
+| Priority (High / Med / Low) | |
+| Status (New / Researched / Contacted / Replied / Meeting / Won / Lost / Nurture) | |
+| Last Touch Date | |
+| Notes | |
+| Source of Data | |
+
+---
 
 ## Medium Priority — Future Agent Capabilities
 
@@ -55,6 +123,12 @@ Black Rabbit should make the core experience feel like an agent that executes a 
 - Sheet becomes the single live ops view (filterable on phone).
 - Serverless functions do the reliable writes; agent works *on top* of the data.
 - Smallest useful version: Sheet + auto-write from /api/lead → then status updates → then agent review loop.
+
+### Commercial Door-Knocking System (Aug 10 2026)
+- Primary sheet remains the existing Client Database.
+- New **Commercial Pipeline** tab will hold research targets.
+- First agent = Research / List-Building (outline above).
+- Philosophy: agents act as junior employees that research and draft; human (Jerry) remains the relationship owner and final sender.
 
 ---
 
