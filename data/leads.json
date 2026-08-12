@@ -1,5 +1,19 @@
 [
   {
+    "id": "lead-msqln9b74jkx",
+    "trackToken": "fR1GX7bVrw3WmHYlXL4EzYwQ",
+    "name": "Rene White",
+    "phone": "360-529-6380",
+    "address": "16511 Mimosa Ct SE Yelm WA 98957",
+    "need": "Cut My Grass request · Service: Bi-weekly mowing · When: ASAP / this week · Notes: Weeds are currently tall. We just want a biweekly mow to keep the HOA from sending us love notes. I don't have current photos, so I snagged one from Zillow online so you can see the size of the yard. · Photos: 1 attached · Payment: card deposit via Stripe Checkout (applied to final quote)",
+    "urgency": "ASAP / this week",
+    "source": "cut-my-grass",
+    "status": "new",
+    "photoCount": 1,
+    "depositPaid": false,
+    "createdAt": "2026-08-12T21:26:33.187Z"
+  },
+  {
     "id": "lead-msp9b388qg3v",
     "trackToken": "ypTZkY6SZ-D7YGNxmwEQ5uVQ",
     "name": "Harold Bowes",
