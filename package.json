@@ -4,7 +4,10 @@
   "description": "Black Rabbit Landscaping site + AI chat API (one Vercel project)",
   "scripts": {
     "dev": "vercel dev",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "smoke": "node scripts/smoke.mjs",
+    "smoke:live": "node scripts/smoke.mjs --live",
+    "test": "node scripts/smoke.mjs"
   },
   "devDependencies": {
     "vercel": "^56.3.2"

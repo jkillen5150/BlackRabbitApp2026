@@ -85,16 +85,19 @@
         grid.innerHTML = '<div class="empty-state">No portfolio photos yet. Upload them in Admin.</div>';
         return;
       }
-      grid.innerHTML = list.map((p) => `
+      grid.innerHTML = list.map((p) => {
+        const src = BRContent.resolveImageUrl ? BRContent.resolveImageUrl(p.image) : p.image;
+        return `
         <article class="portfolio-card">
-          <img src="${BRContent.escapeAttr(p.image)}" alt="${BRContent.escapeAttr(p.title || 'Job photo')}" loading="lazy">
+          <img src="${BRContent.escapeAttr(src)}" alt="${BRContent.escapeAttr(p.title || 'Job photo')}" loading="lazy">
           <div class="body">
             <h3>${BRContent.escapeHtml(p.title || 'Project')}</h3>
             <div class="loc">${BRContent.escapeHtml(p.location || '')}${p.date ? ' · ' + BRContent.escapeHtml(BRContent.formatDate(p.date)) : ''}</div>
             <p>${BRContent.escapeHtml(p.description || '')}</p>
           </div>
         </article>
-      `).join('');
+      `;
+      }).join('');
     }
     document.addEventListener('DOMContentLoaded', render);
     window.addEventListener('br:content-updated', render);

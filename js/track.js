@@ -85,6 +85,9 @@
           .join('');
       }
 
+      const reviewCta = $('track-review-cta');
+      if (reviewCta) reviewCta.hidden = data.status !== 'done';
+
       // Light auto-refresh while job isn’t done
       if (data.status !== 'done') {
         setTimeout(load, 45000);

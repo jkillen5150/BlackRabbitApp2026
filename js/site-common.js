@@ -217,6 +217,27 @@
     });
   }
 
+  async function hydrateReviews() {
+    const page = document.body.dataset.page || '';
+    if (page === 'admin' || page === 'login') return;
+    if (window.BRContent && typeof BRContent.refreshPublicReviewStats === 'function') {
+      await BRContent.refreshPublicReviewStats();
+      return;
+    }
+    try {
+      const res = await fetch('/api/reviews', { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && data.writeReviewUrl) {
+        document.querySelectorAll('a[data-google-review-link]').forEach((a) => {
+          a.href = data.writeReviewUrl;
+        });
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const active = document.body.dataset.page || '';
     injectNav(active);
@@ -226,5 +247,6 @@
     injectFabs();
     injectMobileCta();
     wireUrgencyButtons();
+    hydrateReviews();
   });
 })();

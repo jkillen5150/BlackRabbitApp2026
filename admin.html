@@ -35,14 +35,17 @@
     </div>
 
     <div class="note-banner" id="admin-draft-banner">
-      Edits save in this browser as a <strong>local draft</strong> (preview on this device only).
-      Use <strong>Export content.json</strong>, replace <code>data/content.json</code> in the repo, and redeploy so everyone sees your updates.
-      After a redeploy, stale local drafts are discarded automatically so the new site content shows up.
-      Photos are compressed in your browser as soon as you pick them (gallery-friendly — no forced camera). Prefer JPEG/PNG (iPhone HEIC may still fail). Export + redeploy to publish.
+      <strong>Portfolio / reviews / pins publish live</strong> when
+      <code>GITHUB_TOKEN</code> and <code>LEAD_ADMIN_TOKEN</code> are set on Vercel
+      (same token you paste for the lead list below). Photos upload to the repo; the public
+      <a href="portfolio.html">Portfolio</a> page reads <code>/api/content</code> so changes
+      show without a manual export.
+      <br><br>
+      Photos compress in your browser first (JPEG/PNG best; iPhone HEIC may fail).
+      <strong>Export content.json</strong> is optional backup only.
       <br><br>
       <strong>Chat leads:</strong> Ask AI can interview customers and email you. They also show below when the API is live.
-      Optional: set <code>GITHUB_TOKEN</code> on Vercel so the follow-up list stays durable in <code>data/leads.json</code>.
-      Optional privacy: set <code>LEAD_ADMIN_TOKEN</code> on Vercel; Admin will prompt for it once per session when listing leads.
+      <code>GITHUB_TOKEN</code> also powers durable leads in <code>data/leads.json</code>.
       <span id="admin-draft-status" style="display:block;margin-top:10px;font-weight:600;"></span>
     </div>
 
@@ -75,6 +78,17 @@
     <!-- Reviews -->
     <section class="admin-panel">
       <h2>⭐ Reviews / testimonials</h2>
+      <div class="review-sync-box">
+        <p style="margin:0 0 10px;color:#555;font-size:0.92rem;">
+          Paste a new Google review below, or pull the latest 5 from your listing.
+          Homepage / testimonials counts follow this list (and Google’s total when Places is configured).
+        </p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button type="button" class="btn btn-outline" id="btn-sync-google-reviews">Sync from Google</button>
+          <a class="btn btn-outline" id="link-write-review" data-google-review-link href="https://www.google.com/search?q=Black+Rabbit+Landscaping+Yelm+WA" target="_blank" rel="noopener">Open write-a-review</a>
+        </div>
+        <p id="google-sync-status" style="font-size:0.85rem;color:#666;margin:8px 0 0;"></p>
+      </div>
       <form id="form-review">
         <div class="admin-row">
           <div class="form-group">
@@ -98,8 +112,8 @@
           <div class="form-group">
             <label>Source</label>
             <select name="source">
-              <option value="Google">Google</option>
-              <option value="Customer" selected>Customer</option>
+              <option value="Google" selected>Google</option>
+              <option value="Customer">Customer</option>
               <option value="Facebook">Facebook</option>
             </select>
           </div>
@@ -130,7 +144,7 @@
       <h2>📸 Portfolio photos</h2>
       <p style="color:#666;font-size:0.9rem;margin-top:0;">
         Tap the box to open your <strong>photo library</strong> — multi-select is on (pick several at once, or add more in another pass).
-        We compress on this device, then save a local draft. Prefer JPEG/PNG. Export + redeploy so the public site shows new shots.
+        We compress on this device, then <strong>publish live</strong> (needs the same LEAD_ADMIN_TOKEN as leads). Prefer JPEG/PNG.
       </p>
       <form id="form-portfolio">
         <div class="admin-row">

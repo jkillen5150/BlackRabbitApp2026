@@ -69,6 +69,9 @@
     const data = await BRContent.load();
     reviews = featured(data.reviews || []);
     index = 0;
+    if (BRContent.applyReviewStats) {
+      BRContent.applyReviewStats(BRContent.reviewStats(data.reviews || []));
+    }
     render();
     restart();
 
@@ -87,6 +90,9 @@
     const data = await BRContent.load();
     reviews = featured(data.reviews || []);
     index = 0;
+    if (BRContent.applyReviewStats) {
+      BRContent.applyReviewStats(BRContent.reviewStats(data.reviews || []));
+    }
     render();
     restart();
   });

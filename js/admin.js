@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await refreshAll();
   wireForms();
   loadLeads();
+  loadGoogleReviewStatus();
 });
 
 function updateDraftStatus() {
@@ -62,12 +63,50 @@ function updateDraftStatus() {
   if (!el || !window.BRContent) return;
   if (BRContent.isLocalDraft && BRContent.isLocalDraft()) {
     el.textContent =
-      'Status: local draft active on this device — Export + redeploy to publish, or Reset to defaults to match the live site.';
+      'Status: local draft only on this device — publish failed or API offline. Fix LEAD_ADMIN_TOKEN + GITHUB_TOKEN, then save again so the public site updates.';
     el.style.color = '#8a5a00';
-  } else {
-    el.textContent = 'Status: showing bundled content.json (no local draft).';
+  } else if (BRContent.isDurable && BRContent.isDurable()) {
+    el.textContent =
+      'Status: live content (GitHub-backed). Add/delete portfolio, reviews, and pins save for everyone.';
     el.style.color = '#2e5a2e';
+  } else {
+    el.textContent =
+      'Status: showing static content.json (API not durable yet). Saves need GITHUB_TOKEN on Vercel.';
+    el.style.color = '#8a5a00';
   }
+}
+
+/**
+ * Persist content for everyone via /api/content. Falls back to local draft if API is down.
+ * @returns {Promise<{ ok: boolean, error?: string, localOnly?: boolean, warning?: string }>}
+ */
+async function persistContent(data) {
+  resolveLeadToken();
+  const token = getLeadToken();
+  if (BRContent.saveAndPublish) {
+    return BRContent.saveAndPublish(data, { token, localFallback: true });
+  }
+  // Older content-store without publish
+  return BRContent.save(data);
+}
+
+function alertPersistResult(result, okMessage) {
+  if (!result || result.ok === false) {
+    alert((result && result.error) || 'Could not save.');
+    return false;
+  }
+  if (result.localOnly) {
+    alert(
+      (result.warning || 'Saved only as a local draft on this device.') +
+        '\n\nPublic visitors will still see the old portfolio until publish works. ' +
+        'Paste LEAD_ADMIN_TOKEN (same as leads), confirm GITHUB_TOKEN is on Vercel, then save again.'
+    );
+    return true;
+  }
+  if (okMessage) {
+    // Soft success — status line already updates; avoid noisy alerts for every delete
+  }
+  return true;
 }
 
 async function refreshAll() {
@@ -304,17 +343,44 @@ function wireForms() {
       location: String(fd.get('location') || '').trim(),
       rating: Number(fd.get('rating') || 5),
       text: String(fd.get('text') || '').trim(),
-      source: String(fd.get('source') || 'Customer'),
+      source: String(fd.get('source') || 'Google'),
       date: String(fd.get('date') || new Date().toISOString().slice(0, 10)),
       featured: fd.get('featured') === 'on'
     });
-    const result = BRContent.save(data);
+    const result = await persistContent(data);
+    if (!alertPersistResult(result)) return;
+    e.target.reset();
+    const src = e.target.querySelector('[name="source"]');
+    if (src) src.value = 'Google';
+    const featured = e.target.querySelector('[name="featured"]');
+    if (featured) featured.checked = true;
+    await refreshAll();
+  });
+
+  document.getElementById('btn-sync-google-reviews')?.addEventListener('click', async () => {
+    const btn = document.getElementById('btn-sync-google-reviews');
+    const status = document.getElementById('google-sync-status');
+    if (btn) btn.disabled = true;
+    if (status) {
+      status.textContent = 'Talking to Google…';
+      status.style.color = '#666';
+    }
+    resolveLeadToken();
+    const result = await BRContent.syncGoogleReviews({ token: getLeadToken() });
+    if (btn) btn.disabled = false;
     if (!result || result.ok === false) {
-      alert((result && result.error) || 'Could not save review.');
+      if (status) {
+        status.textContent = (result && result.error) || 'Sync failed.';
+        status.style.color = '#8a2a2a';
+      }
       return;
     }
-    e.target.reset();
+    if (status) {
+      status.textContent = result.note || 'Synced.';
+      status.style.color = '#2e5a2e';
+    }
     await refreshAll();
+    loadGoogleReviewStatus();
   });
 
   /**
@@ -615,6 +681,8 @@ function wireForms() {
 
     try {
       setBusy(true);
+      resolveLeadToken();
+      const token = getLeadToken();
 
       // Fallback: files still on the input if user submitted mid-flow
       if (!portfolioPending.length && photoInput && photoInput.files && photoInput.files.length) {
@@ -641,23 +709,64 @@ function wireForms() {
       const multi = images.length > 1;
 
       setPhotoStatus(
-        multi ? 'Saving ' + images.length + ' photos to local draft…' : 'Saving to local draft…',
+        multi
+          ? 'Uploading ' + images.length + ' photos to the live site…'
+          : 'Uploading photo to the live site…',
         'is-busy'
       );
 
-      const data = await BRContent.load();
-      const newItems = images.map((image, i) => ({
-        id: BRContent.uid('port'),
+      // Upload each data-URL to media/portfolio/ so content.json stays small
+      const publishedPaths = [];
+      for (let i = 0; i < images.length; i++) {
+        const image = images[i];
+        const id = BRContent.uid('port');
+        if (String(image).startsWith('data:')) {
+          setPhotoStatus(
+            'Uploading photo ' + (i + 1) + ' of ' + images.length + '…',
+            'is-busy'
+          );
+          if (!BRContent.uploadPhoto) {
+            alert('Update content-store.js is missing uploadPhoto — hard-refresh Admin.');
+            return;
+          }
+          const up = await BRContent.uploadPhoto(image, { token, id });
+          if (!up.ok) {
+            if (up.status === 401) {
+              alert(
+                'Admin token required to publish photos. Paste LEAD_ADMIN_TOKEN above (same as leads), Save on this device, then try again.'
+              );
+              showLeadLockedUi(
+                'Token needed for portfolio publish — paste LEAD_ADMIN_TOKEN, Save on this device.'
+              );
+            } else {
+              alert(up.error || 'Photo upload failed.');
+            }
+            setPhotoStatus(up.error || 'Upload failed.', 'is-error');
+            return;
+          }
+          // Prefer public image URL (raw GitHub) so it shows before Vercel redeploy
+          publishedPaths.push({ id, image: up.image || up.path });
+        } else {
+          // URL or existing path — keep as-is
+          publishedPaths.push({ id, image: String(image).trim() });
+        }
+      }
+
+      const newItems = publishedPaths.map((p, i) => ({
+        id: p.id,
         title: multi ? baseTitle + ' (' + (i + 1) + ')' : baseTitle,
         location,
         description,
-        image,
+        image: p.image,
         date
       }));
+
+      setPhotoStatus('Saving portfolio list…', 'is-busy');
+      const data = await BRContent.load();
       // Keep selection order at the front of the list
       data.portfolio = newItems.concat(data.portfolio || []);
 
-      const result = BRContent.save(data);
+      const result = await persistContent(data);
       if (!result || result.ok === false) {
         alert((result && result.error) || 'Could not save photo(s).');
         setPhotoStatus(
@@ -669,14 +778,20 @@ function wireForms() {
       const savedCount = newItems.length;
       form.reset();
       clearPortfolioPhotoUi();
-      setPhotoStatus(
-        savedCount > 1
-          ? 'Saved ' +
-              savedCount +
-              ' items to local draft. Export content.json + redeploy to publish.'
-          : 'Saved to local draft. Export content.json + redeploy to publish.',
-        'is-ok'
-      );
+      if (result.localOnly) {
+        setPhotoStatus(
+          'Local draft only — public site not updated. Fix token / GITHUB_TOKEN and save again.',
+          'is-error'
+        );
+        alertPersistResult(result);
+      } else {
+        setPhotoStatus(
+          savedCount > 1
+            ? 'Published ' + savedCount + ' portfolio photos live. Open /portfolio to confirm.'
+            : 'Published live. Open /portfolio to confirm.',
+          'is-ok'
+        );
+      }
       await refreshAll();
     } catch (err) {
       console.error(err);
@@ -750,14 +865,52 @@ function wireForms() {
       city,
       note: String(fd.get('note') || '').trim() || (isClient ? 'Approximate location' : '')
     });
-    const result = BRContent.save(data);
-    if (!result || result.ok === false) {
-      alert((result && result.error) || 'Could not save pin.');
-      return;
-    }
+    const result = await persistContent(data);
+    if (!alertPersistResult(result)) return;
     e.target.reset();
     await refreshAll();
   });
+}
+
+async function loadGoogleReviewStatus() {
+  const status = document.getElementById('google-sync-status');
+  const link = document.getElementById('link-write-review');
+  try {
+    const res = await fetch('/api/reviews', { cache: 'no-store' });
+    const data = await res.json().catch(() => ({}));
+    if (link && data.writeReviewUrl) link.href = data.writeReviewUrl;
+    if (!status || status.textContent) {
+      // keep a just-finished sync note if present
+      if (status && status.textContent && /Added |No new |Talking /.test(status.textContent)) return;
+    }
+    if (!status) return;
+    if (!res.ok) {
+      status.textContent = 'Google API not deployed yet — paste reviews by hand for now.';
+      return;
+    }
+    if (data.error) {
+      status.textContent = data.error;
+      status.style.color = '#8a5a00';
+      return;
+    }
+    if (!data.configured) {
+      status.textContent =
+        'Paste works now. Optional: add GOOGLE_PLACES_API_KEY on Vercel to Sync the latest 5 from Google.';
+      status.style.color = '#666';
+      return;
+    }
+    const bits = [];
+    if (data.userRatingCount != null) bits.push(data.userRatingCount + ' Google reviews');
+    if (data.rating != null) bits.push(data.rating + '★');
+    status.textContent = bits.length
+      ? 'Listing: ' + bits.join(' · ') + '. Sync pulls the newest 5.'
+      : 'Places API is configured. Sync to pull the newest 5.';
+    status.style.color = '#2e5a2e';
+  } catch {
+    if (status && !status.textContent) {
+      status.textContent = 'Could not reach /api/reviews — paste still works.';
+    }
+  }
 }
 
 function renderReviews(list) {
@@ -780,11 +933,12 @@ function renderReviews(list) {
 
   ul.querySelectorAll('[data-del-review]').forEach((btn) => {
     btn.addEventListener('click', async () => {
+      btn.disabled = true;
       const data = await BRContent.load();
       data.reviews = data.reviews.filter((r) => r.id !== btn.dataset.delReview);
-      const result = BRContent.save(data);
-      if (!result || result.ok === false) {
-        alert((result && result.error) || 'Could not save.');
+      const result = await persistContent(data);
+      if (!alertPersistResult(result)) {
+        btn.disabled = false;
         return;
       }
       await refreshAll();
@@ -799,7 +953,7 @@ function renderPortfolio(list) {
       (p) => `
     <li>
       <div style="display:flex;gap:12px;align-items:center;">
-        <img class="preview-thumb" src="${BRContent.escapeAttr(p.image)}" alt="">
+        <img class="preview-thumb" src="${BRContent.escapeAttr(BRContent.resolveImageUrl ? BRContent.resolveImageUrl(p.image) : p.image)}" alt="">
         <div>
           <strong>${BRContent.escapeHtml(p.title)}</strong><br>
           <span style="color:#666">${BRContent.escapeHtml(p.location || '')}</span>
@@ -814,12 +968,21 @@ function renderPortfolio(list) {
 
   ul.querySelectorAll('[data-del-port]').forEach((btn) => {
     btn.addEventListener('click', async () => {
+      if (!confirm('Delete this portfolio photo from the live site?')) return;
+      btn.disabled = true;
+      const id = btn.dataset.delPort;
       const data = await BRContent.load();
-      data.portfolio = data.portfolio.filter((p) => p.id !== btn.dataset.delPort);
-      const result = BRContent.save(data);
-      if (!result || result.ok === false) {
-        alert((result && result.error) || 'Could not save.');
+      const removed = (data.portfolio || []).find((p) => p.id === id);
+      data.portfolio = (data.portfolio || []).filter((p) => p.id !== id);
+      const result = await persistContent(data);
+      if (!alertPersistResult(result)) {
+        btn.disabled = false;
         return;
+      }
+      // Best-effort remove media file for uploads we own (not seed IMG_*.jpeg)
+      if (removed && removed.image && BRContent.deletePhoto) {
+        resolveLeadToken();
+        await BRContent.deletePhoto(removed.image, { token: getLeadToken() });
       }
       await refreshAll();
     });
@@ -846,11 +1009,12 @@ function renderPins(list) {
 
   ul.querySelectorAll('[data-del-pin]').forEach((btn) => {
     btn.addEventListener('click', async () => {
+      btn.disabled = true;
       const data = await BRContent.load();
       data.pins = data.pins.filter((p) => p.id !== btn.dataset.delPin);
-      const result = BRContent.save(data);
-      if (!result || result.ok === false) {
-        alert((result && result.error) || 'Could not save.');
+      const result = await persistContent(data);
+      if (!alertPersistResult(result)) {
+        btn.disabled = false;
         return;
       }
       await refreshAll();

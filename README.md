@@ -65,6 +65,8 @@ GitHub Pages can’t run the chat function. Keep **everything on Vercel**:
    - **`LEAD_ADMIN_TOKEN`** (optional) — gate Admin lead list/updates
    - **`WEB3FORMS_KEY`** (optional) — overrides the public form access key
    - **`STRIPE_DEPOSIT_AMOUNT_CENTS`** (optional) — default `2500` ($25)
+   - **`GOOGLE_PLACES_API_KEY`** (optional) — Admin **Sync from Google** + live review totals
+   - **`GOOGLE_PLACE_ID`** (optional) — pin the Business Profile; otherwise Find Place uses “Black Rabbit Landscaping Yelm WA”
 4. Deploy. Chat calls **`/api/chat`** on the same domain — no separate proxy app needed.
 5. Point **blackrabbitlawn.com** DNS to this Vercel project (Domains → Add).
 
@@ -85,10 +87,12 @@ python3 -m http.server 8765
 
 1. **Login → Admin**
 2. Username: `jkillen5150`
-3. Add reviews, portfolio photos, map pins
-4. Edits save in the browser; **Export content.json** → replace `data/content.json` → redeploy for everyone
+3. Paste **`LEAD_ADMIN_TOKEN`** once (same value as Vercel) under lead token — also required to **publish** portfolio/reviews/pins
+4. Add or delete reviews, portfolio photos, map pins — they **publish live** via `/api/content` (GitHub + `GITHUB_TOKEN`). Homepage / testimonials counts update from the list (no more hardcoded “11”). Optional **Sync from Google** pulls the newest 5 reviews when `GOOGLE_PLACES_API_KEY` is set.
+5. Portfolio photos go to `media/portfolio/`; the public **Portfolio** page reads `/api/content` so updates show without a manual export
+6. **Export content.json** is optional backup only
 
-**Security note:** Admin login is a **client-side gate** (password hash in `js/auth.js`). It is not server authentication. Do not put secrets only behind Admin HTML. Prefer `LEAD_ADMIN_TOKEN` + Vercel env for lead PII, and keep real keys only in Vercel env vars.
+**Security note:** Admin login is a **client-side gate** (password hash in `js/auth.js`). It is not server authentication. Do not put secrets only behind Admin HTML. Prefer `LEAD_ADMIN_TOKEN` + Vercel env for lead PII and content publish, and keep real keys only in Vercel env vars.
 
 ## Content
 
