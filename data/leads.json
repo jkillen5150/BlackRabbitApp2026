@@ -8,10 +8,13 @@
     "need": "Cut My Grass request · Service: Bi-weekly mowing · When: ASAP / this week · Notes: Weeds are currently tall. We just want a biweekly mow to keep the HOA from sending us love notes. I don't have current photos, so I snagged one from Zillow online so you can see the size of the yard. · Photos: 1 attached · Payment: card deposit via Stripe Checkout (applied to final quote)",
     "urgency": "ASAP / this week",
     "source": "cut-my-grass",
-    "status": "new",
+    "status": "deposit_paid",
     "photoCount": 1,
-    "depositPaid": false,
-    "createdAt": "2026-08-12T21:26:33.187Z"
+    "depositPaid": true,
+    "createdAt": "2026-08-12T21:26:33.187Z",
+    "depositAmountCents": 2500,
+    "depositSessionId": "cs_live_a1bHSn2p8FhA0kCVusU8ZeBK6j18AR89pp28JIXpUtf8lBCxXaB6zmUMwf",
+    "updatedAt": "2026-08-12T21:27:55.373Z"
   },
   {
     "id": "lead-msp9b388qg3v",
