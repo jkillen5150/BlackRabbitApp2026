@@ -15,6 +15,7 @@ import {
   siteUrl,
   updateLead
 } from './_lib/leads-store.js';
+import { syncLeadToSheet } from './_lib/sheets.js';
 
 const WEB3_KEY =
   process.env.WEB3FORMS_KEY || '6467d992-e261-48c0-ae1e-2bc4b6cc557d';
@@ -182,6 +183,11 @@ export default async function handler(req, res) {
     }
 
     const lead = await markLeadDepositPaid(info.leadId, info);
+    if (lead) {
+      syncLeadToSheet(lead, { action: 'upsertLead', nextAction: 'Text to lock the slot' }).catch(
+        (e) => console.error('deposit sheet sync', e)
+      );
+    }
     const site = siteUrl(req);
     const trackToken = lead && lead.trackToken ? lead.trackToken : null;
     const trackUrl = trackToken

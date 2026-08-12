@@ -67,6 +67,9 @@ GitHub Pages can’t run the chat function. Keep **everything on Vercel**:
    - **`STRIPE_DEPOSIT_AMOUNT_CENTS`** (optional) — default `2500` ($25)
    - **`GOOGLE_PLACES_API_KEY`** (optional) — Admin **Sync from Google** + live review totals
    - **`GOOGLE_PLACE_ID`** (optional) — pin the Business Profile; otherwise Find Place uses “Black Rabbit Landscaping Yelm WA”
+   - **`GOOGLE_SHEETS_WEBHOOK`** (optional) — Apps Script URL from `docs/ops-sheet-apps-script.js` so new leads land in the Client Database **Web Leads** tab
+   - **`GOOGLE_SERVICE_ACCOUNT_JSON`** (optional) — instead of the webhook
+   - **`GOOGLE_SHEETS_ID`** (optional) — defaults to the existing Client Database spreadsheet
 4. Deploy. Chat calls **`/api/chat`** on the same domain — no separate proxy app needed.
 5. Point **blackrabbitlawn.com** DNS to this Vercel project (Domains → Add).
 

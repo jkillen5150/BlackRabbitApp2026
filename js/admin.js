@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   wireForms();
   loadLeads();
   loadGoogleReviewStatus();
+  loadPipeline();
 });
 
 function updateDraftStatus() {
@@ -355,6 +356,62 @@ function wireForms() {
     const featured = e.target.querySelector('[name="featured"]');
     if (featured) featured.checked = true;
     await refreshAll();
+  });
+
+  document.getElementById('form-quote')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const out = document.getElementById('quote-result');
+    if (!window.BRPricing) {
+      if (out) out.textContent = 'Pricing script failed to load.';
+      return;
+    }
+    const q = BRPricing.calculateLawnPrices(
+      fd.get('lotSqft'),
+      fd.get('houseSqft'),
+      fd.get('bags')
+    );
+    if (out) {
+      out.textContent =
+        'One-time ' +
+        BRPricing.formatMoney(q.oneTime) +
+        ' · Bi-weekly ' +
+        BRPricing.formatMoney(q.biWeekly) +
+        ' · Weekly ' +
+        BRPricing.formatMoney(q.weekly) +
+        (q.cleanup ? ' · Cleanup ' + BRPricing.formatMoney(q.cleanup) : '') +
+        '  (' +
+        q.serviceableSqft +
+        ' sq ft). Override anytime.';
+    }
+  });
+
+  document.getElementById('btn-sync-pipeline')?.addEventListener('click', async () => {
+    const btn = document.getElementById('btn-sync-pipeline');
+    const meta = document.getElementById('pipeline-meta');
+    if (btn) btn.disabled = true;
+    if (meta) meta.textContent = 'Pushing…';
+    resolveLeadToken();
+    try {
+      const res = await fetch('/api/pipeline', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Lead-Token': getLeadToken()
+        },
+        body: JSON.stringify({ action: 'sync-sheet' })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (meta) {
+        meta.textContent = data.ok
+          ? 'Sheet updated.'
+          : data.error || data.reason || 'Sheet not configured yet — list still lives in Admin.';
+        meta.style.color = data.ok ? '#2e5a2e' : '#8a5a00';
+      }
+    } catch (e) {
+      if (meta) meta.textContent = (e && e.message) || 'Push failed';
+    }
+    if (btn) btn.disabled = false;
   });
 
   document.getElementById('btn-sync-google-reviews')?.addEventListener('click', async () => {
@@ -870,6 +927,40 @@ function wireForms() {
     e.target.reset();
     await refreshAll();
   });
+}
+
+async function loadPipeline() {
+  const ul = document.getElementById('list-pipeline');
+  const meta = document.getElementById('pipeline-meta');
+  if (!ul) return;
+  try {
+    const res = await fetch('/api/pipeline', { cache: 'no-store' });
+    const data = await res.json().catch(() => ({}));
+    const list = data.targets || [];
+    if (meta && !meta.textContent) {
+      const sheet = data.sheets || {};
+      meta.textContent = list.length + ' targets · Sheet ' + (sheet.mode || 'off');
+    }
+    ul.innerHTML =
+      list
+        .map(
+          (t) => `
+      <li>
+        <div>
+          <strong>${BRContent.escapeHtml(t.name)}</strong>
+          · ${BRContent.escapeHtml(t.city || '')}
+          · ${BRContent.escapeHtml(t.priority || '')}
+          · ${BRContent.escapeHtml(t.status || '')}<br>
+          <span style="color:#666">${BRContent.escapeHtml(t.contact || '')} — ${BRContent.escapeHtml(
+            (t.angle || '').slice(0, 110)
+          )}</span>
+        </div>
+      </li>`
+        )
+        .join('') || '<li>No pipeline loaded.</li>';
+  } catch {
+    if (ul) ul.innerHTML = '<li>Could not load /api/pipeline.</li>';
+  }
 }
 
 async function loadGoogleReviewStatus() {

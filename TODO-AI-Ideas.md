@@ -7,7 +7,8 @@ Last updated: August 10, 2026
 ## High Priority — User Acquisition & Core Experience
 
 - [ ] Build the “Cut My Grass” agent flow (exact messaging already drafted)
-- [ ] Implement the refined pricing algorithm
+- [x] Implement the refined pricing algorithm (working, not pretty)
+  - `/api/quote` + Admin **Ballpark quote** + `js/pricing.js`
   - Minimum price: $45 (public: service starts at $45 a cut)
   - Cleanup: $4 per full bag
   - Human override always available
@@ -15,13 +16,14 @@ Last updated: August 10, 2026
 
 ## High Priority — Ops Backend & Agentic Automation
 
-- [ ] Set up Google Sheets as live ops backend ("Black Rabbit Ops 2026" / existing Client Database)
-  - Tabs: Leads, Jobs/Schedule, Clients
-  - Core columns for Leads: Timestamp | Source | Name | Phone | Address | Service | Notes/Photos | Status | Track token | Deposit paid? | Assigned | Next action
-- [ ] Extend `/api/lead` (and status updates) to automatically append/update rows in the Google Sheet via service account
-  - Keep existing leads.json durability as fallback or phase it out later
-  - Store Google service-account credentials as Vercel env var
-- [ ] Wire admin status changes (texted → booked → on the way → done) and deposit confirmations to the same Sheet
+- [x] Set up Google Sheets as live ops backend (working path)
+  - Existing centerpiece: **Black Rabbit PNW • Client Database**
+  - New tab written by the site: **Web Leads** (does not touch Client Database rows)
+  - Core columns: Timestamp | Source | Name | Phone | Address | Service | Notes | Status | Track token | Deposit paid? | Assigned | Next action | Lead ID
+  - Fastest connect: paste `docs/ops-sheet-apps-script.js` → `GOOGLE_SHEETS_WEBHOOK`
+- [x] Extend `/api/lead` (and status updates) to append/update Web Leads when webhook or service account is set
+  - Keep existing leads.json durability
+- [x] Wire admin status changes and deposit confirmations to the same Sheet (when configured)
 - [ ] Add thin agent layer on top of the Sheet:
   - Daily/periodic review of open leads
   - Draft personalized quotes or SMS using address + photos + pricing algorithm
@@ -68,6 +70,8 @@ Add new tab: **Commercial Pipeline**
 - Always note source of information for later verification
 
 **Success metric for v1:** Deliver a usable first batch of 25–40 enriched commercial targets that Jerry can review and start personalized outreach from.
+
+- [x] v1 list shipped: `data/commercial-pipeline.json` (30 targets) + Admin **Commercial pipeline**. Ridgeline marked Nurture (already hired). No residential client PII in the repo.
 
 ### Follow-on Agents (later)
 - Enrichment / Contact Finder Agent

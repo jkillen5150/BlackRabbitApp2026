@@ -1,6 +1,6 @@
 # Black Rabbit / Cut My Grass — session handoff
 
-Last updated: 2026-07-22 (evening) · **tabled for reading / distribution**
+Last updated: 2026-08-12 · **make it work, then make it pretty**
 
 ## ⚠️ Token expiry (king note)
 - **`xai_api_key` (Vercel label) — 30-day expiry.** Replaced ~**2026-07-22**. Rotate by ~**2026-08-21** (or xAI console). Dead key → *“Chat not configured”* / auth errors. Fix: console.x.ai → new key → Vercel **`xai_api_key`** → **Redeploy**. Code also accepts legacy `XAI_API_KEY`.
@@ -59,8 +59,8 @@ Last updated: 2026-07-22 (evening) · **tabled for reading / distribution**
 | Start | 2026-07-22 | **0 / 30** | — | — | Goal set; FB Reels/posts active |
 | Week 1 | | / 30 | | | Frens dry runs + FB |
 | Week 2 | | / 30 | | | |
-| Week 3 | | / 30 | | | |
-| **Day 30 / key renew** | ~2026-08-21 | **/ 30** | | | Renew `xai_api_key` |
+| Week 3 | 2026-08-12 | **2+ / 30** | Harold (CMG) + Jessica Bryant (form) | Reviews landing | Count more first-timers from Admin |
+| **Day 30 / key renew** | ~2026-08-21 | **/ 30** | | | Renew `xai_api_key` — **calendar set** |
 
 ## Env vars (Vercel Production — exact names)
 | Name | Purpose |
@@ -72,6 +72,10 @@ Last updated: 2026-07-22 (evening) · **tabled for reading / distribution**
 | `LEAD_ADMIN_TOKEN` | Lock Admin lead list |
 | `STRIPE_DEPOSIT_AMOUNT_CENTS` | Optional; default `2500` |
 | `WEB3FORMS_KEY` | Optional override |
+| `GOOGLE_PLACES_API_KEY` | Optional review Sync |
+| `GOOGLE_SHEETS_WEBHOOK` | Apps Script web app on Client Database |
+| `GOOGLE_SHEETS_ID` | Defaults to existing Client Database |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | Optional Sheets API (instead of webhook) |
 
 ## Key URLs
 - Home: `/` · Book: `/cut-my-grass` · Track: `/track?t=` · Ask AI: `/assistant`
@@ -121,14 +125,16 @@ Last updated: 2026-07-22 (evening) · **tabled for reading / distribution**
 ## ✅ Checklist — next session
 
 ### Start here (5 min)
-- [ ] Confirm Vercel deploy of latest `main` is **Ready** (Porch Mode + cozy live)
-- [ ] Smoke: home, `/cut-my-grass`, `/assistant` (“what mode are you?”), phone number answer
-- [ ] Admin: paste **`LEAD_ADMIN_TOKEN`** if needed → lead list loads
+- [x] Calendar: **2026-08-21** rotate `xai_api_key` (Google Calendar, all-day)
+- [ ] Confirm Vercel deploy of latest `main` is **Ready**
+- [ ] Smoke: home, `/cut-my-grass`, `/assistant`, `/api/quote`, `/api/pipeline`
+- [ ] Admin: paste **`LEAD_ADMIN_TOKEN`** if needed → lead list + pipeline load
+- [ ] Paste Apps Script (`docs/ops-sheet-apps-script.js`) → set `GOOGLE_SHEETS_WEBHOOK`
 
 ### Dry runs + frens (week 1)
 - [ ] You: full path book → (cancel) deposit → track → Admin status once
 - [ ] **3–5 frens users** click the real URL; gather “what felt weird”
-- [ ] Log any real first-timers on the **scoreboard** (new users / 30)
+- [x] Log first named site users: **Harold (CMG)** + **Jessica Bryant (form)** — add anyone else from Admin
 - [ ] Clear old **fire-drill / test** leads from Admin when convenient
 
 ### Distribution (already rolling)

@@ -81,6 +81,11 @@ function expectBody(name, got, needles) {
 // —— local ——
 mustExist('data/content.json');
 mustExist('api/reviews.js');
+mustExist('api/quote.js');
+mustExist('api/pipeline.js');
+mustExist('data/commercial-pipeline.json');
+mustExist('docs/ops-sheet-apps-script.js');
+mustExist('js/pricing.js');
 mustExist('api/content.js');
 mustExist('js/content-store.js');
 mustExist('admin.html');
@@ -97,6 +102,28 @@ try {
   fail('content.json parse', e.message);
 }
 
+try {
+  const pipe = JSON.parse(read('data/commercial-pipeline.json'));
+  const n = (pipe.targets || []).length;
+  if (n >= 25) pass('commercial pipeline size', n + ' targets');
+  else fail('commercial pipeline size', n + ' (need 25+)');
+  const blob = JSON.stringify(pipe).toLowerCase();
+  if (blob.includes('360-789-9617') || blob.includes('315) 286')) {
+    fail('pipeline PII', 'looks like a residential client phone leaked');
+  } else {
+    pass('pipeline has no obvious client phones');
+  }
+} catch (e) {
+  fail('commercial-pipeline.json parse', e.message);
+}
+
+{
+  const { calculateLawnPrices } = await import(join(ROOT, 'api/_lib/pricing.js'));
+  const q = calculateLawnPrices(8000, 1800, 2);
+  if (q.oneTime >= 45 && q.cleanup === 8) pass('pricing floor + bags', JSON.stringify(q));
+  else fail('pricing floor + bags', JSON.stringify(q));
+}
+
 includes('index.html', 'data-review-headline', 'home live review headline');
 includes('testimonials.html', 'data-review-headline', 'testimonials live review headline');
 includes('admin.html', 'btn-sync-google-reviews', 'admin Google sync button');
@@ -108,6 +135,10 @@ includes('api/reviews.js', 'GOOGLE_PLACES_API_KEY', 'reviews API Places key');
 
 const jsFiles = [
   'api/reviews.js',
+  'api/quote.js',
+  'api/pipeline.js',
+  'api/_lib/sheets.js',
+  'api/_lib/pricing.js',
   'api/content.js',
   'api/_lib/content-store.js',
   'js/content-store.js',
@@ -154,7 +185,9 @@ if (LIVE) {
     ['api/chat GET', '/api/chat', [200, 405, 400]],
     ['api/lead GET', '/api/lead', [200, 401]],
     ['api/content GET', '/api/content', [200, 404]],
-    ['api/reviews GET', '/api/reviews', [200, 404]]
+    ['api/reviews GET', '/api/reviews', [200, 404]],
+    ['api/quote GET', '/api/quote?lotSqft=8000&houseSqft=1800', [200, 404]],
+    ['api/pipeline GET', '/api/pipeline', [200, 404]]
   ];
   for (const [name, path, allowed] of apis) {
     try {

@@ -11,6 +11,7 @@
  *   GITHUB_REPO       — default BlackRabbitApp2026
  *   LEAD_ADMIN_TOKEN  — if set, required on GET/PATCH (header X-Lead-Token or Bearer)
  *   SITE_URL          — for track links in email (prefer https://www.blackrabbitlawn.com)
+ *   GOOGLE_SHEETS_WEBHOOK / GOOGLE_SERVICE_ACCOUNT_JSON — optional Client Database write
  */
 import { randomBytes } from 'crypto';
 import {
@@ -22,6 +23,7 @@ import {
   siteUrl,
   updateLead
 } from './_lib/leads-store.js';
+import { isSheetsConfigured, syncLeadToSheet } from './_lib/sheets.js';
 
 const WEB3_KEY =
   process.env.WEB3FORMS_KEY || '6467d992-e261-48c0-ae1e-2bc4b6cc557d';
@@ -197,7 +199,11 @@ export default async function handler(req, res) {
 
     const lead = await updateLead(id, { status });
     if (!lead) return res.status(404).json({ error: 'Lead not found' });
-    return res.status(200).json({ lead: leadForStorage(lead) });
+    const sheet = await syncLeadToSheet(lead, { action: 'upsertLead' });
+    return res.status(200).json({
+      lead: leadForStorage(lead),
+      sheet: { ok: !!sheet.ok, skipped: !!sheet.skipped }
+    });
   }
 
   if (req.method !== 'POST') {
@@ -272,6 +278,12 @@ export default async function handler(req, res) {
       : null,
     emailed,
     saved,
+    sheet: isSheetsConfigured()
+      ? await syncLeadToSheet(lead, { action: 'upsertLead' }).then((r) => ({
+          ok: !!r.ok,
+          skipped: !!r.skipped
+        }))
+      : { ok: false, skipped: true },
     durable: isDurableConfigured(),
     storeError,
     accepted: true,
