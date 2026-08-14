@@ -63,6 +63,7 @@ GitHub Pages can’t run the chat function. Keep **everything on Vercel**:
    - **`SITE_URL`** — prefer `https://www.blackrabbitlawn.com` (canonical host)
    - **`GITHUB_TOKEN`** — **required for `/track`** + durable Admin lead list (repo contents write)
    - **`LEAD_ADMIN_TOKEN`** (optional) — gate Admin lead list/updates
+   - **`LEADS_ENCRYPTION_KEY`** (optional, recommended) — dedicated key for the encrypted GitHub leads file. If unset, the file is wrapped with `LEAD_ADMIN_TOKEN`. Set this so rotating the admin token does not lock `/track`.
    - **`WEB3FORMS_KEY`** (optional) — overrides the public form access key
    - **`STRIPE_DEPOSIT_AMOUNT_CENTS`** (optional) — default `2500` ($25)
    - **`GOOGLE_PLACES_API_KEY`** (optional) — Admin **Sync from Google** + live review totals

@@ -70,6 +70,7 @@ Last updated: 2026-08-12 · **make it work, then make it pretty**
 | `SITE_URL` | Prefer `https://www.blackrabbitlawn.com` |
 | `GITHUB_TOKEN` | Durable leads/track (Contents write) |
 | `LEAD_ADMIN_TOKEN` | Lock Admin lead list |
+| `LEADS_ENCRYPTION_KEY` | Encrypt `data/leads.json` at rest (independent of admin token) |
 | `STRIPE_DEPOSIT_AMOUNT_CENTS` | Optional; default `2500` |
 | `WEB3FORMS_KEY` | Optional override |
 | `GOOGLE_PLACES_API_KEY` | Optional review Sync |

@@ -172,7 +172,7 @@ for (const f of jsFiles) {
   }
   try {
     const back = unwrapLeadsFromStorage(blob, secret);
-    if (back[0] && back[0].phone === '3605550100') pass('leads encrypt roundtrip');
+    if (back.leads[0] && back.leads[0].phone === '3605550100') pass('leads encrypt roundtrip');
     else fail('leads encrypt roundtrip', JSON.stringify(back));
   } catch (e) {
     fail('leads encrypt roundtrip', e.message);
@@ -182,6 +182,16 @@ for (const f of jsFiles) {
     fail('leads encrypt rejects bad key', 'decrypt unexpectedly succeeded');
   } catch {
     pass('leads encrypt rejects bad key');
+  }
+  try {
+    const viaFallback = unwrapLeadsFromStorage(blob, ['wrong-secret', secret]);
+    if (viaFallback.leads[0]?.phone === '3605550100' && viaFallback.keyIndex === 1) {
+      pass('leads encrypt fallback key');
+    } else {
+      fail('leads encrypt fallback key', JSON.stringify(viaFallback));
+    }
+  } catch (e) {
+    fail('leads encrypt fallback key', e.message);
   }
 }
 

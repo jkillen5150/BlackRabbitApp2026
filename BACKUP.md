@@ -34,6 +34,7 @@ If the laptop, Vercel, or a bad day takes the site down, this is how you get bac
    - `xai_api_key` — **30-day expiry** (Vercel label; replaced ~2026-07-22; renew ~2026-08-21 at console.x.ai → update Vercel → redeploy). Legacy name `XAI_API_KEY` also works in code.
    - `GITHUB_TOKEN`
    - `LEAD_ADMIN_TOKEN`
+   - `LEADS_ENCRYPTION_KEY` — dedicated leads-file key (do not rotate with the admin token)
    - `SITE_URL` (= `https://www.blackrabbitlawn.com`)
    - `STRIPE_DEPOSIT_AMOUNT_CENTS` (if set)
    - `WEB3FORMS_KEY` (if overridden)

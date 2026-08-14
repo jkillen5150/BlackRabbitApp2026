@@ -61,9 +61,19 @@ function githubRepo() {
   };
 }
 
-/** Secret used to wrap the GitHub leads file. Prefer a dedicated key. */
+/** Secrets that can unwrap the GitHub leads file. Dedicated key first. */
+export function leadsStorageSecrets() {
+  const keys = [];
+  const dedicated = String(process.env.LEADS_ENCRYPTION_KEY || '').trim();
+  const admin = String(process.env.LEAD_ADMIN_TOKEN || '').trim();
+  if (dedicated) keys.push(dedicated);
+  if (admin && admin !== dedicated) keys.push(admin);
+  return keys;
+}
+
+/** Secret used to wrap new writes. Prefer LEADS_ENCRYPTION_KEY. */
 export function leadsStorageSecret() {
-  return String(process.env.LEADS_ENCRYPTION_KEY || process.env.LEAD_ADMIN_TOKEN || '').trim();
+  return leadsStorageSecrets()[0] || '';
 }
 
 function leadsKey(secret) {
@@ -99,16 +109,7 @@ export function wrapLeadsForStorage(leads, secret) {
   });
 }
 
-/** Decrypt a wrapped blob, or pass through a legacy plaintext array. */
-export function unwrapLeadsFromStorage(textOrObj, secret) {
-  const parsed = typeof textOrObj === 'string' ? JSON.parse(textOrObj) : textOrObj;
-  if (Array.isArray(parsed)) return parsed;
-  if (!isWrappedLeadsBlob(parsed)) {
-    throw new Error('Unknown leads storage format');
-  }
-  if (!secret) {
-    throw new Error('Missing LEADS_ENCRYPTION_KEY or LEAD_ADMIN_TOKEN');
-  }
+function decryptLeadsBlob(parsed, secret) {
   const decipher = createDecipheriv(LEADS_ALG, leadsKey(secret), Buffer.from(parsed.iv, 'base64'));
   decipher.setAuthTag(Buffer.from(parsed.tag, 'base64'));
   const out = Buffer.concat([
@@ -117,6 +118,34 @@ export function unwrapLeadsFromStorage(textOrObj, secret) {
   ]);
   const leads = JSON.parse(out.toString('utf8'));
   return Array.isArray(leads) ? leads : [];
+}
+
+/**
+ * Decrypt a wrapped blob, or pass through a legacy plaintext array.
+ * `secret` may be one string or a list (dedicated key, then LEAD_ADMIN_TOKEN).
+ * Returns { leads, keyIndex } so callers can rewrap after a fallback decrypt.
+ */
+export function unwrapLeadsFromStorage(textOrObj, secret) {
+  const parsed = typeof textOrObj === 'string' ? JSON.parse(textOrObj) : textOrObj;
+  if (Array.isArray(parsed)) return { leads: parsed, keyIndex: -1 };
+  if (!isWrappedLeadsBlob(parsed)) {
+    throw new Error('Unknown leads storage format');
+  }
+  const secrets = (Array.isArray(secret) ? secret : [secret])
+    .map((s) => String(s || '').trim())
+    .filter(Boolean);
+  if (!secrets.length) {
+    throw new Error('Missing LEADS_ENCRYPTION_KEY or LEAD_ADMIN_TOKEN');
+  }
+  let lastErr;
+  for (let i = 0; i < secrets.length; i++) {
+    try {
+      return { leads: decryptLeadsBlob(parsed, secrets[i]), keyIndex: i };
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('Leads decrypt failed');
 }
 
 function githubHeaders(token, extra) {
@@ -207,9 +236,20 @@ export async function githubGetLeads() {
 
     if (isWrappedLeadsBlob(parsed)) {
       try {
-        const leads = unwrapLeadsFromStorage(parsed, leadsStorageSecret());
+        const secrets = leadsStorageSecrets();
+        const { leads, keyIndex } = unwrapLeadsFromStorage(parsed, secrets);
+        let sha = file.sha;
+        // Rewrap when we opened the file with the fallback token but a dedicated key is set.
+        if (keyIndex > 0 && leadsStorageSecret()) {
+          const nextSha = await githubSaveLeads(
+            leads,
+            file.sha,
+            'chore: rewrap leads with LEADS_ENCRYPTION_KEY'
+          );
+          if (typeof nextSha === 'string') sha = nextSha;
+        }
         setGithubStoreError(null);
-        return { leads, sha: file.sha };
+        return { leads, sha };
       } catch (e) {
         const err =
           'Leads decrypt failed — set LEADS_ENCRYPTION_KEY to the key used when the file was written (LEAD_ADMIN_TOKEN may have changed).';
