@@ -4,8 +4,16 @@
  * In-memory (globalThis) is only warm within ONE function instance.
  * /api/lead and /api/track are separate lambdas — they do not share memory.
  * Durable reads/writes go through GitHub when GITHUB_TOKEN is set.
+ *
+ * The GitHub file is encrypted at rest (AES-256-GCM) so a public repo
+ * cannot publish customer PII as plain JSON. Key: LEADS_ENCRYPTION_KEY
+ * or, if unset, LEAD_ADMIN_TOKEN. Plaintext files are migrated on read.
  */
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
+
 const DEFAULT_SITE = 'https://www.blackrabbitlawn.com';
+const LEADS_WRAP_VERSION = 1;
+const LEADS_ALG = 'aes-256-gcm';
 
 export function siteUrl(req) {
   let base = process.env.SITE_URL || '';
@@ -49,8 +57,66 @@ function githubRepo() {
   return {
     owner: process.env.GITHUB_OWNER || 'jkillen5150',
     repo: process.env.GITHUB_REPO || 'BlackRabbitApp2026',
-    path: 'data/leads.json'
+    path: process.env.GITHUB_LEADS_PATH || 'data/leads.json'
   };
+}
+
+/** Secret used to wrap the GitHub leads file. Prefer a dedicated key. */
+export function leadsStorageSecret() {
+  return String(process.env.LEADS_ENCRYPTION_KEY || process.env.LEAD_ADMIN_TOKEN || '').trim();
+}
+
+function leadsKey(secret) {
+  return createHash('sha256').update('br-leads-v1:' + secret).digest();
+}
+
+export function isWrappedLeadsBlob(value) {
+  return !!(
+    value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Number(value.v) === LEADS_WRAP_VERSION &&
+    value.alg === LEADS_ALG &&
+    value.iv &&
+    value.tag &&
+    value.data
+  );
+}
+
+/** Encrypt a leads array for GitHub. Exported for smoke tests. */
+export function wrapLeadsForStorage(leads, secret) {
+  const key = leadsKey(secret);
+  const iv = randomBytes(12);
+  const cipher = createCipheriv(LEADS_ALG, key, iv);
+  const plain = Buffer.from(JSON.stringify(Array.isArray(leads) ? leads : []), 'utf8');
+  const data = Buffer.concat([cipher.update(plain), cipher.final()]);
+  return JSON.stringify({
+    v: LEADS_WRAP_VERSION,
+    alg: LEADS_ALG,
+    iv: iv.toString('base64'),
+    tag: cipher.getAuthTag().toString('base64'),
+    data: data.toString('base64')
+  });
+}
+
+/** Decrypt a wrapped blob, or pass through a legacy plaintext array. */
+export function unwrapLeadsFromStorage(textOrObj, secret) {
+  const parsed = typeof textOrObj === 'string' ? JSON.parse(textOrObj) : textOrObj;
+  if (Array.isArray(parsed)) return parsed;
+  if (!isWrappedLeadsBlob(parsed)) {
+    throw new Error('Unknown leads storage format');
+  }
+  if (!secret) {
+    throw new Error('Missing LEADS_ENCRYPTION_KEY or LEAD_ADMIN_TOKEN');
+  }
+  const decipher = createDecipheriv(LEADS_ALG, leadsKey(secret), Buffer.from(parsed.iv, 'base64'));
+  decipher.setAuthTag(Buffer.from(parsed.tag, 'base64'));
+  const out = Buffer.concat([
+    decipher.update(Buffer.from(parsed.data, 'base64')),
+    decipher.final()
+  ]);
+  const leads = JSON.parse(out.toString('utf8'));
+  return Array.isArray(leads) ? leads : [];
 }
 
 function githubHeaders(token, extra) {
@@ -117,15 +183,44 @@ export async function githubGetLeads() {
     }
     const file = await res.json();
     const text = Buffer.from(file.content || '', 'base64').toString('utf8');
-    let leads = [];
+    let parsed;
     try {
-      leads = JSON.parse(text);
-      if (!Array.isArray(leads)) leads = [];
+      parsed = JSON.parse(text);
     } catch {
-      leads = [];
+      parsed = [];
     }
-    setGithubStoreError(null);
-    return { leads, sha: file.sha };
+
+    if (Array.isArray(parsed)) {
+      const secret = leadsStorageSecret();
+      let sha = file.sha;
+      if (secret) {
+        const nextSha = await githubSaveLeads(
+          parsed,
+          file.sha,
+          'chore: encrypt leads at rest'
+        );
+        if (typeof nextSha === 'string') sha = nextSha;
+      }
+      setGithubStoreError(null);
+      return { leads: parsed, sha };
+    }
+
+    if (isWrappedLeadsBlob(parsed)) {
+      try {
+        const leads = unwrapLeadsFromStorage(parsed, leadsStorageSecret());
+        setGithubStoreError(null);
+        return { leads, sha: file.sha };
+      } catch (e) {
+        const err =
+          'Leads decrypt failed — set LEADS_ENCRYPTION_KEY to the key used when the file was written (LEAD_ADMIN_TOKEN may have changed).';
+        setGithubStoreError(err);
+        console.error(err, e.message || e);
+        return null;
+      }
+    }
+
+    setGithubStoreError('Unknown leads storage format');
+    return { leads: [], sha: file.sha };
   } catch (e) {
     const err = 'GitHub get failed: ' + (e.message || String(e));
     setGithubStoreError(err);
@@ -141,7 +236,11 @@ export async function githubSaveLeads(leads, sha, message) {
     return false;
   }
   const { owner, repo, path } = githubRepo();
-  const content = Buffer.from(JSON.stringify(leads, null, 2) + '\n').toString('base64');
+  const secret = leadsStorageSecret();
+  const payload = secret
+    ? wrapLeadsForStorage(leads, secret) + '\n'
+    : JSON.stringify(leads, null, 2) + '\n';
+  const content = Buffer.from(payload).toString('base64');
   try {
     const body = {
       message: String(message || `chore: update leads`).slice(0, 72),
@@ -165,8 +264,9 @@ export async function githubSaveLeads(leads, sha, message) {
       console.error('GitHub save leads', err);
       return false;
     }
+    const json = await res.json().catch(() => ({}));
     setGithubStoreError(null);
-    return true;
+    return json.content?.sha || true;
   } catch (e) {
     const err = 'GitHub save failed: ' + (e.message || String(e));
     setGithubStoreError(err);

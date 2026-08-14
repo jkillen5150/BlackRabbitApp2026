@@ -158,6 +158,33 @@ for (const f of jsFiles) {
   if (a.toLowerCase().startsWith(b.slice(0, 20))) pass('review key case-fold idea');
 }
 
+{
+  const { wrapLeadsForStorage, unwrapLeadsFromStorage } = await import(
+    join(ROOT, 'api/_lib/leads-store.js')
+  );
+  const secret = 'smoke-leads-secret-not-used-in-prod';
+  const sample = [{ id: 'lead-smoke', phone: '3605550100', address: '1 Test St' }];
+  const blob = wrapLeadsForStorage(sample, secret);
+  if (blob.includes('3605550100') || blob.includes('1 Test St')) {
+    fail('leads encrypt hides PII', blob.slice(0, 80));
+  } else {
+    pass('leads encrypt hides PII');
+  }
+  try {
+    const back = unwrapLeadsFromStorage(blob, secret);
+    if (back[0] && back[0].phone === '3605550100') pass('leads encrypt roundtrip');
+    else fail('leads encrypt roundtrip', JSON.stringify(back));
+  } catch (e) {
+    fail('leads encrypt roundtrip', e.message);
+  }
+  try {
+    unwrapLeadsFromStorage(blob, 'wrong-secret');
+    fail('leads encrypt rejects bad key', 'decrypt unexpectedly succeeded');
+  } catch {
+    pass('leads encrypt rejects bad key');
+  }
+}
+
 if (LIVE) {
   const pages = [
     ['home', '/', ['Black Rabbit', 'Cut My Grass', '407']],
@@ -213,6 +240,53 @@ if (LIVE) {
     }
   } catch (e) {
     fail('landscaping.com 301', e.message);
+  }
+
+  function looksLikePlainLeads(text) {
+    try {
+      const parsed = JSON.parse(text);
+      if (!Array.isArray(parsed)) return false;
+      return parsed.some((l) => l && (l.phone || l.address || l.trackToken));
+    } catch {
+      return false;
+    }
+  }
+
+  try {
+    const got = await fetchOk('/data/leads.json', { redirect: 'follow' });
+    if (got.status === 404 || got.status === 403 || got.status === 401) {
+      pass('live /data/leads.json not public', got.status);
+    } else if (looksLikePlainLeads(got.text)) {
+      fail('live /data/leads.json not public', 'plaintext PII served HTTP ' + got.status);
+    } else {
+      pass('live /data/leads.json not plaintext PII', got.status);
+    }
+  } catch (e) {
+    fail('live /data/leads.json not public', e.message);
+  }
+
+  try {
+    const got = await fetchOk('/api/lead');
+    const cc = got.headers.get('cache-control') || '';
+    if (/no-store/i.test(cc)) pass('live /api/lead Cache-Control no-store', cc);
+    else fail('live /api/lead Cache-Control no-store', cc || 'missing');
+  } catch (e) {
+    fail('live /api/lead Cache-Control no-store', e.message);
+  }
+
+  try {
+    const got = await fetchOk(
+      'https://raw.githubusercontent.com/jkillen5150/BlackRabbitApp2026/main/data/leads.json'
+    );
+    if (got.status === 404) {
+      pass('github raw leads.json absent', got.status);
+    } else if (looksLikePlainLeads(got.text)) {
+      fail('github raw leads.json not plaintext PII', 'public repo still has plaintext leads');
+    } else {
+      pass('github raw leads.json not plaintext PII', got.status);
+    }
+  } catch (e) {
+    fail('github raw leads.json not plaintext PII', e.message);
   }
 }
 

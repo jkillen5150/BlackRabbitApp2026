@@ -1,0 +1,3 @@
+# Customer PII — never ship these as static files (GitHub store still uses the API path)
+data/leads.json
+data/customers.json

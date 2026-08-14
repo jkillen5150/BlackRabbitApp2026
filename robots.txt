@@ -15,5 +15,7 @@ Disallow: /customer.html
 Disallow: /thankyou
 Disallow: /thankyou.html
 Disallow: /api/
+Disallow: /data/leads.json
+Disallow: /data/customers.json
 
 Sitemap: https://blackrabbitlawn.com/sitemap.xml
