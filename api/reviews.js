@@ -18,6 +18,14 @@ import {
 
 const DEFAULT_QUERY = 'Black Rabbit Landscaping';
 const DEFAULT_PHONE = '14079511663';
+/** From https://g.page/r/Cd-1M_ymvQphEBM/review (service-area listing). */
+const DEFAULT_PLACE_CID = '6992609896339584479';
+const DEFAULT_PLACE_ID_GUESSES = [
+  'ChIJ37Uz_Ka9CmED3j0iWsNDIQ',
+  'ChIJA949IlrDQyHftTP8pr0KYQ',
+  'ChIJIUPDWiI93gNhCr2m_DO13w',
+  'ChIJYQq9pvwztd8hQ8NaIj3eAw'
+];
 const DEFAULT_SEARCH_URL =
   'https://www.google.com/search?q=Black+Rabbit+Landscaping';
 const CACHE_MS = 6 * 60 * 60 * 1000;
@@ -167,6 +175,17 @@ async function findPlaceId(key) {
   const known = configuredPlaceId();
   if (known) return { placeId: known };
 
+  const cid = String(process.env.GOOGLE_PLACE_CID || DEFAULT_PLACE_CID).replace(/\D/g, '');
+  if (cid) {
+    const byCid = await fetchPlaceDetails(key, null, cid);
+    if (byCid.placeId && !byCid.error) return { placeId: byCid.placeId };
+  }
+
+  for (const guess of DEFAULT_PLACE_ID_GUESSES) {
+    const details = await fetchPlaceDetails(key, guess);
+    if (details.placeId && !details.error) return { placeId: details.placeId };
+  }
+
   const tried = [];
   for (const q of queryList()) {
     tried.push(q);
@@ -191,11 +210,14 @@ async function findPlaceId(key) {
   };
 }
 
-async function fetchPlaceDetails(key, placeId) {
+async function fetchPlaceDetails(key, placeId, cid) {
+  const qs = cid
+    ? 'cid=' + encodeURIComponent(cid)
+    : 'place_id=' + encodeURIComponent(placeId);
   const url =
     'https://maps.googleapis.com/maps/api/place/details/json' +
-    '?place_id=' +
-    encodeURIComponent(placeId) +
+    '?' +
+    qs +
     '&fields=place_id,name,rating,user_ratings_total,url,reviews' +
     '&reviews_sort=newest' +
     '&key=' +
