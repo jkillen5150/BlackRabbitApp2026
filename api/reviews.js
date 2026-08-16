@@ -152,6 +152,45 @@ function queryList() {
   return out;
 }
 
+async function searchPlacesNew(key, query) {
+  try {
+    const res = await fetch('https://places.googleapis.com/v1/places:searchText', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': key,
+        'X-Goog-FieldMask':
+          'places.id,places.displayName,places.rating,places.userRatingCount,places.googleMapsUri,places.nationalPhoneNumber'
+      },
+      body: JSON.stringify({
+        textQuery: query,
+        maxResultCount: 5
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg =
+        data.error && data.error.message
+          ? data.error.message
+          : 'Places New HTTP ' + res.status;
+      if (/API has not been used|PERMISSION_DENIED|SERVICE_DISABLED/i.test(msg)) {
+        return { disabled: true, error: msg };
+      }
+      return { error: 'Places New: ' + msg };
+    }
+    const places = Array.isArray(data.places) ? data.places : [];
+    const phone = String(process.env.GOOGLE_PLACE_PHONE || DEFAULT_PHONE).replace(/\D/g, '');
+    const picked =
+      places.find((p) => String(p.nationalPhoneNumber || '').replace(/\D/g, '').endsWith(phone.slice(-10))) ||
+      places.find((p) => /black rabbit/i.test((p.displayName && p.displayName.text) || '')) ||
+      places[0];
+    if (picked && picked.id) return { placeId: picked.id };
+    return {};
+  } catch (e) {
+    return { error: 'Places New: ' + (e.message || String(e)) };
+  }
+}
+
 async function findPlaceFromText(key, input, inputType) {
   const url =
     'https://maps.googleapis.com/maps/api/place/findplacefromtext/json' +
@@ -174,6 +213,13 @@ async function findPlaceFromText(key, input, inputType) {
 async function findPlaceId(key) {
   const known = configuredPlaceId();
   if (known) return { placeId: known };
+
+  const newQueries = queryList().concat(['Black Rabbit Landscaping Washington']);
+  for (const q of newQueries) {
+    const neu = await searchPlacesNew(key, q);
+    if (neu.disabled) break;
+    if (neu.placeId) return { placeId: neu.placeId };
+  }
 
   const cid = String(process.env.GOOGLE_PLACE_CID || DEFAULT_PLACE_CID).replace(/\D/g, '');
   if (cid) {
