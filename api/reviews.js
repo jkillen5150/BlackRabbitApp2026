@@ -5,7 +5,7 @@
  * Env:
  *   GOOGLE_PLACES_API_KEY  — Places API key (legacy Place Details)
  *   GOOGLE_PLACE_ID        — optional; otherwise Find Place from text
- *   GOOGLE_PLACE_QUERY     — default "Black Rabbit Landscaping Yelm WA"
+ *   GOOGLE_PLACE_QUERY     — default "Black Rabbit Landscaping"
  *   LEAD_ADMIN_TOKEN       — required on POST when set (same as Admin)
  *   GITHUB_TOKEN           — required for sync write
  */
@@ -16,9 +16,10 @@ import {
   lastGithubStoreError
 } from './_lib/content-store.js';
 
-const DEFAULT_QUERY = 'Black Rabbit Landscaping Yelm WA';
+const DEFAULT_QUERY = 'Black Rabbit Landscaping';
+const DEFAULT_PHONE = '14079511663';
 const DEFAULT_SEARCH_URL =
-  'https://www.google.com/search?q=Black+Rabbit+Landscaping+Yelm+WA';
+  'https://www.google.com/search?q=Black+Rabbit+Landscaping';
 const CACHE_MS = 6 * 60 * 60 * 1000;
 
 let placeCache = { at: 0, data: null };
@@ -128,14 +129,28 @@ async function fetchJson(url) {
   return { ok: res.ok, status: res.status, data };
 }
 
-async function findPlaceId(key) {
-  const known = configuredPlaceId();
-  if (known) return { placeId: known };
+function queryList() {
+  const primary = placeQuery();
+  const extras = [
+    'Black Rabbit Landscaping',
+    'Black Rabbit Landscaping Rainier WA',
+    'Black Rabbit Landscaping Yelm WA'
+  ];
+  const out = [];
+  for (const q of [primary, ...extras]) {
+    const t = String(q || '').trim();
+    if (t && !out.includes(t)) out.push(t);
+  }
+  return out;
+}
+
+async function findPlaceFromText(key, input, inputType) {
   const url =
     'https://maps.googleapis.com/maps/api/place/findplacefromtext/json' +
     '?input=' +
-    encodeURIComponent(placeQuery()) +
-    '&inputtype=textquery' +
+    encodeURIComponent(input) +
+    '&inputtype=' +
+    encodeURIComponent(inputType) +
     '&fields=place_id,name,rating,user_ratings_total' +
     '&key=' +
     encodeURIComponent(key);
@@ -144,10 +159,36 @@ async function findPlaceId(key) {
     return { error: 'Find Place: ' + data.status + (data.error_message ? ' — ' + data.error_message : '') };
   }
   const cand = (data.candidates || [])[0];
-  if (!cand || !cand.place_id) {
-    return { error: 'No Google place matched "' + placeQuery() + '". Set GOOGLE_PLACE_ID on Vercel.' };
+  if (cand && cand.place_id) return { placeId: cand.place_id };
+  return {};
+}
+
+async function findPlaceId(key) {
+  const known = configuredPlaceId();
+  if (known) return { placeId: known };
+
+  const tried = [];
+  for (const q of queryList()) {
+    tried.push(q);
+    const found = await findPlaceFromText(key, q, 'textquery');
+    if (found.error) return found;
+    if (found.placeId) return { placeId: found.placeId };
   }
-  return { placeId: cand.place_id };
+
+  const phone = String(process.env.GOOGLE_PLACE_PHONE || DEFAULT_PHONE).replace(/\D/g, '');
+  if (phone) {
+    tried.push('phone ' + phone);
+    const found = await findPlaceFromText(key, '+' + phone, 'phonenumber');
+    if (found.error) return found;
+    if (found.placeId) return { placeId: found.placeId };
+  }
+
+  return {
+    error:
+      'No Google place matched (' +
+      tried.join(' · ') +
+      '). Set GOOGLE_PLACE_ID on Vercel, or open the listing → Share and send the link.'
+  };
 }
 
 async function fetchPlaceDetails(key, placeId) {
