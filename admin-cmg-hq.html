@@ -183,6 +183,7 @@
       <button type="button" data-tab="sign">Sexy sign</button>
       <button type="button" data-tab="budget">Budget / VistaPrint</button>
       <button type="button" data-tab="vanity">Vanity 301</button>
+      <button type="button" data-tab="plant">Plant list</button>
       <button type="button" data-tab="checklist">Checklists</button>
       <button type="button" data-tab="docs">Full docs</button>
     </nav>
@@ -215,6 +216,14 @@
           <a class="btn btn-solid" href="docs/cmg-yard-sign-design-b.png" download="cut-my-grass-yard-sign-design-b.png">Download Design B PNG</a>
           <a class="btn btn-outline" href="docs/cmg-yard-sign-qr.png" download="cut-my-grass-qr.png">QR PNG</a>
           <button type="button" class="btn btn-outline" data-tab-jump="sign">Open Sexy sign tab</button>
+        </div>
+      </div>
+      <div class="cmg-card">
+        <h2>Yard signs — plant list</h2>
+        <p class="cmg-muted">Running checklist: Starbucks → Home Depot → plazas. Based on your client map density.</p>
+        <div class="cmg-actions">
+          <button type="button" class="btn btn-solid" data-tab-jump="plant">Open Plant list tab</button>
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-plant-list.md" target="_blank" rel="noopener">Plant list .md</a>
         </div>
       </div>
       <div class="cmg-card">
@@ -490,6 +499,52 @@ Powered by Black Rabbit</div>
       </div>
     </section>
 
+    <!-- PLANT LIST -->
+    <section class="cmg-panel" id="tab-plant" role="tabpanel">
+      <div class="cmg-card">
+        <h2>Yard-sign plant list (running)</h2>
+        <p class="cmg-muted">
+          Ordered by your client density: <strong>Yelm 9 → Roy 4 → Lacey 3</strong>.
+          Check off as you plant. Checks save on <strong>this device</strong> only.
+          Ask strip / pad owners before planting. Prefer drive-thru exit sightlines. Scan QR after each plant.
+        </p>
+        <div class="cmg-callout cmg-ok">
+          <strong>Order:</strong> Starbucks first → Home Depot → home-improvement plazas / hardware.
+          Also leave permission-based signs at finished jobs (Topaz Dr · 39th Ave S).
+        </div>
+        <div class="cmg-actions">
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-plant-list.md" target="_blank" rel="noopener">Open full plant list .md</a>
+          <a class="btn btn-outline" href="docs/cmg-yard-sign-design-a.png" download="cut-my-grass-yard-sign-design-a.png">Design A PNG</a>
+        </div>
+      </div>
+      <div class="cmg-card">
+        <h2>1) Starbucks</h2>
+        <p class="cmg-muted">Plant these first. Addresses — verify on Maps before you drive.</p>
+        <div class="cmg-checklist" id="check-plant-sbx" data-store="cmg_hq_plant_sbx_v1"></div>
+      </div>
+      <div class="cmg-card">
+        <h2>2) Home Depot</h2>
+        <p class="cmg-muted">No HD in Yelm — Lacey Marvin is the money store for DIY → hire.</p>
+        <div class="cmg-checklist" id="check-plant-hd" data-store="cmg_hq_plant_hd_v1"></div>
+      </div>
+      <div class="cmg-card">
+        <h2>3) Home improvement plazas &amp; hardware</h2>
+        <p class="cmg-muted">After Starbucks + HD. Ask plaza owners — don’t plant in public ROW.</p>
+        <div class="cmg-checklist" id="check-plant-plaza" data-store="cmg_hq_plant_plaza_v1"></div>
+      </div>
+      <div class="cmg-card">
+        <h2>Suggested next 10–15 signs</h2>
+        <ol>
+          <li>Yelm Starbucks E + W (2–4)</li>
+          <li>Lacey Marvin Starbucks + Home Depot Lacey (2–3)</li>
+          <li>Job sites: Topaz Dr Yelm + 39th Ave S Roy (2–3, permission)</li>
+          <li>Tumwater Yelm Hwy Starbucks (1)</li>
+          <li>Spanaway Pacific Starbucks for Roy corridor (1–2)</li>
+          <li>Then Lowe’s Martin Way / Hawks Prairie plaza edges</li>
+        </ol>
+      </div>
+    </section>
+
     <!-- CHECKLISTS -->
     <section class="cmg-panel" id="tab-checklist" role="tabpanel">
       <div class="cmg-card">
@@ -641,6 +696,34 @@ Powered by Black Rabbit</div>
 
       // Checklists
       const LISTS = {
+        'check-plant-sbx': [
+          'P1 · Starbucks Yelm (E) — 1109 Yelm Ave E (Yelm core)',
+          'P1 · Starbucks Yelm (E alt) — 1406 E Yelm Ave (confirm same/2nd pad)',
+          'P1 · Starbucks Yelm (W) — 937 W Yelm Ave & Killion Rd SE',
+          'P1 · Starbucks Lacey Marvin / Hawks Prairie — 2350 Marvin Rd NE',
+          'P2 · Starbucks Lacey College St — 1110 College St SE',
+          'P2 · Starbucks Tumwater Yelm Hwy — 1301 Yelm Hwy SE',
+          'P2 · Starbucks Tumwater Littlerock — 6104 Littlerock Rd SW',
+          'P2 · Starbucks Spanaway Pacific & 166th (Roy/Spanaway commute)',
+          'P3 · Starbucks Spanaway 204th & Hwy 7',
+          'P3 · Starbucks Martin Way / Olympia-Lacey edge (after Yelm+Lacey saturated)',
+          'Job-site · Finished Topaz Dr Yelm (permission)',
+          'Job-site · Finished 39th Ave S Roy cluster (permission)'
+        ],
+        'check-plant-hd': [
+          'P1 · Home Depot Lacey #4742 — 1450 Marvin Rd NE',
+          'P2 · Home Depot Olympia #4708 — 1325 Fones Rd SE',
+          'P2 · Home Depot Tumwater #4724 — 1101 Kingswood Dr SW',
+          'P3 · Home Depot Spanaway/Tacoma #4747 — Pacific Ave & Military Rd area'
+        ],
+        'check-plant-plaza': [
+          'P1 · Lowe’s Olympia/Lacey — 4230 Martin Way E',
+          'P1 · Hawks Prairie plaza edges — Marvin Rd NE @ I-5 (Costco/Walmart/Cabela’s pads — ask owners)',
+          'P2 · Mountain Lumber & Hardware — Yelm area (verify address)',
+          'P2 · True Value / Sunbird True Value — Yelm strip',
+          'P2 · Harbor Freight — nearest Olympia/Lacey (verify)',
+          'P3 · Ace / other Olympia hardware — only if signs left'
+        ],
         'check-print': [
           'Book URL frozen: https://www.blackrabbitlawn.com/cut-my-grass',
           'QR scanned on cellular — Step 1 of CMG opens',
@@ -668,7 +751,7 @@ Powered by Black Rabbit</div>
           'STRIPE_SECRET_KEY on Vercel Production',
           'LEAD_ADMIN_TOKEN set + saved in Admin',
           'SITE_URL prefers https://www.blackrabbitlawn.com',
-          'xai_api_key calendar: rotate ~2026-08-21',
+          'xai_api_key calendar: next rotate ~2026-09-13',
           'Admin leads list loads',
           'Smoke: home, /cut-my-grass, /assistant, phone answer'
         ]
