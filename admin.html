@@ -239,9 +239,16 @@
     <section class="admin-panel">
       <h2>📒 Clients (private roster)</h2>
       <p style="color:#666;font-size:0.9rem;margin-top:0;">
-        From <strong>Master Client Book</strong> (Google Sheet). Exact street + coords stay in gitignored
-        <code>data/customers.json</code> — Admin only. Public service-area map never gets these streets.
+        Exact streets for <strong>you only</strong> (not on the public map). Uses the same
+        <code>LEAD_ADMIN_TOKEN</code> as Follow-up leads. Durable copy is encrypted on GitHub
+        (<code>data/customers.json</code> path — never committed as plaintext).
       </p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;">
+        <button type="button" class="btn btn-outline" id="btn-refresh-clients">Refresh clients</button>
+        <button type="button" class="btn btn-solid" id="btn-publish-clients" title="From Codespaces: upload local roster to the live encrypted store">
+          Publish roster to server
+        </button>
+      </div>
       <p id="private-clients-meta" style="font-size:0.85rem;color:#666;"></p>
       <ul class="admin-list" id="list-private-clients"></ul>
     </section>

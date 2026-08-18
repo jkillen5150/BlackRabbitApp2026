@@ -17,6 +17,43 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   document.getElementById('btn-refresh-leads')?.addEventListener('click', () => loadLeads());
+  document.getElementById('btn-refresh-clients')?.addEventListener('click', async () => {
+    clearPrivateCustomersCache();
+    await renderPrivateClients();
+    const data = await BRContent.load();
+    await renderPins(data.pins);
+  });
+  document.getElementById('btn-publish-clients')?.addEventListener('click', async () => {
+    const meta = document.getElementById('private-clients-meta');
+    const btn = document.getElementById('btn-publish-clients');
+    if (btn) btn.disabled = true;
+    if (meta) {
+      meta.textContent = 'Publishing private roster to encrypted server store…';
+      meta.style.color = '#8a5a00';
+    }
+    try {
+      const result = await publishPrivateCustomers();
+      if (!result.ok) {
+        if (meta) {
+          meta.textContent = result.error || 'Publish failed.';
+          meta.style.color = '#a33';
+        }
+        alert(result.error || 'Could not publish private roster.');
+        return;
+      }
+      if (meta) {
+        meta.textContent =
+          'Published ' + (result.count || 0) + ' clients to server. Refreshing…';
+        meta.style.color = '#2e5a2e';
+      }
+      clearPrivateCustomersCache();
+      await renderPrivateClients();
+      const data = await BRContent.load();
+      await renderPins(data.pins);
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  });
   document.getElementById('btn-save-lead-token')?.addEventListener('click', () => {
     const input = document.getElementById('lead-admin-token');
     const val = (input && input.value ? input.value : '').trim();
@@ -33,6 +70,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (val) input.placeholder = 'Token saved on this device (edit to change)';
     }
     loadLeads();
+    clearPrivateCustomersCache();
+    renderPrivateClients();
   });
 
   // Enter in token field = save + load (no extra clicks)
@@ -119,23 +158,123 @@ async function refreshAll() {
   updateDraftStatus();
 }
 
-/** Private roster (gitignored). Exact addresses for Admin only — never published to public map. */
+/** Private roster. Prefer durable /api/customers (encrypted on GitHub); fallback local file. */
 let privateCustomersCache = null;
+function clearPrivateCustomersCache() {
+  privateCustomersCache = null;
+}
+
 async function loadPrivateCustomers() {
   if (privateCustomersCache) return privateCustomersCache;
+
+  // 1) Durable Admin API (works on Vercel when LEAD_ADMIN_TOKEN is saved)
+  try {
+    resolveLeadToken();
+    const res = await fetch('/api/customers', {
+      cache: 'no-store',
+      headers: leadAuthHeaders()
+    });
+    if (res.status === 401) {
+      privateCustomersCache = {
+        customers: [],
+        missing: true,
+        locked: true,
+        note: 'Paste LEAD_ADMIN_TOKEN above (same as leads), Save on this device, then Refresh clients.'
+      };
+      return privateCustomersCache;
+    }
+    if (res.ok) {
+      const data = await res.json();
+      const list = Array.isArray(data.customers) ? data.customers : [];
+      if (list.length) {
+        privateCustomersCache = Object.assign({}, data, {
+          customers: list,
+          missing: false,
+          fromApi: true,
+          durable: !!data.durable
+        });
+        return privateCustomersCache;
+      }
+      // Empty durable store — try local seed file next
+      privateCustomersCache = {
+        customers: [],
+        missing: true,
+        fromApi: true,
+        durable: !!data.durable,
+        emptyDurable: true,
+        note: data.error || 'Roster empty on server — publish from this device if you have data/customers.json.'
+      };
+    }
+  } catch {
+    /* API offline — fall through to static file */
+  }
+
+  // 2) Local Codespace / static file (gitignored — not on Vercel)
   try {
     const res = await fetch('data/customers.json', { cache: 'no-store' });
     if (!res.ok) {
-      privateCustomersCache = { customers: [], missing: true };
+      if (!privateCustomersCache) {
+        privateCustomersCache = { customers: [], missing: true };
+      }
       return privateCustomersCache;
     }
-    privateCustomersCache = await res.json();
-    privateCustomersCache.missing = false;
+    const data = await res.json();
+    privateCustomersCache = Object.assign({}, data, {
+      customers: Array.isArray(data.customers) ? data.customers : [],
+      missing: false,
+      fromApi: false,
+      localFile: true
+    });
     return privateCustomersCache;
   } catch {
-    privateCustomersCache = { customers: [], missing: true };
+    if (!privateCustomersCache) {
+      privateCustomersCache = { customers: [], missing: true };
+    }
     return privateCustomersCache;
   }
+}
+
+/** Push local data/customers.json (or in-memory roster) to durable /api/customers. */
+async function publishPrivateCustomers(roster) {
+  resolveLeadToken();
+  if (!getLeadToken()) {
+    return {
+      ok: false,
+      error: 'Paste LEAD_ADMIN_TOKEN and Save on this device first.'
+    };
+  }
+  let body = roster;
+  if (!body || !Array.isArray(body.customers) || !body.customers.length) {
+    try {
+      const res = await fetch('data/customers.json', { cache: 'no-store' });
+      if (!res.ok) {
+        return {
+          ok: false,
+          error: 'No local data/customers.json to publish on this host.'
+        };
+      }
+      body = await res.json();
+    } catch {
+      return { ok: false, error: 'Could not read local data/customers.json.' };
+    }
+  }
+  const res = await fetch('/api/customers', {
+    method: 'PUT',
+    headers: leadAuthHeaders({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify(body)
+  });
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    return { ok: false, error: 'Token rejected — check LEAD_ADMIN_TOKEN.' };
+  }
+  if (!res.ok) {
+    return {
+      ok: false,
+      error: data.error || data.note || data.detail || 'Publish failed (HTTP ' + res.status + ')'
+    };
+  }
+  clearPrivateCustomersCache();
+  return { ok: true, count: data.count };
 }
 
 const LEAD_TOKEN_KEY = 'br_lead_token';
@@ -1174,23 +1313,37 @@ async function renderPrivateClients() {
   const ul = document.getElementById('list-private-clients');
   const meta = document.getElementById('private-clients-meta');
   if (!ul) return;
+  clearPrivateCustomersCache();
   const roster = await loadPrivateCustomers();
   const list = roster.customers || [];
   if (meta) {
-    if (roster.missing) {
+    if (roster.locked) {
       meta.textContent =
-        'Private roster file not found on this host. Local Codespaces with data/customers.json shows exact addresses here. Public map stays approximate either way.';
+        roster.note ||
+        'Locked — paste LEAD_ADMIN_TOKEN (same as Follow-up leads), Save on this device, then Refresh clients.';
+      meta.style.color = '#8a5a00';
+    } else if (roster.missing) {
+      meta.textContent =
+        roster.note ||
+        'No private roster on this host yet. On Codespaces: use “Publish roster to server”. On Vercel: publish once from Codespaces, then Refresh here with your lead token.';
       meta.style.color = '#8a5a00';
     } else {
+      const where = roster.fromApi ? 'server (encrypted)' : 'local file';
       meta.textContent =
         list.length +
-        ' clients from Master Client Book · exact addresses admin-only · public map uses jittered pins';
-      meta.style.color = '#666';
+        ' clients · ' +
+        where +
+        ' · exact addresses admin-only · public map stays approximate';
+      meta.style.color = '#2e5a2e';
     }
   }
-  if (roster.missing) {
+  if (roster.missing || !list.length) {
     ul.innerHTML =
-      '<li class="empty-state">No private <code>data/customers.json</code> on this deploy (gitignored by design). Pins still show approximate public locations.</li>';
+      '<li class="empty-state"><strong>Exact addresses not loaded.</strong> ' +
+      (roster.locked
+        ? 'Paste <code>LEAD_ADMIN_TOKEN</code> under Follow-up quotes → Save on this device → Refresh clients.'
+        : 'Public pins stay approximate. To show streets here on the live site: open Admin in Codespaces (where <code>data/customers.json</code> exists), paste your lead token, click <strong>Publish roster to server</strong>, then Refresh on Vercel Admin.') +
+      '</li>';
     return;
   }
   ul.innerHTML =

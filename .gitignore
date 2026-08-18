@@ -19,3 +19,7 @@ data/customers.json
 
 # Local scratch (tokens, notes) — never commit
 output/
+
+# Local scratch secrets — never commit
+n
+*.token
