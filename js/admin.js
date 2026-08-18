@@ -114,8 +114,28 @@ async function refreshAll() {
   const data = await BRContent.load();
   renderReviews(data.reviews);
   renderPortfolio(data.portfolio);
-  renderPins(data.pins);
+  await renderPins(data.pins);
+  await renderPrivateClients();
   updateDraftStatus();
+}
+
+/** Private roster (gitignored). Exact addresses for Admin only — never published to public map. */
+let privateCustomersCache = null;
+async function loadPrivateCustomers() {
+  if (privateCustomersCache) return privateCustomersCache;
+  try {
+    const res = await fetch('data/customers.json', { cache: 'no-store' });
+    if (!res.ok) {
+      privateCustomersCache = { customers: [], missing: true };
+      return privateCustomersCache;
+    }
+    privateCustomersCache = await res.json();
+    privateCustomersCache.missing = false;
+    return privateCustomersCache;
+  } catch {
+    privateCustomersCache = { customers: [], missing: true };
+    return privateCustomersCache;
+  }
 }
 
 const LEAD_TOKEN_KEY = 'br_lead_token';
@@ -1080,23 +1100,60 @@ function renderPortfolio(list) {
   });
 }
 
-function renderPins(list) {
+async function renderPins(list) {
   const ul = document.getElementById('list-pins');
-  ul.innerHTML = (list || [])
-    .map(
-      (p) => `
+  if (!ul) return;
+  const roster = await loadPrivateCustomers();
+  const byPin = {};
+  const byCustomerId = {};
+  (roster.customers || []).forEach((c) => {
+    if (c.mapPinId) byPin[c.mapPinId] = c;
+    if (c.id) byCustomerId[c.id] = c;
+  });
+
+  ul.innerHTML =
+    (list || [])
+      .map((p) => {
+        const isClient = (p.type || 'city') !== 'city';
+        const cust = byPin[p.id] || byCustomerId[p.customerId] || null;
+        let adminLine = '';
+        if (isClient && cust) {
+          const exact =
+            cust.exactLat != null && cust.exactLng != null
+              ? ` · exact ${Number(cust.exactLat).toFixed(5)}, ${Number(cust.exactLng).toFixed(5)}`
+              : '';
+          adminLine =
+            `<br><span style="color:#1e3d1e;font-weight:600;">Admin: ${BRContent.escapeHtml(cust.name)}</span>` +
+            `<br><span style="color:#2e5a2e;">📍 ${BRContent.escapeHtml(cust.address || '')}, ${BRContent.escapeHtml(
+              cust.city || ''
+            )}${exact}</span>` +
+            (cust.geocodePrecision === 'city'
+              ? '<br><span style="color:#8a5a00;font-size:0.8rem;">Street geocode soft — city-level exact only</span>'
+              : '');
+        } else if (isClient && roster.missing) {
+          adminLine =
+            '<br><span style="color:#8a5a00;font-size:0.8rem;">Private roster not on this host (data/customers.json) — public approx only</span>';
+        }
+        const publicCoords =
+          p.lat != null && p.lng != null
+            ? `public approx (${Number(p.lat).toFixed(3)}, ${Number(p.lng).toFixed(3)})`
+            : '';
+        return `
     <li>
       <div>
         <strong>${BRContent.escapeHtml(p.label)}</strong>
         <span style="color:#888;font-size:0.8rem;"> · ${BRContent.escapeHtml(p.type || 'city')}</span><br>
-        <span style="color:#666">${BRContent.escapeHtml(p.city || p.address || '')} (${p.lat?.toFixed?.(3)}, ${p.lng?.toFixed?.(3)})</span>
+        <span style="color:#666">${BRContent.escapeHtml(p.city || p.address || '')}${
+          publicCoords ? ' · ' + publicCoords : ''
+        }</span>
+        ${adminLine}
       </div>
       <div class="actions">
         <button type="button" data-del-pin="${BRContent.escapeAttr(p.id)}" class="btn-danger">Delete</button>
       </div>
-    </li>`
-    )
-    .join('') || '<li>No map pins yet.</li>';
+    </li>`;
+      })
+      .join('') || '<li>No map pins yet.</li>';
 
   ul.querySelectorAll('[data-del-pin]').forEach((btn) => {
     btn.addEventListener('click', async () => {
@@ -1111,4 +1168,53 @@ function renderPins(list) {
       await refreshAll();
     });
   });
+}
+
+async function renderPrivateClients() {
+  const ul = document.getElementById('list-private-clients');
+  const meta = document.getElementById('private-clients-meta');
+  if (!ul) return;
+  const roster = await loadPrivateCustomers();
+  const list = roster.customers || [];
+  if (meta) {
+    if (roster.missing) {
+      meta.textContent =
+        'Private roster file not found on this host. Local Codespaces with data/customers.json shows exact addresses here. Public map stays approximate either way.';
+      meta.style.color = '#8a5a00';
+    } else {
+      meta.textContent =
+        list.length +
+        ' clients from Master Client Book · exact addresses admin-only · public map uses jittered pins';
+      meta.style.color = '#666';
+    }
+  }
+  if (roster.missing) {
+    ul.innerHTML =
+      '<li class="empty-state">No private <code>data/customers.json</code> on this deploy (gitignored by design). Pins still show approximate public locations.</li>';
+    return;
+  }
+  ul.innerHTML =
+    list
+      .map((c) => {
+        const exact =
+          c.exactLat != null && c.exactLng != null
+            ? `${Number(c.exactLat).toFixed(5)}, ${Number(c.exactLng).toFixed(5)}`
+            : '—';
+        return `
+      <li>
+        <div>
+          <strong>${BRContent.escapeHtml(c.name)}</strong>
+          <span style="color:#888;font-size:0.8rem;"> · ${BRContent.escapeHtml(c.status || '')} · ${BRContent.escapeHtml(
+            c.frequency || ''
+          )}</span><br>
+          <span style="color:#2e5a2e;">📍 ${BRContent.escapeHtml(c.address || '')}, ${BRContent.escapeHtml(
+            c.city || ''
+          )} WA</span><br>
+          <span style="color:#666;font-size:0.85rem;">Exact ${exact} · pin ${BRContent.escapeHtml(
+            c.mapPinId || '—'
+          )} · public map is approx only</span>
+        </div>
+      </li>`;
+      })
+      .join('') || '<li>No clients in private roster.</li>';
 }

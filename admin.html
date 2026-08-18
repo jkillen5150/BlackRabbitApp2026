@@ -235,13 +235,24 @@
       <ul class="admin-list" id="list-portfolio"></ul>
     </section>
 
+    <!-- Private client roster (exact addresses — not on public map) -->
+    <section class="admin-panel">
+      <h2>📒 Clients (private roster)</h2>
+      <p style="color:#666;font-size:0.9rem;margin-top:0;">
+        From <strong>Master Client Book</strong> (Google Sheet). Exact street + coords stay in gitignored
+        <code>data/customers.json</code> — Admin only. Public service-area map never gets these streets.
+      </p>
+      <p id="private-clients-meta" style="font-size:0.85rem;color:#666;"></p>
+      <ul class="admin-list" id="list-private-clients"></ul>
+    </section>
+
     <!-- Map pins -->
     <section class="admin-panel">
       <h2>📍 Map pins</h2>
       <p style="color:#666;font-size:0.9rem;margin-top:0;">
-        <strong>City pins</strong> stay on the main towns. <strong>Client / job pins</strong> are privacy-safe by default:
-        we geocode if needed, then jitter the point ~0.5–1 km and <em>never store the street address</em> on the public site —
-        only city + approximate coords.
+        <strong>City pins</strong> stay on the main towns.
+        <strong>Client / job pins</strong> publish as <em>approximate</em> only (~0.5–1 km jitter, city label, no street).
+        When the private roster is present, Admin lists show the exact address under each client pin.
       </p>
       <form id="form-pin">
         <div class="admin-row">
