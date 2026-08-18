@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>Black Rabbit CMG — Yard-sign marketing map</name>
+  <description>Starbucks → Home Depot → plazas. Updated 2026-08-18. QR book URL: https://www.blackrabbitlawn.com/cut-my-grass</description>
+  <Style id="sbx"><IconStyle><color>ff2d8cff</color><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href></Icon></IconStyle></Style>
+  <Style id="hd"><IconStyle><color>ff00a5ff</color><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/orange-circle.png</href></Icon></IconStyle></Style>
+  <Style id="plaza"><IconStyle><color>ff14b414</color><scale>1.0</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-circle.png</href></Icon></IconStyle></Style>
+  
+  <Folder>
+    <name>1) Starbucks</name>
+    
+      <Placemark>
+        <name>Starbucks Yelm (E) — 1109 Yelm Ave E</name>
+        <description>Priority: P1
+Serves: Yelm core
+Address: 1109 Yelm Ave E, Yelm, WA 98597
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#sbx</styleUrl>
+        <Point><coordinates>-122.5939876,46.9337147,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Starbucks Yelm (E alt) — 1406 E Yelm Ave</name>
+        <description>Priority: P1
+Serves: Yelm core
+Address: 1406 E Yelm Ave, Yelm, WA 98597
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#sbx</styleUrl>
+        <Point><coordinates>-122.5904825,46.9336609,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Starbucks Yelm (W) — W Yelm Ave &amp; Killion</name>
+        <description>Priority: P1
+Serves: West Yelm / 507
+Address: 937 W Yelm Ave, Yelm, WA 98597
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#sbx</styleUrl>
+        <Point><coordinates>-122.6179751,46.9480511,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Starbucks Lacey — Marvin / Hawks Prairie</name>
+        <description>Priority: P1
+Serves: Lacey clients + DIY
+Address: 2350 Marvin Rd NE, Lacey, WA 98516
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#sbx</styleUrl>
+        <Point><coordinates>-122.7681139,47.0675143,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Starbucks Lacey — College St</name>
+        <description>Priority: P2
+Serves: South Lacey commute
+Address: 1110 College St SE, Lacey, WA
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#sbx</styleUrl>
+        <Point><coordinates>-122.8224213,47.0379648,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Starbucks Tumwater — Yelm Hwy</name>
+        <description>Priority: P2
+Serves: Yelm↔Olympia corridor
+Address: 1301 Yelm Hwy SE, Tumwater, WA 98501
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#sbx</styleUrl>
+        <Point><coordinates>-122.8811842,47.0033166,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Starbucks Tumwater — Littlerock</name>
+        <description>Priority: P2
+Serves: Tumwater
+Address: 6104 Littlerock Rd SW, Tumwater, WA 98512
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#sbx</styleUrl>
+        <Point><coordinates>-122.9218481,46.9941747,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Starbucks Spanaway — Pacific &amp; 166th</name>
+        <description>Priority: P2
+Serves: Roy / Spanaway commute
+Address: Pacific Ave S &amp; 166th St E, Spanaway, WA
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#sbx</styleUrl>
+        <Point><coordinates>-122.4176008,47.0898165,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Starbucks Spanaway — 204th &amp; Hwy 7</name>
+        <description>Priority: P3
+Serves: Pierce edge
+Address: 204th St E &amp; Hwy 7, Spanaway, WA
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#sbx</styleUrl>
+        <Point><coordinates>-122.4176008,47.0898165,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Starbucks Martin Way area</name>
+        <description>Priority: P3
+Serves: Broader Thurston (after P1/P2)
+Address: 4230 Martin Way E, Olympia, WA 98516
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#sbx</styleUrl>
+        <Point><coordinates>-122.8310216,47.0498277,0</coordinates></Point>
+      </Placemark>
+  </Folder>
+  
+  <Folder>
+    <name>2) Home Depot</name>
+    
+      <Placemark>
+        <name>Home Depot Lacey #4742</name>
+        <description>Priority: P1
+Serves: Lacey DIY → hire
+Address: 1450 Marvin Rd NE, Lacey, WA 98516
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#hd</styleUrl>
+        <Point><coordinates>-122.762578,47.0606528,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Home Depot Olympia #4708</name>
+        <description>Priority: P2
+Serves: Central Thurston DIY
+Address: 1325 Fones Rd SE, Olympia, WA 98501
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#hd</styleUrl>
+        <Point><coordinates>-122.8501892,47.0369702,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Home Depot Tumwater #4724</name>
+        <description>Priority: P2
+Serves: Tumwater / west
+Address: 1101 Kingswood Dr SW, Tumwater, WA 98512
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#hd</styleUrl>
+        <Point><coordinates>-122.91,46.985,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Home Depot Spanaway / Tacoma #4747</name>
+        <description>Priority: P3
+Serves: Roy/Spanaway Pierce
+Address: Pacific Ave &amp; Military Rd, Tacoma/Spanaway, WA 98445
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#hd</styleUrl>
+        <Point><coordinates>-122.3857646,47.0911918,0</coordinates></Point>
+      </Placemark>
+  </Folder>
+  
+  <Folder>
+    <name>3) Plazas &amp;amp; hardware</name>
+    
+      <Placemark>
+        <name>Lowe’s Olympia/Lacey — Martin Way</name>
+        <description>Priority: P1
+Serves: Same gravity as HD
+Address: 4230 Martin Way E, Olympia, WA 98516
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#plaza</styleUrl>
+        <Point><coordinates>-122.8310216,47.0498277,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Hawks Prairie big-box approaches</name>
+        <description>Priority: P1
+Serves: Lacey + DIY
+Address: Marvin Rd NE @ I-5, Lacey, WA (Costco/Walmart/Cabela’s pads)
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.
+Note: Ask strip owners — not public ROW</description>
+        <styleUrl>#plaza</styleUrl>
+        <Point><coordinates>-122.7605068,47.0601236,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Mountain Lumber &amp; Hardware (Yelm area)</name>
+        <description>Priority: P2
+Serves: Local Yelm DIY
+Address: Yelm, WA — verify current address
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#plaza</styleUrl>
+        <Point><coordinates>-122.60639,46.9413877,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>True Value / Sunbird True Value — Yelm</name>
+        <description>Priority: P2
+Serves: Neighborhood foot traffic
+Address: Yelm strip — verify
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#plaza</styleUrl>
+        <Point><coordinates>-122.60639,46.9413877,0</coordinates></Point>
+      </Placemark>
+      <Placemark>
+        <name>Harbor Freight (nearest Olympia/Lacey)</name>
+        <description>Priority: P3
+Serves: DIY crossover
+Address: Verify nearest Olympia/Lacey
+Book: https://www.blackrabbitlawn.com/cut-my-grass
+Phone: (407) 951-1663
+Ask permission before planting.</description>
+        <styleUrl>#plaza</styleUrl>
+        <Point><coordinates>-122.82515,47.0369835,0</coordinates></Point>
+      </Placemark>
+  </Folder>
+</Document>
+</kml>

@@ -8,6 +8,7 @@
   <meta name="description" content="Private Cut My Grass launch kit — admin only.">
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="stylesheet" href="css/site.css">
   <style>
     body.admin-page.cmg-hq { background: #f3ebe0; }
@@ -138,6 +139,20 @@
       margin: 0 0 10px; color: #5c564e; font-size: 0.85rem; line-height: 1.4;
     }
     .cmg-concept-meta .cmg-actions { margin-top: 0; }
+    #cmg-marketing-map {
+      width: 100%; height: 420px; border-radius: 14px;
+      border: 1px solid #e4d9c8; margin-top: 12px; z-index: 1;
+    }
+    .cmg-map-legend {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; font-size: 0.85rem;
+    }
+    .cmg-map-legend span {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #efe8dc; padding: 4px 10px; border-radius: 999px; font-weight: 600;
+    }
+    .cmg-map-dot {
+      width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+    }
   </style>
 </head>
 <body data-page="admin" class="admin-page cmg-hq">
@@ -514,8 +529,24 @@ Powered by Black Rabbit</div>
         </div>
         <div class="cmg-actions">
           <a class="btn btn-outline" href="docs/cmg-yard-sign-plant-list.md" target="_blank" rel="noopener">Open full plant list .md</a>
+          <a class="btn btn-solid" href="docs/cmg-marketing-map.kml" download="Black-Rabbit-CMG-Marketing-Map.kml">Download Google Earth KML</a>
+          <a class="btn btn-outline" href="data/marketing-plant-spots.json" target="_blank" rel="noopener">Master list JSON</a>
           <a class="btn btn-outline" href="docs/cmg-yard-sign-design-a.png" download="cut-my-grass-yard-sign-design-a.png">Design A PNG</a>
         </div>
+      </div>
+      <div class="cmg-card">
+        <h2>Marketing map</h2>
+        <p class="cmg-muted">
+          Master plant spots (not client home addresses). Blue = Starbucks · Orange = Home Depot · Green = plazas/hardware.
+          For Google Earth: download the KML, then <strong>File → Open</strong> (desktop) or import into a Google Earth project (web) and save to Drive.
+        </p>
+        <div id="cmg-marketing-map" role="region" aria-label="Yard-sign marketing map"></div>
+        <div class="cmg-map-legend" id="cmg-marketing-map-legend">
+          <span><i class="cmg-map-dot" style="background:#2563eb"></i> Starbucks</span>
+          <span><i class="cmg-map-dot" style="background:#ea580c"></i> Home Depot</span>
+          <span><i class="cmg-map-dot" style="background:#16a34a"></i> Plazas / hardware</span>
+        </div>
+        <div id="cmg-marketing-map-list" style="margin-top:14px;font-size:0.9rem;"></div>
       </div>
       <div class="cmg-card">
         <h2>1) Starbucks</h2>
@@ -628,6 +659,7 @@ Powered by Black Rabbit</div>
     </section>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="js/auth.js"></script>
   <script src="js/site-common.js"></script>
   <script>
@@ -642,6 +674,7 @@ Powered by Black Rabbit</div>
       // Tabs
       const tabs = document.querySelectorAll('.cmg-tabs button');
       const panels = document.querySelectorAll('.cmg-panel');
+      let marketingMap = null;
       function activateTab(id) {
         if (!id) return;
         const btn = document.querySelector('.cmg-tabs button[data-tab="' + id + '"]');
@@ -649,7 +682,97 @@ Powered by Black Rabbit</div>
         tabs.forEach((b) => b.classList.toggle('active', b === btn));
         panels.forEach((p) => p.classList.toggle('active', p.id === 'tab-' + id));
         try { sessionStorage.setItem('cmg_hq_tab', id); } catch (_) {}
+        if (id === 'plant' && marketingMap) {
+          setTimeout(() => marketingMap.invalidateSize(), 80);
+        }
       }
+
+      async function initMarketingMap() {
+        const el = document.getElementById('cmg-marketing-map');
+        const listEl = document.getElementById('cmg-marketing-map-list');
+        if (!el || typeof L === 'undefined') return;
+        try {
+          const res = await fetch('data/marketing-plant-spots.json', { cache: 'no-store' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          const spots = data.spots || [];
+          marketingMap = L.map(el).setView([46.98, -122.7], 10);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; OpenStreetMap'
+          }).addTo(marketingMap);
+          const colors = {
+            starbucks: '#2563eb',
+            home_depot: '#ea580c',
+            plaza_hardware: '#16a34a'
+          };
+          const bounds = [];
+          spots.forEach((s) => {
+            if (s.lat == null || s.lng == null) return;
+            const color = colors[s.category] || '#666';
+            const m = L.circleMarker([s.lat, s.lng], {
+              radius: s.priority === 'P1' ? 9 : 7,
+              color: '#fff',
+              weight: 2,
+              fillColor: color,
+              fillOpacity: 0.92
+            }).addTo(marketingMap);
+            m.bindPopup(
+              '<strong>' +
+                String(s.name || '').replace(/</g, '&lt;') +
+                '</strong><br>' +
+                String(s.priority || '') +
+                ' · ' +
+                String(s.address || '').replace(/</g, '&lt;') +
+                '<br><em>Serves: ' +
+                String(s.serves || '').replace(/</g, '&lt;') +
+                '</em>'
+            );
+            bounds.push([s.lat, s.lng]);
+          });
+          if (bounds.length) marketingMap.fitBounds(bounds, { padding: [36, 36], maxZoom: 11 });
+
+          if (listEl) {
+            const order = ['starbucks', 'home_depot', 'plaza_hardware'];
+            const labels = {
+              starbucks: '1) Starbucks',
+              home_depot: '2) Home Depot',
+              plaza_hardware: '3) Plazas & hardware'
+            };
+            listEl.innerHTML = order
+              .map((cat) => {
+                const items = spots.filter((s) => s.category === cat);
+                return (
+                  '<h3 style="margin:14px 0 6px;font-size:1rem;color:#1e3d1e;">' +
+                  labels[cat] +
+                  '</h3><ul style="margin:0;padding-left:1.1rem;">' +
+                  items
+                    .map(
+                      (s) =>
+                        '<li><strong>' +
+                        String(s.priority || '') +
+                        '</strong> ' +
+                        String(s.name || '').replace(/</g, '&lt;') +
+                        ' <span style="color:#666">— ' +
+                        String(s.address || '').replace(/</g, '&lt;') +
+                        '</span></li>'
+                    )
+                    .join('') +
+                  '</ul>'
+                );
+              })
+              .join('');
+          }
+        } catch (e) {
+          if (listEl) {
+            listEl.innerHTML =
+              '<p style="color:#8a5a00">Could not load marketing-plant-spots.json — ' +
+              (e && e.message ? e.message : e) +
+              '</p>';
+          }
+        }
+      }
+      initMarketingMap();
       tabs.forEach((btn) => {
         btn.addEventListener('click', () => activateTab(btn.getAttribute('data-tab')));
       });

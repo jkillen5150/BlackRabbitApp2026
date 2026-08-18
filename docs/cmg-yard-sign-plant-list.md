@@ -73,4 +73,13 @@ _No Home Depot in Yelm — use Yelm Starbucks + Lacey HD._
 
 ---
 
-*Admin checklist UI: CMG Launch HQ → **Plant list** tab (checks save on this device).*
+## Google Earth / Drive
+
+| File | Use |
+|------|-----|
+| `docs/cmg-marketing-map.kml` | Open in Google Earth (desktop or web import) → save as a project to Drive |
+| `data/marketing-plant-spots.json` | Master machine-readable list for the Admin marketing map |
+
+Live download: `https://www.blackrabbitlawn.com/docs/cmg-marketing-map.kml`
+
+*Admin: CMG Launch HQ → **Plant list** tab (map + checklists save on this device).*

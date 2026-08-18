@@ -1,0 +1,255 @@
+{
+  "updatedAt": "2026-08-18",
+  "title": "Black Rabbit / Cut My Grass \u2014 Yard-sign marketing map",
+  "bookUrl": "https://www.blackrabbitlawn.com/cut-my-grass",
+  "phone": "(407) 951-1663",
+  "note": "Ask property owners before planting. Prefer drive-thru exit sightlines. Public client pins stay approximate.",
+  "categories": [
+    {
+      "id": "starbucks",
+      "label": "Starbucks",
+      "order": 1
+    },
+    {
+      "id": "home_depot",
+      "label": "Home Depot",
+      "order": 2
+    },
+    {
+      "id": "plaza_hardware",
+      "label": "Home improvement plazas & hardware",
+      "order": 3
+    }
+  ],
+  "spots": [
+    {
+      "id": "sbx-yelm-e-1109",
+      "category": "starbucks",
+      "priority": "P1",
+      "name": "Starbucks Yelm (E) \u2014 1109 Yelm Ave E",
+      "address": "1109 Yelm Ave E, Yelm, WA 98597",
+      "serves": "Yelm core",
+      "query": "1109 Yelm Ave E, Yelm, WA 98597",
+      "lat": 46.9337147,
+      "lng": -122.5939876,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "sbx-yelm-e-1406",
+      "category": "starbucks",
+      "priority": "P1",
+      "name": "Starbucks Yelm (E alt) \u2014 1406 E Yelm Ave",
+      "address": "1406 E Yelm Ave, Yelm, WA 98597",
+      "serves": "Yelm core",
+      "query": "1406 E Yelm Ave, Yelm, WA 98597",
+      "lat": 46.9336609,
+      "lng": -122.5904825,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "sbx-yelm-w",
+      "category": "starbucks",
+      "priority": "P1",
+      "name": "Starbucks Yelm (W) \u2014 W Yelm Ave & Killion",
+      "address": "937 W Yelm Ave, Yelm, WA 98597",
+      "serves": "West Yelm / 507",
+      "query": "937 W Yelm Avenue, Yelm, WA 98597",
+      "lat": 46.9480511,
+      "lng": -122.6179751,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "sbx-lacey-marvin",
+      "category": "starbucks",
+      "priority": "P1",
+      "name": "Starbucks Lacey \u2014 Marvin / Hawks Prairie",
+      "address": "2350 Marvin Rd NE, Lacey, WA 98516",
+      "serves": "Lacey clients + DIY",
+      "query": "2350 Marvin Rd NE, Lacey, WA 98516",
+      "lat": 47.0675143,
+      "lng": -122.7681139,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "sbx-lacey-college",
+      "category": "starbucks",
+      "priority": "P2",
+      "name": "Starbucks Lacey \u2014 College St",
+      "address": "1110 College St SE, Lacey, WA",
+      "serves": "South Lacey commute",
+      "query": "1110 College St SE, Lacey, WA",
+      "lat": 47.0379648,
+      "lng": -122.8224213,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "sbx-tumwater-yelmhwy",
+      "category": "starbucks",
+      "priority": "P2",
+      "name": "Starbucks Tumwater \u2014 Yelm Hwy",
+      "address": "1301 Yelm Hwy SE, Tumwater, WA 98501",
+      "serves": "Yelm\u2194Olympia corridor",
+      "query": "1301 Yelm Hwy SE, Tumwater, WA 98501",
+      "lat": 47.0033166,
+      "lng": -122.8811842,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "sbx-tumwater-littlerock",
+      "category": "starbucks",
+      "priority": "P2",
+      "name": "Starbucks Tumwater \u2014 Littlerock",
+      "address": "6104 Littlerock Rd SW, Tumwater, WA 98512",
+      "serves": "Tumwater",
+      "query": "6104 Littlerock Rd SW, Tumwater, WA 98512",
+      "lat": 46.9941747,
+      "lng": -122.9218481,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "sbx-spanaway-166",
+      "category": "starbucks",
+      "priority": "P2",
+      "name": "Starbucks Spanaway \u2014 Pacific & 166th",
+      "address": "Pacific Ave S & 166th St E, Spanaway, WA",
+      "serves": "Roy / Spanaway commute",
+      "query": "Starbucks Pacific Ave and 166th, Spanaway, WA",
+      "lat": 47.0898165,
+      "lng": -122.4176008,
+      "geocode": "city"
+    },
+    {
+      "id": "sbx-spanaway-204",
+      "category": "starbucks",
+      "priority": "P3",
+      "name": "Starbucks Spanaway \u2014 204th & Hwy 7",
+      "address": "204th St E & Hwy 7, Spanaway, WA",
+      "serves": "Pierce edge",
+      "query": "Starbucks 204th and Highway 7, Spanaway, WA",
+      "lat": 47.0898165,
+      "lng": -122.4176008,
+      "geocode": "city"
+    },
+    {
+      "id": "sbx-martinway",
+      "category": "starbucks",
+      "priority": "P3",
+      "name": "Starbucks Martin Way area",
+      "address": "4230 Martin Way E, Olympia, WA 98516",
+      "serves": "Broader Thurston (after P1/P2)",
+      "query": "4230 Martin Way E, Olympia, WA 98516",
+      "lat": 47.0498277,
+      "lng": -122.8310216,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "hd-lacey",
+      "category": "home_depot",
+      "priority": "P1",
+      "name": "Home Depot Lacey #4742",
+      "address": "1450 Marvin Rd NE, Lacey, WA 98516",
+      "serves": "Lacey DIY \u2192 hire",
+      "query": "Home Depot 1450 Marvin Rd NE, Lacey, WA",
+      "lat": 47.0606528,
+      "lng": -122.762578,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "hd-olympia",
+      "category": "home_depot",
+      "priority": "P2",
+      "name": "Home Depot Olympia #4708",
+      "address": "1325 Fones Rd SE, Olympia, WA 98501",
+      "serves": "Central Thurston DIY",
+      "query": "Home Depot 1325 Fones Rd SE, Olympia, WA",
+      "lat": 47.0369702,
+      "lng": -122.8501892,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "hd-tumwater",
+      "category": "home_depot",
+      "priority": "P2",
+      "name": "Home Depot Tumwater #4724",
+      "address": "1101 Kingswood Dr SW, Tumwater, WA 98512",
+      "serves": "Tumwater / west",
+      "query": "Home Depot 1101 Kingswood Dr SW, Tumwater, WA",
+      "lat": 46.985,
+      "lng": -122.91,
+      "geocode": "fallback"
+    },
+    {
+      "id": "hd-spanaway",
+      "category": "home_depot",
+      "priority": "P3",
+      "name": "Home Depot Spanaway / Tacoma #4747",
+      "address": "Pacific Ave & Military Rd, Tacoma/Spanaway, WA 98445",
+      "serves": "Roy/Spanaway Pierce",
+      "query": "Home Depot Pacific Avenue Military Road, Tacoma, WA 98445",
+      "lat": 47.0911918,
+      "lng": -122.3857646,
+      "geocode": "city"
+    },
+    {
+      "id": "lowes-martinway",
+      "category": "plaza_hardware",
+      "priority": "P1",
+      "name": "Lowe\u2019s Olympia/Lacey \u2014 Martin Way",
+      "address": "4230 Martin Way E, Olympia, WA 98516",
+      "serves": "Same gravity as HD",
+      "query": "Lowe's 4230 Martin Way E, Olympia, WA",
+      "lat": 47.0498277,
+      "lng": -122.8310216,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "hawks-prairie",
+      "category": "plaza_hardware",
+      "priority": "P1",
+      "name": "Hawks Prairie big-box approaches",
+      "address": "Marvin Rd NE @ I-5, Lacey, WA (Costco/Walmart/Cabela\u2019s pads)",
+      "serves": "Lacey + DIY",
+      "query": "Costco Marvin Road NE, Lacey, WA",
+      "note": "Ask strip owners \u2014 not public ROW",
+      "lat": 47.0601236,
+      "lng": -122.7605068,
+      "geocode": "nominatim"
+    },
+    {
+      "id": "mtn-lumber-yelm",
+      "category": "plaza_hardware",
+      "priority": "P2",
+      "name": "Mountain Lumber & Hardware (Yelm area)",
+      "address": "Yelm, WA \u2014 verify current address",
+      "serves": "Local Yelm DIY",
+      "query": "Mountain Lumber Hardware, Yelm, WA",
+      "lat": 46.9413877,
+      "lng": -122.60639,
+      "geocode": "city"
+    },
+    {
+      "id": "truevalue-yelm",
+      "category": "plaza_hardware",
+      "priority": "P2",
+      "name": "True Value / Sunbird True Value \u2014 Yelm",
+      "address": "Yelm strip \u2014 verify",
+      "serves": "Neighborhood foot traffic",
+      "query": "Sunbird True Value, Yelm, WA",
+      "lat": 46.9413877,
+      "lng": -122.60639,
+      "geocode": "city"
+    },
+    {
+      "id": "harbor-freight",
+      "category": "plaza_hardware",
+      "priority": "P3",
+      "name": "Harbor Freight (nearest Olympia/Lacey)",
+      "address": "Verify nearest Olympia/Lacey",
+      "serves": "DIY crossover",
+      "query": "Harbor Freight Tools, Lacey, WA",
+      "lat": 47.0369835,
+      "lng": -122.82515,
+      "geocode": "nominatim"
+    }
+  ]
+}
