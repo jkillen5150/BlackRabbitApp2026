@@ -31,7 +31,7 @@ If the laptop, Vercel, or a bad day takes the site down, this is how you get bac
 
 3. **Secrets in a password manager** (never commit these)
    - `STRIPE_SECRET_KEY`
-   - `xai_api_key` — **30-day expiry** (Vercel label; replaced ~2026-07-22; renew ~2026-08-21 at console.x.ai → update Vercel → redeploy). Legacy name `XAI_API_KEY` also works in code.
+   - `xai_api_key` — **30-day expiry** (Vercel label; rotated **2026-08-14**, old key revoked; next ~**2026-09-13** at console.x.ai → update Vercel → redeploy). Legacy name `XAI_API_KEY` also works in code.
    - `GITHUB_TOKEN`
    - `LEAD_ADMIN_TOKEN`
    - `LEADS_ENCRYPTION_KEY` — dedicated leads-file key (do not rotate with the admin token)
@@ -47,7 +47,7 @@ If the laptop, Vercel, or a bad day takes the site down, this is how you get bac
 
 5. **Monthly (optional)** — new ZIP or bundle after a quiet week. Leads are **gitignored** locally; durable list still lives via `GITHUB_TOKEN` on GitHub when configured (don’t commit PII).
 
-6. **Product goal reminder** — by ~**2026-08-21** renew **`xai_api_key`** and score **30 new users** (see `PROJECT_STATUS.md`). Facebook Reels/posts already part of distribution.
+6. **Product goal reminder** — score **30 site-found users** by ~**2026-09-11** (see `PROJECT_STATUS.md`). Next **`xai_api_key`** rotate ~**2026-09-13**. Facebook Reels/posts already part of distribution.
 
 ## If things go tits up
 

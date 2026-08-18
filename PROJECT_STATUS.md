@@ -1,10 +1,10 @@
 # Black Rabbit / Cut My Grass — session handoff
 
-Last updated: 2026-08-12 · **make it work, then make it pretty**
+Last updated: 2026-08-14 · **make it work, then make it pretty**
 
 ## ⚠️ Token expiry (king note)
-- **`xai_api_key` (Vercel label) — 30-day expiry.** Replaced ~**2026-07-22**. Rotate by ~**2026-08-21** (or xAI console). Dead key → *“Chat not configured”* / auth errors. Fix: console.x.ai → new key → Vercel **`xai_api_key`** → **Redeploy**. Code also accepts legacy `XAI_API_KEY`.
-- **Same window = product goal:** **30 new users** by key renew (~2026-08-21). See **🎯 30-day goal**.
+- **`xai_api_key` (Vercel label) — 30-day expiry.** Rotated **2026-08-14**; old key **revoked**. Next rotate ~**2026-09-13**. Dead key → *“Chat not configured”* / auth errors. Fix: console.x.ai → new key → Vercel **`xai_api_key`** → **Redeploy**. Code also accepts legacy `XAI_API_KEY`.
+- **Site-found user goal** is its own clock (since 8/11). See **🎯 30-day goal**.
 - **`GITHUB_TOKEN`** — no expiration (~2026-07-21). Needs **Contents: Read and write** (or classic `repo`). Durable leads + track verified live.
 - **`LEAD_ADMIN_TOKEN`** — no auto-expiry. Live **401** on list without token.
 - Secrets only in Vercel + password manager — never the repo.
@@ -43,29 +43,30 @@ Last updated: 2026-08-12 · **make it work, then make it pretty**
 | Paid ads | **Not yet** — after a few closed jobs |
 | Marketplace / job board | Parked (code lives in BlackRabbitLandscapingApp) |
 
-## 🎯 30-day goal (key window)
+## 🎯 30-day goal (site-found, since 8/11)
 
 | | |
 |--|--|
-| **Window** | **2026-07-22 → ~2026-08-21** |
-| **Goal** | **30 new users** (first-timers to the *site*, not drills, not you) |
+| **Window** | **2026-08-11 → ~2026-09-11** (28 days left as of 8/14) |
+| **Goal** | **30 new users** who found us from the site (CMG / organic). Not drills, not you. |
+| **On the board** | **2 / 30** — Harold (8/11) + Rene White (8/14), both CMG |
+| **Pace** | **28 more in 28 days** → about **1 first-timer a day** |
+| **Not in this count** | Jessica Bryant (homepage form) — still a real lead, different path |
 | **Stretch** | Turn as many as possible into real jobs → Google reviews |
-| **Count** | Unique new names/phones (Admin + site-sourced texts) |
-| **Key renew** | Rotate **`xai_api_key`** + score **/30** |
+| **Separate ops** | **`xai_api_key` rotated 2026-08-14** (old key revoked). Next ~**2026-09-13** |
 
 ### Scoreboard
-| Checkpoint | Date | **New users** | Leads | Jobs closed | Notes |
-|------------|------|---------------|-------|-------------|--------|
-| Start | 2026-07-22 | **0 / 30** | — | — | Goal set; FB Reels/posts active |
-| Week 1 | | / 30 | | | Frens dry runs + FB |
-| Week 2 | | / 30 | | | |
-| Week 3 | 2026-08-12 | **2+ / 30** | Harold (CMG) + Jessica Bryant (form) | Reviews landing | Count more first-timers from Admin |
-| **Day 30 / key renew** | ~2026-08-21 | **/ 30** | | | Renew `xai_api_key` — **calendar set** |
+| Checkpoint | Date | **Site-found** | Notes |
+|------------|------|----------------|-------|
+| Clock start | 2026-08-11 | **1 / 30** | Harold — CMG, found us from the site |
+| +3 days | 2026-08-14 | **2 / 30** | Rene White — CMG, Yelm, bi-weekly, active |
+| Need | ~2026-09-11 | **30 / 30** | 28 more · 1 a day |
+| Ask AI key | 2026-08-14 | done | Rotated + old key revoked. Next ~2026-09-13 |
 
 ## Env vars (Vercel Production — exact names)
 | Name | Purpose |
 |------|---------|
-| **`xai_api_key`** | Ask AI — **30-day** · renew ~2026-08-21 |
+| **`xai_api_key`** | Ask AI — **30-day** · rotated 2026-08-14 · next ~2026-09-13 |
 | `STRIPE_SECRET_KEY` | Deposits (`sk_` or `rk_live_`) |
 | `SITE_URL` | Prefer `https://www.blackrabbitlawn.com` |
 | `GITHUB_TOKEN` | Durable leads/track (Contents write) |
@@ -126,7 +127,7 @@ Last updated: 2026-08-12 · **make it work, then make it pretty**
 ## ✅ Checklist — next session
 
 ### Start here (5 min)
-- [x] Calendar: **2026-08-21** rotate `xai_api_key` (Google Calendar, all-day)
+- [x] Calendar: **2026-08-21** rotate `xai_api_key` — **done early 2026-08-14**; move reminder to **~2026-09-13**
 - [ ] Confirm Vercel deploy of latest `main` is **Ready**
 - [ ] Smoke: home, `/cut-my-grass`, `/assistant`, `/api/quote`, `/api/pipeline`
 - [ ] Admin: paste **`LEAD_ADMIN_TOKEN`** if needed → lead list + pipeline load
@@ -135,7 +136,7 @@ Last updated: 2026-08-12 · **make it work, then make it pretty**
 ### Dry runs + frens (week 1)
 - [ ] You: full path book → (cancel) deposit → track → Admin status once
 - [ ] **3–5 frens users** click the real URL; gather “what felt weird”
-- [x] Log first named site users: **Harold (CMG)** + **Jessica Bryant (form)** — add anyone else from Admin
+- [x] Site-found count since 8/11: **Harold + Rene White = 2 / 30** (Jessica Bryant is a form lead, not in this count)
 - [ ] Clear old **fire-drill / test** leads from Admin when convenient
 
 ### Distribution (already rolling)
@@ -148,7 +149,7 @@ Last updated: 2026-08-12 · **make it work, then make it pretty**
 ### Ops hygiene
 - [ ] Password manager has all secrets from **BACKUP.md**
 - [ ] Optional: `git bundle` / USB code backup (still open)
-- [ ] Calendar: **~2026-08-21** renew `xai_api_key` + score 30 new users
+- [ ] Calendar: **~2026-09-13** next `xai_api_key` rotate + score site-found users
 
 ### Only if something’s broken
 - [ ] Chat dead → check **`xai_api_key`** + redeploy

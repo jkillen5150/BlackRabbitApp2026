@@ -58,7 +58,7 @@ GitHub Pages can’t run the chat function. Keep **everything on Vercel**:
 1. Import **jkillen5150/BlackRabbitApp2026** in [vercel.com](https://vercel.com) (or link the existing project to this repo).
 2. Framework preset: **Other** (static + `api/`).
 3. Project env vars:
-   - **`xai_api_key`** — xAI key for Ask AI (Vercel label; **30-day expiry** — replaced ~2026-07-22; renew ~2026-08-21, then redeploy). Code also accepts `XAI_API_KEY`.
+   - **`xai_api_key`** — xAI key for Ask AI (Vercel label; **30-day expiry** — rotated **2026-08-14**; next ~**2026-09-13**, then redeploy). Code also accepts `XAI_API_KEY`.
    - **`STRIPE_SECRET_KEY`** — `sk_…` or `rk_live_…` for Cut My Grass deposits
    - **`SITE_URL`** — prefer `https://www.blackrabbitlawn.com` (canonical host)
    - **`GITHUB_TOKEN`** — **required for `/track`** + durable Admin lead list (repo contents write)
