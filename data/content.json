@@ -467,6 +467,42 @@
       "note": "Approximate location",
       "customerId": "client-019",
       "sheetId": 19
+    },
+    {
+      "id": "pin-client-20",
+      "type": "client",
+      "label": "Past service \u00b7 Olympia area",
+      "address": "Olympia area",
+      "lat": 47.002,
+      "lng": -122.723,
+      "city": "Olympia",
+      "note": "Approximate location",
+      "customerId": "client-020",
+      "sheetId": 20
+    },
+    {
+      "id": "pin-client-21",
+      "type": "client",
+      "label": "Past service \u00b7 Tenino area",
+      "address": "Tenino area",
+      "lat": 46.863,
+      "lng": -122.849,
+      "city": "Tenino",
+      "note": "Approximate location",
+      "customerId": "client-021",
+      "sheetId": 21
+    },
+    {
+      "id": "pin-client-22",
+      "type": "client",
+      "label": "Past service \u00b7 Olympia area",
+      "address": "Olympia area",
+      "lat": 47.056,
+      "lng": -122.817,
+      "city": "Olympia",
+      "note": "Approximate location",
+      "customerId": "client-022",
+      "sheetId": 22
     }
   ],
   "serviceAreas": [

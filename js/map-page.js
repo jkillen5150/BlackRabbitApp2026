@@ -1,7 +1,7 @@
 /**
  * Leaflet service-area map
- * - City pins: main towns we serve (exact city centers OK)
- * - Client pins: approximate only — never show street addresses publicly
+ * - Map shows past-job pins only (approximate — never street addresses)
+ * - City centers are not pinned: South Sound locals already know the towns
  */
 (function () {
   let map;
@@ -26,21 +26,6 @@
       .toLowerCase()
       .replace(/[^a-z]/g, '');
     return CITY_PAGES[key] || null;
-  }
-
-  function cityIcon() {
-    return L.divIcon({
-      className: '',
-      html: `<div style="
-        width:28px;height:28px;background:#2e5a2e;
-        border:3px solid #fff;border-radius:50% 50% 50% 0;
-        transform:rotate(-45deg);
-        box-shadow:0 2px 8px rgba(0,0,0,.35);
-      "></div>`,
-      iconSize: [28, 28],
-      iconAnchor: [14, 28],
-      popupAnchor: [0, -28]
-    });
   }
 
   function clientIcon() {
@@ -94,7 +79,6 @@
   async function draw() {
     const data = await BRContent.load();
     const pins = data.pins || [];
-    const areas = data.serviceAreas || [];
     const listCities = document.getElementById('pin-list-cities');
     const listJobs = document.getElementById('pin-list-jobs');
     const listEl = document.getElementById('pin-list');
@@ -105,22 +89,6 @@
     const bounds = [];
     const cities = pins.filter(isCity);
     const clients = pins.filter((p) => !isCity(p));
-
-    cities.forEach((p) => {
-      if (p.lat == null || p.lng == null) return;
-      const detail = publicDetail(p);
-      const page = cityPageHref(p);
-      const link = page
-        ? `<br><a href="${BRContent.escapeAttr(page)}">Lawn care in ${BRContent.escapeHtml(publicLabel(p))} →</a>`
-        : '';
-      const m = L.marker([p.lat, p.lng], { icon: cityIcon(), zIndexOffset: 200 }).addTo(layerGroup);
-      m.bindPopup(
-        `<strong>${BRContent.escapeHtml(publicLabel(p))}</strong><br>
-         ${BRContent.escapeHtml(detail.line)}<br>
-         <em>${BRContent.escapeHtml(detail.note)}</em>${link}`
-      );
-      bounds.push([p.lat, p.lng]);
-    });
 
     clients.forEach((p) => {
       if (p.lat == null || p.lng == null) return;
@@ -134,24 +102,12 @@
       bounds.push([p.lat, p.lng]);
     });
 
-    areas.forEach((a) => {
-      if (a.lat == null || a.lng == null) return;
-      L.circle([a.lat, a.lng], {
-        radius: 2200,
-        color: '#2e5a2e',
-        fillColor: '#2e5a2e',
-        fillOpacity: 0.08,
-        weight: 1
-      }).addTo(layerGroup);
-    });
-
     if (bounds.length) {
       map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 });
     }
 
     if (legendEl) {
       legendEl.innerHTML = `
-        <span class="map-chip">📍 Towns we serve</span>
         <span class="map-chip" style="border-color:#d97706;color:#b45309;">● Past jobs (approx.)</span>
       `;
     }
