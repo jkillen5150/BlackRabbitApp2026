@@ -98,6 +98,19 @@ try {
   const names = (content.reviews || []).map((r) => r.name).filter(Boolean);
   if (names.includes('William Beasley')) pass('seed review William Beasley');
   else fail('seed review William Beasley', 'not in content.json');
+  const pins = content.pins || [];
+  const clients = pins.filter((p) => (p.type || 'city') !== 'city');
+  if (clients.length >= 22) pass('content.json client pins', clients.length + ' job pins');
+  else fail('content.json client pins', clients.length + ' (need 22+)');
+  const cities = [...new Set(clients.map((p) => p.city).filter(Boolean))];
+  if (cities.includes('Olympia') && cities.includes('Tenino')) pass('client pins include Olympia + Tenino');
+  else fail('client pins include Olympia + Tenino', cities.join(', '));
+  const streetLike = clients.filter((p) => {
+    const line = String(p.address || p.label || '');
+    return /\d/.test(line) && !/area/i.test(line);
+  });
+  if (!streetLike.length) pass('client pins have no street addresses');
+  else fail('client pins have no street addresses', streetLike.map((p) => p.id).join(', '));
 } catch (e) {
   fail('content.json parse', e.message);
 }
@@ -132,6 +145,15 @@ includes('thankyou.html', 'data-google-review-link', 'thank-you write-review CTA
 includes('track/index.html', 'track-review-cta', 'track review CTA after done');
 includes('js/content-store.js', 'refreshPublicReviewStats', 'content-store live counts');
 includes('api/reviews.js', 'GOOGLE_PLACES_API_KEY', 'reviews API Places key');
+includes('service-area.html', 'Amber pins are past jobs', 'service-area copy is job pins, not city pins');
+{
+  const mapJs = read('js/map-page.js');
+  if (mapJs.includes('cityIcon') || mapJs.includes('L.circle')) {
+    fail('map-page no city overlays', 'city markers or coverage circles still drawn');
+  } else {
+    pass('map-page no city overlays');
+  }
+}
 
 const jsFiles = [
   'api/reviews.js',
@@ -145,7 +167,8 @@ const jsFiles = [
   'js/admin.js',
   'js/reviews-carousel.js',
   'js/site-common.js',
-  'js/track.js'
+  'js/track.js',
+  'js/map-page.js'
 ];
 for (const f of jsFiles) {
   if (existsSync(join(ROOT, f))) nodeCheck(f);

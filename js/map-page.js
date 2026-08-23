@@ -1,6 +1,6 @@
 /**
  * Leaflet service-area map
- * - Map shows past-job pins only (approximate — never street addresses)
+ * - Past-job pins only (approximate — never street addresses)
  * - City centers are not pinned: South Sound locals already know the towns
  */
 (function () {
@@ -9,23 +9,6 @@
 
   function isCity(p) {
     return (p.type || 'city') === 'city';
-  }
-
-  /** SEO city landings — folder URLs work on GitHub Pages + Vercel */
-  const CITY_PAGES = {
-    yelm: '/lawn-care-yelm/',
-    rainier: '/lawn-care-rainier/',
-    lacey: '/lawn-care-lacey/',
-    roy: '/lawn-care-roy/',
-    olympia: '/lawn-care-olympia/',
-    tenino: '/lawn-care-tenino/'
-  };
-
-  function cityPageHref(p) {
-    const key = String(p.city || p.label || '')
-      .toLowerCase()
-      .replace(/[^a-z]/g, '');
-    return CITY_PAGES[key] || null;
   }
 
   function clientIcon() {
@@ -43,18 +26,11 @@
   }
 
   function publicLabel(p) {
-    if (isCity(p)) return p.label || p.city || 'Service area';
     return p.label || (p.city ? `Past service · ${p.city} area` : 'Past service (approx.)');
   }
 
   /** Never expose street-level address for client pins */
   function publicDetail(p) {
-    if (isCity(p)) {
-      return {
-        line: p.address || p.city || '',
-        note: p.note || ''
-      };
-    }
     return {
       line: p.city ? `${p.city} area` : 'Approximate location',
       note: p.note || 'Approximate — exact address not shown'
@@ -78,18 +54,13 @@
 
   async function draw() {
     const data = await BRContent.load();
-    const pins = data.pins || [];
-    const listCities = document.getElementById('pin-list-cities');
+    const clients = (data.pins || []).filter((p) => !isCity(p));
     const listJobs = document.getElementById('pin-list-jobs');
-    const listEl = document.getElementById('pin-list');
     const legendEl = document.getElementById('map-legend');
 
     layerGroup.clearLayers();
 
     const bounds = [];
-    const cities = pins.filter(isCity);
-    const clients = pins.filter((p) => !isCity(p));
-
     clients.forEach((p) => {
       if (p.lat == null || p.lng == null) return;
       const detail = publicDetail(p);
@@ -112,43 +83,26 @@
       `;
     }
 
-    function listHtml(items, emptyMsg) {
-      if (!items.length) {
-        return `<div class="empty-state">${emptyMsg}</div>`;
-      }
-      return items
-        .map((p) => {
-          const detail = publicDetail(p);
-          const dotClass = isCity(p) ? 'pin-dot' : 'pin-dot pin-dot-client';
-          const page = isCity(p) ? cityPageHref(p) : null;
-          const title = page
-            ? `<h4><a href="${BRContent.escapeAttr(page)}">${BRContent.escapeHtml(publicLabel(p))}</a></h4>`
-            : `<h4>${BRContent.escapeHtml(publicLabel(p))}</h4>`;
-          return `
+    if (listJobs) {
+      if (!clients.length) {
+        listJobs.innerHTML =
+          '<div class="empty-state">No approximate job pins yet — paste towns or addresses privately and we’ll add fuzzy pins only.</div>';
+      } else {
+        listJobs.innerHTML = clients
+          .map((p) => {
+            const detail = publicDetail(p);
+            return `
           <div class="pin-list-item">
-            <div class="${dotClass}" aria-hidden="true"></div>
+            <div class="pin-dot pin-dot-client" aria-hidden="true"></div>
             <div>
-              ${title}
+              <h4>${BRContent.escapeHtml(publicLabel(p))}</h4>
               <p>${BRContent.escapeHtml(detail.line)}</p>
               ${detail.note ? `<p>${BRContent.escapeHtml(detail.note)}</p>` : ''}
             </div>
           </div>`;
-        })
-        .join('');
-    }
-
-    if (listCities) {
-      listCities.innerHTML = listHtml(cities, 'No city pins yet.');
-    }
-    if (listJobs) {
-      listJobs.innerHTML = listHtml(
-        clients,
-        'No approximate job pins yet — paste towns or addresses privately and we’ll add fuzzy pins only.'
-      );
-    }
-    // Fallback single list if page still has old markup
-    if (listEl && !listCities) {
-      listEl.innerHTML = listHtml(pins, 'No pins yet.');
+          })
+          .join('');
+      }
     }
   }
 
