@@ -217,6 +217,28 @@
     });
   }
 
+  /** Load the genuine-need corner badge on marketing pages. */
+  function loadReferralBadge() {
+    const page = document.body.dataset.page || '';
+    if (
+      page === 'assistant' ||
+      page === 'admin' ||
+      page === 'login' ||
+      page === 'customer' ||
+      page === 'thankyou' ||
+      page === 'cut-my-grass' ||
+      page === 'track' ||
+      page === 'genuine-need'
+    ) {
+      return;
+    }
+    if (document.body.classList.contains('admin-page')) return;
+    if (document.querySelector('script[src*="referral-badge.js"]')) return;
+    const s = document.createElement('script');
+    s.src = '/js/referral-badge.js';
+    document.body.appendChild(s);
+  }
+
   async function hydrateReviews() {
     const page = document.body.dataset.page || '';
     if (page === 'admin' || page === 'login') return;
@@ -248,5 +270,6 @@
     injectMobileCta();
     wireUrgencyButtons();
     hydrateReviews();
+    loadReferralBadge();
   });
 })();
