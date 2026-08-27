@@ -16,5 +16,10 @@
       "headers": [{ "key": "Cache-Control", "value": "no-store" }]
     }
   ],
-  "rewrites": [{ "source": "/badge-192.png", "destination": "/api/badge-192" }]
+  "rewrites": [{ "source": "/badge-192.png", "destination": "/api/badge-png" }],
+  "functions": {
+    "api/badge-png.js": {
+      "includeFiles": "api/badge-192.js"
+    }
+  }
 }
