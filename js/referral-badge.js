@@ -1,12 +1,13 @@
 /**
  * Corner badge for neighbor referrals of genuine lawn-care need.
  * Tap goes to /genuine-need. Dismiss is remembered in localStorage.
- * Skips admin, login, booking, and the destination page itself.
+ * Skips homepage (crowded), admin, login, booking, and the destination page itself.
  */
 (function () {
   var STORAGE_KEY = 'br-genuine-need-badge-dismissed';
   var PAGE_HREF = '/genuine-need';
   var SKIP_PAGES = {
+    home: 1,
     admin: 1,
     login: 1,
     customer: 1,
@@ -22,6 +23,7 @@
     if (SKIP_PAGES[page]) return true;
     if (document.body && document.body.classList.contains('admin-page')) return true;
     var path = location.pathname || '';
+    if (path === '/' || /\/index\.html$/i.test(path)) return true;
     if (/admin-cmg-hq|admin\.html|login\.html|customer\.html|genuine-need/i.test(path)) return true;
     if (/\/cut-my-grass|\/track(?:\/|$)/i.test(path)) return true;
     try {

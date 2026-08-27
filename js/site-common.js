@@ -50,6 +50,7 @@
         <a href="/service-area.html">Service Map</a>
         <a href="/assistant.html">Ask AI</a>
         <a href="/#service-form">Get a Quote</a>
+        <a href="/genuine-need">Know somebody in need?</a>
         <a href="${FACEBOOK_URL}" target="_blank" rel="noopener noreferrer">Facebook</a>
       </nav>
       <p class="footer-cities">
@@ -217,10 +218,12 @@
     });
   }
 
-  /** Load the genuine-need corner badge on marketing pages. */
+  /** Load the genuine-need corner badge on inner marketing pages, not the crowded homepage. */
   function loadReferralBadge() {
     const page = document.body.dataset.page || '';
+    const path = location.pathname || '';
     if (
+      page === 'home' ||
       page === 'assistant' ||
       page === 'admin' ||
       page === 'login' ||
@@ -232,6 +235,7 @@
     ) {
       return;
     }
+    if (path === '/' || /\/index\.html$/i.test(path)) return;
     if (document.body.classList.contains('admin-page')) return;
     if (document.querySelector('script[src*="referral-badge.js"]')) return;
     const s = document.createElement('script');
@@ -242,8 +246,8 @@
   async function hydrateReviews() {
     const page = document.body.dataset.page || '';
     if (page === 'admin' || page === 'login') return;
-    if (window.BRContent && typeof BRContent.refreshPublicReviewStats === 'function') {
-      await BRContent.refreshPublicReviewStats();
+    if (window.BRContent && typeof window.BRContent.refreshPublicReviewStats === 'function') {
+      await window.BRContent.refreshPublicReviewStats();
       return;
     }
     try {
