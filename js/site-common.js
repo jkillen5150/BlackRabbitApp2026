@@ -17,6 +17,7 @@
       { href: '/service-area.html', id: 'map', label: 'Service Map' },
       { href: '/assistant.html', id: 'assistant', label: 'Ask AI' },
       { href: '/#service-form', id: 'quote', label: 'Get a Quote' },
+      { href: '/genuine-need', id: 'genuine-need', label: 'Know somebody in need?' },
       { href: '/login.html', id: 'login', label: 'Login' }
     ];
     return `
@@ -133,44 +134,15 @@
       mount.innerHTML = footerHtml();
       return;
     }
-    // Optional: empty footer shell with data-br-footer
     const shell = document.querySelector('footer.site-footer[data-br-footer]');
     if (shell && !shell.querySelector('.footer-nap')) {
       shell.innerHTML = footerHtml();
     }
   }
 
-  /** Floating call / text / Facebook — skip admin + assistant (busy UI) */
-  function injectFabs() {
-    const page = document.body.dataset.page || '';
-    if (
-      page === 'assistant' ||
-      page === 'admin' ||
-      page === 'login' ||
-      page === 'customer' ||
-      page === 'thankyou' ||
-      page === 'cut-my-grass' ||
-      page === 'track'
-    ) {
-      return;
-    }
-    if (document.body.classList.contains('admin-page')) return;
-    if (document.getElementById('site-fabs')) return;
-
-    // Remove any page-level fabs so we don't double-stack
-    document.querySelectorAll('a.fab').forEach((el) => el.remove());
-
-    const wrap = document.createElement('div');
-    wrap.id = 'site-fabs';
-    wrap.className = 'site-fabs';
-    wrap.innerHTML = `
-      <a href="${FACEBOOK_URL}" class="fab fb" target="_blank" rel="noopener noreferrer" aria-label="Black Rabbit on Facebook">
-        <span class="fab-fb-f" aria-hidden="true">f</span>
-      </a>
-      <a href="sms:${PHONE_TEL}?body=Hey,%20Black%20Rabbit!" class="fab sms" aria-label="Text us">💬</a>
-      <a href="tel:${PHONE_TEL}" class="fab call" aria-label="Call us">📞</a>
-    `;
-    document.body.appendChild(wrap);
+  /** Strip leftover floating call/text/FB buttons. Jerry wants the lower right clear. */
+  function stripFabs() {
+    document.querySelectorAll('a.fab, #site-fabs').forEach((el) => el.remove());
   }
 
   /**
@@ -218,31 +190,6 @@
     });
   }
 
-  /** Load the genuine-need corner badge on inner marketing pages, not the crowded homepage. */
-  function loadReferralBadge() {
-    const page = document.body.dataset.page || '';
-    const path = location.pathname || '';
-    if (
-      page === 'home' ||
-      page === 'assistant' ||
-      page === 'admin' ||
-      page === 'login' ||
-      page === 'customer' ||
-      page === 'thankyou' ||
-      page === 'cut-my-grass' ||
-      page === 'track' ||
-      page === 'genuine-need'
-    ) {
-      return;
-    }
-    if (path === '/' || /\/index\.html$/i.test(path)) return;
-    if (document.body.classList.contains('admin-page')) return;
-    if (document.querySelector('script[src*="referral-badge.js"]')) return;
-    const s = document.createElement('script');
-    s.src = '/js/referral-badge.js';
-    document.body.appendChild(s);
-  }
-
   async function hydrateReviews() {
     const page = document.body.dataset.page || '';
     if (page === 'admin' || page === 'login') return;
@@ -270,10 +217,9 @@
     injectFooter();
     ensureFooterTrust();
     injectHeroTrust();
-    injectFabs();
+    stripFabs();
     injectMobileCta();
     wireUrgencyButtons();
     hydrateReviews();
-    loadReferralBadge();
   });
 })();
