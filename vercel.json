@@ -15,5 +15,6 @@
       "source": "/api/lead",
       "headers": [{ "key": "Cache-Control", "value": "no-store" }]
     }
-  ]
+  ],
+  "rewrites": [{ "source": "/badge-192.png", "destination": "/api/badge-192" }]
 }
