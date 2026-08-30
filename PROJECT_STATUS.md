@@ -17,7 +17,7 @@ Last updated: 2026-08-14 · **make it work, then make it pretty**
 ## What works (live)
 - Marketing site + SEO landings + **cozy porch** home / CMG / thank-you
 - **Ask AI** + **Porch Mode™** (`data/ai-knowledge.json`) — occasional **fam / cuz / fren** (not slang spam)
-- **Cut My Grass** book → lead → optional **$25 Stripe** deposit → **track** page
+- **Cut My Grass** book → lead → **no deposit** (quote/book free) → **track** page
 - Durable leads via **`GITHUB_TOKEN`** (API path `data/leads.json`)
 - Admin lead list locked with **`LEAD_ADMIN_TOKEN`**
 - Client Web3Forms backup (server free tier often fails — expected)
@@ -99,7 +99,7 @@ Last updated: 2026-08-14 · **make it work, then make it pretty**
 ## Core product (done)
 - [x] Durable leads + track (`GITHUB_TOKEN`)
 - [x] Lead admin token lock
-- [x] Stripe Checkout deposit ($25)
+- [x] Stripe Checkout deposit ($25) — **disabled**; quote/book with no payment
 - [x] Cut My Grass + client email backup
 - [x] Ask AI live + **Porch Mode™** + vernacular
 - [x] Cozy landing UX
@@ -134,7 +134,7 @@ Last updated: 2026-08-14 · **make it work, then make it pretty**
 - [ ] Paste Apps Script (`docs/ops-sheet-apps-script.js`) → set `GOOGLE_SHEETS_WEBHOOK`
 
 ### Dry runs + frens (week 1)
-- [ ] You: full path book → (cancel) deposit → track → Admin status once
+- [ ] You: full path book (no deposit) → track → Admin status once
 - [ ] **3–5 frens users** click the real URL; gather “what felt weird”
 - [x] Site-found count since 8/11: **Harold + Rene White = 2 / 30** (Jessica Bryant is a form lead, not in this count)
 - [ ] Clear old **fire-drill / test** leads from Admin when convenient

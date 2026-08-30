@@ -1,12 +1,16 @@
 /**
  * Cut My Grass — multi-step booking
  * 1) POST /api/lead (email + Admin)
- * 2) POST /api/create-deposit → Stripe Checkout (card deposit)
+ * 2) Done — no card deposit; Jerry quotes / confirms by text
  * Optional yard photos compressed on-device.
+ *
+ * Stripe Checkout still exists at /api/create-deposit but is off
+ * (REQUIRE_DEPOSIT) so people can quote or book without paying.
  */
 (function () {
   const TOTAL_STEPS = 4;
   const MAX_PHOTOS = 2;
+  const REQUIRE_DEPOSIT = false;
 
   const state = {
     step: 1,
@@ -79,7 +83,7 @@
     if (back) back.hidden = step <= 1;
     if (next) {
       next.disabled = !canContinue();
-      next.textContent = step === TOTAL_STEPS ? 'Pay deposit & book' : 'Continue';
+      next.textContent = step === TOTAL_STEPS ? 'Send request' : 'Continue';
       next.classList.toggle('cmg-busy', false);
     }
     if (step === 4) renderSummary();
@@ -155,7 +159,7 @@
     ];
     if (state.notes) parts.push('Notes: ' + state.notes);
     if (state.photos.length) parts.push('Photos: ' + state.photos.length + ' attached');
-    parts.push('Payment: card deposit via Stripe Checkout (applied to final quote)');
+    parts.push('Payment: none now — Jerry will quote and confirm by text');
     return parts.join(' · ');
   }
 
@@ -594,34 +598,40 @@
         );
       }
 
-      // 2) Stripe Checkout deposit
-      if (next) next.textContent = 'Opening secure pay…';
-      try {
-        const checkout = await startDeposit(leadId);
-        window.location.href = checkout.url;
-        return;
-      } catch (depErr) {
-        // Lead already saved — soft-fail so booking isn’t lost
-        showStep('done');
-        const title = $('cmg-done-title');
-        const msg = $('cmg-done-msg');
-        if (title) title.textContent = 'Request received';
-        if (msg) {
-          const detail = depErr.detail || depErr.message || '';
-          const stripeHint =
-            /not configured|STRIPE/i.test(detail + (depErr.message || ''))
-              ? ' Stripe isn’t configured on this Vercel project yet (add STRIPE_SECRET_KEY + redeploy).'
-              : detail
-                ? ' (' + detail + ')'
-                : '';
-          msg.textContent =
-            'Jerry should have your request. Card deposit isn’t available right now.' +
-            stripeHint +
-            ' Call/text (407) 951-1663 anytime.';
+      // 2) Optional Stripe Checkout deposit (currently off)
+      if (REQUIRE_DEPOSIT) {
+        if (next) next.textContent = 'Opening secure pay…';
+        try {
+          const checkout = await startDeposit(leadId);
+          window.location.href = checkout.url;
+          return;
+        } catch (depErr) {
+          // Lead already saved — soft-fail so booking isn’t lost
+          showStep('done');
+          const title = $('cmg-done-title');
+          const msg = $('cmg-done-msg');
+          if (title) title.textContent = 'Request received';
+          if (msg) {
+            const detail = depErr.detail || depErr.message || '';
+            const stripeHint =
+              /not configured|STRIPE/i.test(detail + (depErr.message || ''))
+                ? ' Stripe isn’t configured on this Vercel project yet (add STRIPE_SECRET_KEY + redeploy).'
+                : detail
+                  ? ' (' + detail + ')'
+                  : '';
+            msg.textContent =
+              'Jerry should have your request. Card deposit isn’t available right now.' +
+              stripeHint +
+              ' Call/text (407) 951-1663 anytime.';
+          }
+          injectTrackLink(trackUrl);
+          return;
         }
-        injectTrackLink(trackUrl);
-        return;
       }
+
+      showStep('done');
+      injectTrackLink(trackUrl);
+      return;
     } catch (e) {
       setError(
         (e && e.message) ||
@@ -630,7 +640,7 @@
       if (next) {
         next.disabled = false;
         next.classList.remove('cmg-busy');
-        next.textContent = 'Pay deposit & book';
+        next.textContent = 'Send request';
       }
     }
   }

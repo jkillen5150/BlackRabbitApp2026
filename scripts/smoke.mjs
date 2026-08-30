@@ -147,6 +147,20 @@ includes('js/content-store.js', 'refreshPublicReviewStats', 'content-store live 
 includes('api/reviews.js', 'GOOGLE_PLACES_API_KEY', 'reviews API Places key');
 includes('service-area.html', 'Amber pins are past jobs', 'service-area copy is job pins, not city pins');
 {
+  const cmg = read('cut-my-grass/index.html');
+  if (/\$25|card deposit/i.test(cmg)) {
+    fail('cmg no deposit copy', 'cut-my-grass still mentions $25 / card deposit');
+  } else {
+    pass('cmg no deposit copy');
+  }
+  const cmgJs = read('js/cut-my-grass.js');
+  if (!/REQUIRE_DEPOSIT = false/.test(cmgJs)) {
+    fail('cmg deposit flag off', 'REQUIRE_DEPOSIT is not false');
+  } else {
+    pass('cmg deposit flag off');
+  }
+}
+{
   const mapJs = read('js/map-page.js');
   if (mapJs.includes('cityIcon') || mapJs.includes('L.circle')) {
     fail('map-page no city overlays', 'city markers or coverage circles still drawn');
@@ -168,7 +182,10 @@ const jsFiles = [
   'js/reviews-carousel.js',
   'js/site-common.js',
   'js/track.js',
-  'js/map-page.js'
+  'js/map-page.js',
+  'js/cut-my-grass.js',
+  'api/create-deposit.js',
+  'api/lead.js'
 ];
 for (const f of jsFiles) {
   if (existsSync(join(ROOT, f))) nodeCheck(f);

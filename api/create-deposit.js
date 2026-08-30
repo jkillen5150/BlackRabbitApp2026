@@ -2,6 +2,9 @@
  * POST /api/create-deposit
  * Creates a Stripe Checkout Session for a Cut My Grass booking deposit.
  *
+ * Currently disabled — customers quote / book without paying.
+ * Flip DEPOSITS_ENABLED to true to collect the card deposit again.
+ *
  * Env (Vercel):
  *   STRIPE_SECRET_KEY          — sk_live_… or sk_test_… (required)
  *   STRIPE_DEPOSIT_AMOUNT_CENTS — default 2500 ($25.00)
@@ -13,6 +16,8 @@
  * Returns: { url, sessionId, amountCents, amountLabel }
  */
 import { siteUrl } from './_lib/leads-store.js';
+
+const DEPOSITS_ENABLED = false;
 
 function clean(s, max = 200) {
   return String(s || '')
@@ -36,6 +41,14 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  if (!DEPOSITS_ENABLED) {
+    return res.status(410).json({
+      error: 'Deposits are disabled',
+      depositsDisabled: true,
+      note: 'Cut My Grass bookings no longer collect a card deposit. Quote and pay after the job.'
+    });
   }
 
   const secret = process.env.STRIPE_SECRET_KEY;

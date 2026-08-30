@@ -109,7 +109,7 @@ async function emailLead(lead) {
       ? `Photos: ${lead.photoCount} attached to this email`
       : 'Photos: none';
   const depositNote = isCmg
-    ? 'Deposit: customer will be sent to Stripe Checkout after this email (watch for payment in Stripe Dashboard).'
+    ? 'Deposit: none. Customer submitted a free quote/booking request — text or call to confirm price and time.'
     : null;
   const site = siteUrl();
   const trackNote =

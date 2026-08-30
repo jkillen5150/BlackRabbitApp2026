@@ -59,13 +59,13 @@ GitHub Pages can’t run the chat function. Keep **everything on Vercel**:
 2. Framework preset: **Other** (static + `api/`).
 3. Project env vars:
    - **`xai_api_key`** — xAI key for Ask AI (Vercel label; **30-day expiry** — rotated **2026-08-14**; next ~**2026-09-13**, then redeploy). Code also accepts `XAI_API_KEY`.
-   - **`STRIPE_SECRET_KEY`** — `sk_…` or `rk_live_…` for Cut My Grass deposits
+   - **`STRIPE_SECRET_KEY`** — `sk_…` or `rk_live_…` for Cut My Grass deposits (currently unused — deposit is off)
    - **`SITE_URL`** — prefer `https://www.blackrabbitlawn.com` (canonical host)
    - **`GITHUB_TOKEN`** — **required for `/track`** + durable Admin lead list (repo contents write)
    - **`LEAD_ADMIN_TOKEN`** (optional) — gate Admin lead list/updates
    - **`LEADS_ENCRYPTION_KEY`** (optional, recommended) — dedicated key for the encrypted GitHub leads file. If unset, the file is wrapped with `LEAD_ADMIN_TOKEN`. Set this so rotating the admin token does not lock `/track`.
    - **`WEB3FORMS_KEY`** (optional) — overrides the public form access key
-   - **`STRIPE_DEPOSIT_AMOUNT_CENTS`** (optional) — default `2500` ($25)
+   - **`STRIPE_DEPOSIT_AMOUNT_CENTS`** (optional) — default `2500` ($25); unused while deposits are off
    - **`GOOGLE_PLACES_API_KEY`** (optional) — Admin **Sync from Google** + live review totals
    - **`GOOGLE_PLACE_ID`** (optional) — pin the Business Profile; otherwise Find Place uses “Black Rabbit Landscaping Yelm WA”
    - **`GOOGLE_SHEETS_WEBHOOK`** (optional) — Apps Script URL from `docs/ops-sheet-apps-script.js` so new leads land in the Client Database **Web Leads** tab
@@ -125,15 +125,16 @@ Fast booking UX at **`/cut-my-grass/`**, branded as a product of Black Rabbit:
 2. Multi-step: service → address → when → contact
 3. Posts to **`POST /api/lead`** with `source: cut-my-grass` (email + Admin list)
 4. Optional **yard photos** (up to 2) — compressed on-device, emailed as attachments; Admin shows previews when the API is still warm
-5. **Stripe deposit** — after the request is saved, customer is sent to Stripe Checkout (`POST /api/create-deposit`). Default **$25** (`STRIPE_DEPOSIT_AMOUNT_CENTS=2500`). Deposit applies to the final quote; balance after the job.
-6. **Deposit confirm** — return URL calls `POST /api/confirm-deposit` with the Checkout `session_id`. Verifies payment with Stripe, emails you **DEPOSIT PAID**, marks the warm Admin lead when possible.
-7. **Track page** — each lead gets a `trackToken`; customer opens `/track/?t=…` (`GET /api/track`). Admin sets status: texted → booked → **on the way** → done.
+5. **No card deposit** — quote and book for free. Jerry texts or calls with price and timing; pay after the job. Stripe Checkout (`POST /api/create-deposit`) stays in the repo but is disabled (`DEPOSITS_ENABLED` / `REQUIRE_DEPOSIT`).
+6. **Track page** — each lead gets a `trackToken`; customer opens `/track/?t=…` (`GET /api/track`). Admin sets status: texted → booked → **on the way** → done.
 
 ### Stripe env (Vercel)
 
+Deposits are **off**. These vars only matter if you flip `DEPOSITS_ENABLED` in `api/create-deposit.js` and `REQUIRE_DEPOSIT` in `js/cut-my-grass.js`.
+
 | Variable | Required | Notes |
 |----------|----------|--------|
-| `STRIPE_SECRET_KEY` | Yes for deposits | `sk_live_…` (or `sk_test_…` while testing) |
+| `STRIPE_SECRET_KEY` | Only if deposits are re-enabled | `sk_live_…` (or `sk_test_…` while testing) |
 | `STRIPE_DEPOSIT_AMOUNT_CENTS` | No | Default `2500` ($25.00) |
 | `SITE_URL` | No | e.g. `https://blackrabbitlawn.com` if redirects mis-detect host |
 
