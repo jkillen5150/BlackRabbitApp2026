@@ -446,7 +446,7 @@
           </div>
         </div>
         <div class="review-stars" aria-label="${r.rating || 5} out of 5 stars">${stars(r.rating || 5)}</div>
-        <p class="review-text">${escapeHtml(r.text || '')}</p>
+        <p class="review-text">${escapeHtml(r.text || '').replace(/\n/g, '<br>')}</p>
         <div class="review-footer">
           <span class="google-badge">
             ${isGoogle ? '<span class="google-g">G</span>' : '⭐'}
@@ -460,6 +460,10 @@
 
   const DEFAULT_WRITE_REVIEW_URL =
     'https://www.google.com/search?q=Black+Rabbit+Landscaping+Yelm+WA';
+
+  function fiveStarReviews(list) {
+    return (Array.isArray(list) ? list : []).filter((r) => Number(r.rating) === 5);
+  }
 
   function reviewStats(list) {
     const reviews = Array.isArray(list) ? list : [];
@@ -836,6 +840,7 @@
     stars,
     initial,
     renderReviewCard,
+    fiveStarReviews,
     reviewStats,
     reviewHeadline,
     applyReviewStats,

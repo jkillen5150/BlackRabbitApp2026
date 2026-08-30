@@ -67,7 +67,7 @@
 
   async function init() {
     const data = await BRContent.load();
-    reviews = featured(data.reviews || []);
+    reviews = featured(BRContent.fiveStarReviews ? BRContent.fiveStarReviews(data.reviews || []) : data.reviews || []);
     index = 0;
     if (BRContent.applyReviewStats) {
       BRContent.applyReviewStats(BRContent.reviewStats(data.reviews || []));
@@ -88,7 +88,7 @@
   document.addEventListener('DOMContentLoaded', init);
   window.addEventListener('br:content-updated', async () => {
     const data = await BRContent.load();
-    reviews = featured(data.reviews || []);
+    reviews = featured(BRContent.fiveStarReviews ? BRContent.fiveStarReviews(data.reviews || []) : data.reviews || []);
     index = 0;
     if (BRContent.applyReviewStats) {
       BRContent.applyReviewStats(BRContent.reviewStats(data.reviews || []));

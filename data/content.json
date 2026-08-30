@@ -1,6 +1,56 @@
 {
   "reviews": [
     {
+      "id": "rev-barbara-anderson",
+      "name": "Barbara Anderson",
+      "location": "",
+      "rating": 5,
+      "text": "Great price\n\nI cannot express enough gratitude for Jerry at Black Rabbit Landscaping. After experiencing a stressful sewer overflow, I needed urgent help clearing out my yard so plumbers could locate and access the septic tanks. My grass was severely overgrown, and bushes were completely covering the area, making it impossible to work.\n\nWhile other companies wouldn’t take on the job, Black Rabbit Landscaping stepped right up. Jerry dedicated so much time and effort to carefully clearing the area and locating the septic tanks so the plumbers could finally get in and fix the issue.\n\nBeyond his incredible work ethic, his kindness meant the world to me during a very distressing time. He was extremely warm, comforting, and reassuring, taking the time to let me know everything was going to be alright.\n\nIf you need a reliable, hard-working, and truly caring landscaper, look no further than Black Rabbit Landscaping. I am so thankful for Jerry’s help and cannot recommend him highly enough!",
+      "source": "Google",
+      "date": "2026-08-22",
+      "featured": true
+    },
+    {
+      "id": "rev-casandra-waddill",
+      "name": "Casandra Waddill",
+      "location": "",
+      "rating": 5,
+      "text": "A genuine Christian landscaper who does exceptional work, professional and punctual!!",
+      "source": "Google",
+      "date": "2026-08-22",
+      "featured": true
+    },
+    {
+      "id": "rev-darin-shapiro",
+      "name": "Darin Shapiro",
+      "location": "",
+      "rating": 5,
+      "text": "If you’re looking for a trustworthy, well detailed lawn and landscaping service look no further. I highly recommend Jerry, his work is 10 out of 10.",
+      "source": "Google",
+      "date": "2026-08-18",
+      "featured": true
+    },
+    {
+      "id": "rev-renee-white",
+      "name": "Renee White",
+      "location": "",
+      "rating": 5,
+      "text": "Jerry was super friendly and easy to work with. Our lawn really needed a mow and it looks amazing after he finished. Our...",
+      "source": "Google",
+      "date": "2026-08-18",
+      "featured": true
+    },
+    {
+      "id": "rev-brad-young",
+      "name": "Brad Young",
+      "location": "",
+      "rating": 5,
+      "text": "Trustworthy and efficient. Great value I highly recommend Jerry and Black Rabbit.",
+      "source": "Google",
+      "date": "2026-08-11",
+      "featured": true
+    },
+    {
       "id": "rev-jackson-hauserman",
       "name": "Jackson Hauserman",
       "location": "",

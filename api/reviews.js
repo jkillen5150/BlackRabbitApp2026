@@ -281,7 +281,9 @@ async function fetchPlaceDetails(key, placeId, cid) {
     rating: typeof r.rating === 'number' ? r.rating : null,
     userRatingCount: typeof r.user_ratings_total === 'number' ? r.user_ratings_total : null,
     mapsUrl: r.url || mapsUrl(r.place_id || placeId),
-    reviews: Array.isArray(r.reviews) ? r.reviews.map(mapGoogleReview).filter((x) => x.text) : []
+    reviews: Array.isArray(r.reviews)
+      ? r.reviews.map(mapGoogleReview).filter((x) => x.text && Number(x.rating) === 5)
+      : []
   };
 }
 
