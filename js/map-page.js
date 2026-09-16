@@ -1,21 +1,41 @@
 /**
  * Leaflet service-area map
- * - Past-job pins only (approximate — never street addresses)
+ * - Secured / past-job pins, colored by city group
+ * - Approximate only — never street addresses or client names
  * - City centers are not pinned: South Sound locals already know the towns
  */
 (function () {
   let map;
   let layerGroup;
 
+  const CITY_COLORS = {
+    Lacey: '#2563eb',
+    Olympia: '#7c3aed',
+    Yelm: '#16a34a',
+    Rainier: '#0d9488',
+    Tumwater: '#ea580c',
+    Roy: '#db2777',
+    Tenino: '#ca8a04',
+    Spanaway: '#d97706',
+    'Thurston County': '#64748b'
+  };
+  const DEFAULT_COLOR = '#d97706';
+
   function isCity(p) {
     return (p.type || 'city') === 'city';
   }
 
-  function clientIcon() {
+  function cityColor(city) {
+    if (!city) return DEFAULT_COLOR;
+    return CITY_COLORS[city] || DEFAULT_COLOR;
+  }
+
+  function clientIcon(color) {
+    const c = color || DEFAULT_COLOR;
     return L.divIcon({
       className: '',
       html: `<div style="
-        width:14px;height:14px;background:#d97706;
+        width:14px;height:14px;background:${c};
         border:2px solid #fff;border-radius:50%;
         box-shadow:0 2px 6px rgba(0,0,0,.3);
       "></div>`,
@@ -26,7 +46,7 @@
   }
 
   function publicLabel(p) {
-    return p.label || (p.city ? `Past service · ${p.city} area` : 'Past service (approx.)');
+    return p.label || (p.city ? `Secured · ${p.city} area` : 'Secured (approx.)');
   }
 
   /** Never expose street-level address for client pins */
@@ -61,10 +81,13 @@
     layerGroup.clearLayers();
 
     const bounds = [];
+    const usedCities = new Set();
     clients.forEach((p) => {
       if (p.lat == null || p.lng == null) return;
+      const color = cityColor(p.city);
+      if (p.city) usedCities.add(p.city);
       const detail = publicDetail(p);
-      const m = L.marker([p.lat, p.lng], { icon: clientIcon(), zIndexOffset: 100 }).addTo(layerGroup);
+      const m = L.marker([p.lat, p.lng], { icon: clientIcon(color), zIndexOffset: 100 }).addTo(layerGroup);
       m.bindPopup(
         `<strong>${BRContent.escapeHtml(publicLabel(p))}</strong><br>
          ${BRContent.escapeHtml(detail.line)}<br>
@@ -78,9 +101,16 @@
     }
 
     if (legendEl) {
-      legendEl.innerHTML = `
-        <span class="map-chip" style="border-color:#d97706;color:#b45309;">● Past jobs (approx.)</span>
-      `;
+      const cities = Array.from(usedCities).sort();
+      const chips = cities.length
+        ? cities
+            .map((c) => {
+              const col = cityColor(c);
+              return `<span class="map-chip" style="border-color:${col};color:${col};">● ${BRContent.escapeHtml(c)}</span>`;
+            })
+            .join('')
+        : `<span class="map-chip" style="border-color:${DEFAULT_COLOR};color:#b45309;">● Secured places (approx.)</span>`;
+      legendEl.innerHTML = chips;
     }
 
     if (listJobs) {
@@ -88,12 +118,14 @@
         listJobs.innerHTML =
           '<div class="empty-state">No approximate job pins yet — paste towns or addresses privately and we’ll add fuzzy pins only.</div>';
       } else {
-        listJobs.innerHTML = clients
+        const sorted = clients.slice().sort((a, b) => String(a.city || '').localeCompare(String(b.city || '')));
+        listJobs.innerHTML = sorted
           .map((p) => {
             const detail = publicDetail(p);
+            const col = cityColor(p.city);
             return `
           <div class="pin-list-item">
-            <div class="pin-dot pin-dot-client" aria-hidden="true"></div>
+            <div class="pin-dot" style="background:${col};border-color:${col};" aria-hidden="true"></div>
             <div>
               <h4>${BRContent.escapeHtml(publicLabel(p))}</h4>
               <p>${BRContent.escapeHtml(detail.line)}</p>
