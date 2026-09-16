@@ -3,6 +3,7 @@
  * - Secured / past-job pins, colored by city group
  * - Approximate only — never street addresses or client names
  * - City centers are not pinned: South Sound locals already know the towns
+ * - Extra secured pins: data/extra-pins.json (merged at draw time)
  */
 (function () {
   let map;
@@ -57,6 +58,17 @@
     };
   }
 
+  async function loadExtraPins() {
+    try {
+      const res = await fetch('data/extra-pins.json', { cache: 'no-store' });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return Array.isArray(data) ? data : [];
+    } catch {
+      return [];
+    }
+  }
+
   async function init() {
     const el = document.getElementById('service-map');
     if (!el || typeof L === 'undefined') return;
@@ -74,7 +86,13 @@
 
   async function draw() {
     const data = await BRContent.load();
-    const clients = (data.pins || []).filter((p) => !isCity(p));
+    const extra = await loadExtraPins();
+    const byId = new Map();
+    [...(data.pins || []), ...extra].forEach((p) => {
+      if (p && p.id) byId.set(p.id, p);
+      else if (p) byId.set(JSON.stringify(p), p);
+    });
+    const clients = Array.from(byId.values()).filter((p) => !isCity(p));
     const listJobs = document.getElementById('pin-list-jobs');
     const legendEl = document.getElementById('map-legend');
 
