@@ -18,6 +18,7 @@
       { href: '/assistant.html', id: 'assistant', label: 'Ask AI' },
       { href: '/#service-form', id: 'quote', label: 'Get a Quote' },
       { href: '/genuine-need', id: 'genuine-need', label: 'Know somebody in need?' },
+      { href: '/now-hiring', id: 'now-hiring', label: 'Now Hiring' },
       { href: '/login.html', id: 'login', label: 'Login' }
     ];
     return `
@@ -32,7 +33,7 @@
             ${links
               .map(
                 (l) =>
-                  `<a href="${l.href}" class="${l.id === active ? 'active' : ''}">${l.label}</a>`
+                  `<a href="${l.href}" class="${[l.id === active ? 'active' : '', l.id === 'now-hiring' ? 'nav-now-hiring' : ''].filter(Boolean).join(' ')}">${l.label}</a>`
               )
               .join('')}
           </div>
@@ -52,6 +53,7 @@
         <a href="/assistant.html">Ask AI</a>
         <a href="/#service-form">Get a Quote</a>
         <a href="/genuine-need">Know somebody in need?</a>
+        <a href="/now-hiring">Now Hiring</a>
         <a href="${FACEBOOK_URL}" target="_blank" rel="noopener noreferrer">Facebook</a>
       </nav>
       <p class="footer-cities">
