@@ -1,21 +1,42 @@
 /**
  * Leaflet service-area map
- * - Past-job pins only (approximate — never street addresses)
+ * - Past-job / secured pins only (approximate — never street addresses)
+ * - Client pins colored by city
  * - City centers are not pinned: South Sound locals already know the towns
  */
 (function () {
   let map;
   let layerGroup;
 
+  const CITY_COLORS = {
+    Lacey: '#2563eb',
+    Olympia: '#7c3aed',
+    Yelm: '#16a34a',
+    Rainier: '#0d9488',
+    Tumwater: '#ea580c',
+    Roy: '#db2777',
+    Tenino: '#ca8a04',
+    Spanaway: '#d97706'
+  };
+  const DEFAULT_COLOR = '#d97706';
+
   function isCity(p) {
     return (p.type || 'city') === 'city';
   }
 
-  function clientIcon() {
+  function cityColor(city) {
+    if (!city) return DEFAULT_COLOR;
+    const key = Object.keys(CITY_COLORS).find(
+      (k) => k.toLowerCase() === String(city).trim().toLowerCase()
+    );
+    return key ? CITY_COLORS[key] : DEFAULT_COLOR;
+  }
+
+  function clientIcon(color) {
     return L.divIcon({
       className: '',
       html: `<div style="
-        width:14px;height:14px;background:#d97706;
+        width:14px;height:14px;background:${color};
         border:2px solid #fff;border-radius:50%;
         box-shadow:0 2px 6px rgba(0,0,0,.3);
       "></div>`,
@@ -61,10 +82,16 @@
     layerGroup.clearLayers();
 
     const bounds = [];
+    const citiesUsed = new Map();
+
     clients.forEach((p) => {
       if (p.lat == null || p.lng == null) return;
+      const color = cityColor(p.city);
+      const cityKey = (p.city && String(p.city).trim()) || 'Other';
+      if (!citiesUsed.has(cityKey)) citiesUsed.set(cityKey, color);
+
       const detail = publicDetail(p);
-      const m = L.marker([p.lat, p.lng], { icon: clientIcon(), zIndexOffset: 100 }).addTo(layerGroup);
+      const m = L.marker([p.lat, p.lng], { icon: clientIcon(color), zIndexOffset: 100 }).addTo(layerGroup);
       m.bindPopup(
         `<strong>${BRContent.escapeHtml(publicLabel(p))}</strong><br>
          ${BRContent.escapeHtml(detail.line)}<br>
@@ -78,9 +105,25 @@
     }
 
     if (legendEl) {
-      legendEl.innerHTML = `
-        <span class="map-chip" style="border-color:#d97706;color:#b45309;">● Past jobs (approx.)</span>
-      `;
+      const paletteOrder = ['Lacey', 'Olympia', 'Yelm', 'Rainier', 'Tumwater', 'Roy', 'Tenino', 'Spanaway'];
+      const ordered = [];
+      paletteOrder.forEach((name) => {
+        if (citiesUsed.has(name)) ordered.push([name, citiesUsed.get(name)]);
+      });
+      citiesUsed.forEach((color, name) => {
+        if (!paletteOrder.includes(name)) ordered.push([name, color]);
+      });
+
+      const chips = ordered
+        .map(
+          ([name, color]) =>
+            `<span class="map-chip" style="border-color:${color};color:${color};">● ${BRContent.escapeHtml(name)}</span>`
+        )
+        .join('');
+
+      legendEl.innerHTML =
+        chips ||
+        `<span class="map-chip" style="border-color:${DEFAULT_COLOR};color:#b45309;">● Past jobs (approx.)</span>`;
     }
 
     if (listJobs) {
@@ -91,9 +134,10 @@
         listJobs.innerHTML = clients
           .map((p) => {
             const detail = publicDetail(p);
+            const color = cityColor(p.city);
             return `
           <div class="pin-list-item">
-            <div class="pin-dot pin-dot-client" aria-hidden="true"></div>
+            <div class="pin-dot pin-dot-client" style="background:${color};border-color:${color};" aria-hidden="true"></div>
             <div>
               <h4>${BRContent.escapeHtml(publicLabel(p))}</h4>
               <p>${BRContent.escapeHtml(detail.line)}</p>
