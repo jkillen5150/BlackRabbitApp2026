@@ -70,7 +70,7 @@
         <a href="/yard-cleanup/">Yard cleanup</a> ·
         <a href="/fall-leaf-cleanup/">Fall leaf cleanup</a>
       </p>
-      <p class="footer-trust">Licensed · Bonded · Insured</p>
+      <p class="footer-trust">Licensed WA BLACKRL740MU · Bonded · Insured</p>
       <p class="footer-nap">${NAP_LINE}<a href="tel:${PHONE_TEL}">${PHONE_DISPLAY}</a></p>
     `;
   }
@@ -83,7 +83,7 @@
       const nap = footer.querySelector('.footer-nap');
       const el = document.createElement('p');
       el.className = 'footer-trust';
-      el.textContent = 'Licensed · Bonded · Insured';
+      el.textContent = 'Licensed WA BLACKRL740MU · Bonded · Insured';
       if (nap) footer.insertBefore(el, nap);
       else footer.appendChild(el);
     });
