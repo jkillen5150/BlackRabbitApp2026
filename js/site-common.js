@@ -223,5 +223,11 @@
     injectMobileCta();
     wireUrgencyButtons();
     hydrateReviews();
+    if ((document.body.dataset.page || '') === 'home') {
+      var s = document.createElement('script');
+      s.src = '/js/now-hiring-home.js';
+      s.defer = true;
+      document.body.appendChild(s);
+    }
   });
 })();
