@@ -1,0 +1,154 @@
+/* ——— Now Hiring CTA (yellow glow) ——— */
+.hero-cta.now-hiring {
+  background: linear-gradient(180deg, #ffe566 0%, #f5c518 55%, #e0a800 100%);
+  color: #3a2e00;
+  border: 2px solid rgba(255, 236, 120, 0.95);
+  box-shadow:
+    0 0 0 3px rgba(255, 214, 0, 0.35),
+    0 0 22px 6px rgba(255, 214, 0, 0.55),
+    0 8px 24px rgba(0, 0, 0, 0.22);
+  animation: now-hiring-pulse 2.4s ease-in-out infinite;
+}
+
+.hero-cta.now-hiring:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 4px rgba(255, 214, 0, 0.45),
+    0 0 28px 8px rgba(255, 214, 0, 0.7),
+    0 12px 28px rgba(0, 0, 0, 0.26);
+}
+
+@keyframes now-hiring-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px rgba(255, 214, 0, 0.35),
+      0 0 18px 4px rgba(255, 214, 0, 0.45),
+      0 8px 24px rgba(0, 0, 0, 0.22);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(255, 214, 0, 0.5),
+      0 0 30px 10px rgba(255, 214, 0, 0.65),
+      0 8px 24px rgba(0, 0, 0, 0.22);
+  }
+}
+
+.site-nav-links a.nav-now-hiring {
+  color: #ffe566;
+  text-shadow: 0 0 10px rgba(255, 214, 0, 0.55);
+}
+
+.site-nav-links a.nav-now-hiring:hover,
+.site-nav-links a.nav-now-hiring.active {
+  color: #fff3a0;
+}
+
+.hiring-belief {
+  background: #fff;
+  border: 1px solid #e6ebe6;
+  border-left: 5px solid #f5c518;
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin: 0 0 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.hiring-belief h2 {
+  margin: 0 0 12px;
+  color: var(--green-dark);
+  font-size: 1.2rem;
+}
+
+.hiring-belief ul {
+  margin: 0 0 12px;
+  padding-left: 1.2rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.hiring-belief li { margin-bottom: 6px; }
+
+.hiring-belief .belief-closer {
+  margin: 0;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+.hiring-apply-alt {
+  text-align: center;
+  background: linear-gradient(135deg, #fff8e0, #f7f3eb);
+  border: 1px solid rgba(245, 197, 24, 0.45);
+  border-radius: var(--radius);
+  padding: 20px 18px;
+  margin: 0 0 28px;
+}
+
+.hiring-apply-alt p {
+  margin: 0 0 8px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.hiring-apply-alt .apply-phone {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+.hiring-apply-alt .apply-disclaimer {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  color: #6b5640;
+  line-height: 1.45;
+}
+
+.hiring-form-error {
+  display: none;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fdecea;
+  color: #8a1f11;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.hiring-form-error.visible { display: block; }
+
+.ref-fieldset {
+  border: 1px solid #e4ddd2;
+  border-radius: 14px;
+  padding: 16px 16px 4px;
+  margin: 0 0 20px;
+  background: #fffcf7;
+}
+
+.ref-fieldset legend {
+  font-weight: 700;
+  color: var(--green-dark);
+  padding: 0 8px;
+}
+
+.radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin-top: 4px;
+}
+
+.radio-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: #3d3832;
+  cursor: pointer;
+}
+
+.radio-row input { width: auto; margin: 0; }
+
+.form-section-title {
+  margin: 8px 0 16px;
+  color: var(--green);
+  font-size: 1.15rem;
+}
