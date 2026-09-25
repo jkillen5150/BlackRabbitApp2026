@@ -29,25 +29,4 @@
     "city": "Yelm",
     "note": "Approximate location — city slot Yelm"
   }
-][
-  {
-    "id": "pin-client-jeremy-thunell",
-    "type": "client",
-    "label": "Secured · Lacey area",
-    "address": "Lacey area",
-    "lat": 47.0362,
-    "lng": -122.7795,
-    "city": "Lacey",
-    "note": "Approximate location — city slot Lacey"
-  },
-  {
-    "id": "pin-client-sue-olympia",
-    "type": "client",
-    "label": "Secured · Olympia area",
-    "address": "Olympia area",
-    "lat": 46.9985,
-    "lng": -122.8042,
-    "city": "Olympia",
-    "note": "Approximate location — city slot Olympia"
-  }
 ]
