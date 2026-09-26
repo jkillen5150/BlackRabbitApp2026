@@ -7,7 +7,6 @@
   const PHONE_DISPLAY = '(407) 951-1663';
   const NAP_LINE = 'Black Rabbit Landscaping · Yelm, WA 98597 · ';
 
-  // Root-relative so nav/footer work from city subfolders on GitHub Pages + Vercel
   function navHtml(active) {
     const links = [
       { href: '/', id: 'home', label: 'Home' },
@@ -68,14 +67,14 @@
         <a href="/cut-my-grass/">Cut My Grass</a> ·
         <a href="/lawn-mowing/">Lawn mowing</a> ·
         <a href="/yard-cleanup/">Yard cleanup</a> ·
-        <a href="/fall-leaf-cleanup/">Fall leaf cleanup</a>
+        <a href="/fall-leaf-cleanup/">Fall leaf cleanup</a> ·
+        <a href="/storm-cleanup/">Storm cleanup</a>
       </p>
       <p class="footer-trust">Licensed WA BLACKRL740MU · Bonded · Insured</p>
       <p class="footer-nap">${NAP_LINE}<a href="tel:${PHONE_TEL}">${PHONE_DISPLAY}</a></p>
     `;
   }
 
-  /** Ensure every public footer shows credentials (static HTML may predate this). */
   function ensureFooterTrust() {
     document.querySelectorAll('footer.site-footer').forEach((footer) => {
       if (footer.classList.contains('site-footer-simple')) return;
@@ -89,7 +88,6 @@
     });
   }
 
-  /** Licensed / bonded / insured pills on marketing heroes */
   function injectHeroTrust() {
     if (document.querySelector('.trust-badges')) return;
     const hero = document.querySelector('.page-hero, header.hero');
@@ -125,10 +123,6 @@
     }
   }
 
-  /**
-   * Prefer static full footers in HTML (best for crawlable NAP).
-   * If #site-footer-mount exists, fill it; also normalize empty .site-footer shells.
-   */
   function injectFooter() {
     const mount = document.getElementById('site-footer-mount');
     if (mount) {
@@ -142,15 +136,10 @@
     }
   }
 
-  /** Strip leftover floating call/text/FB buttons. Jerry wants the lower right clear. */
   function stripFabs() {
     document.querySelectorAll('a.fab, #site-fabs').forEach((el) => el.remove());
   }
 
-  /**
-   * Sticky mobile CTA: Text + Call + Quote.
-   * Skips login/admin/assistant (busy or private UI).
-   */
   function injectMobileCta() {
     const page = document.body.dataset.page || '';
     if (
