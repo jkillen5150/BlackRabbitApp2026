@@ -270,7 +270,8 @@ QCbJpBxt7O6OpKq8+Pwf5C6W0H8OQC+pcunlrHpJFaKXAHpJFaKXAHpJFaKXAHpJFaKXAHpJFaL/A0yP
 
 export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', /^https:\/\/(www\.)?blackrabbitlawn\.com$/.test(String((req.headers&&req.headers.origin)||'')) ? req.headers.origin : 'https://www.blackrabbitlawn.com');
+  res.setHeader('Vary', 'Origin');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     return res.status(204).end();
   }
@@ -280,6 +281,7 @@ export default async function handler(req, res) {
   const buf = Buffer.from(PNG_B64, 'base64');
   res.setHeader('Content-Type', 'image/png');
   res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', /^https:\/\/(www\.)?blackrabbitlawn\.com$/.test(String((req.headers&&req.headers.origin)||'')) ? req.headers.origin : 'https://www.blackrabbitlawn.com');
+  res.setHeader('Vary', 'Origin');
   res.status(200).send(buf);
 }

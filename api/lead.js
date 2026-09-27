@@ -166,7 +166,8 @@ async function emailLead(lead) {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', /^https:\/\/(www\.)?blackrabbitlawn\.com$/.test(String((req.headers&&req.headers.origin)||'')) ? req.headers.origin : 'https://www.blackrabbitlawn.com');
+  res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
