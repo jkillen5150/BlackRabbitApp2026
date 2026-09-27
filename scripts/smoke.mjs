@@ -57,7 +57,8 @@ async function fetchOk(path, opts) {
       headers: {
         'user-agent': 'BlackRabbitSmoke/1.0',
         // Optional: Vercel "Protection Bypass for Automation" secret for protected preview URLs
-        ...(process.env.SMOKE_BYPASS ? { 'x-vercel-protection-bypass': process.env.SMOKE_BYPASS } : {})
+        ...(process.env.SMOKE_BYPASS ? { 'x-vercel-protection-bypass': process.env.SMOKE_BYPASS } : {}),
+        ...(process.env.SMOKE_COOKIE ? { cookie: process.env.SMOKE_COOKIE } : {})
       },
       signal: ac.signal
     });
