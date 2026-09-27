@@ -7,8 +7,8 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <link rel="apple-touch-icon" href="logo.jpg">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="preload" href="/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css?v=20260927">
 </head>
 <body data-page="login">
   <div id="site-nav-mount"></div>
@@ -29,9 +29,9 @@
     <div class="card">
       <h2 style="margin:0 0 10px;color:#2e5a2e;font-size:1.1rem;">Explore the site</h2>
       <p style="margin:0;">
-        <a href="portfolio.html">Portfolio</a> ·
-        <a href="testimonials.html">Testimonials</a> ·
-        <a href="service-area.html">Service map</a>
+        <a href="/portfolio">Portfolio</a> ·
+        <a href="/testimonials">Testimonials</a> ·
+        <a href="/service-area">Service map</a>
       </p>
     </div>
 
@@ -39,7 +39,7 @@
   </div>
 
   <script src="js/auth.js"></script>
-  <script src="js/site-common.js"></script>
+  <script src="/js/site-common.js?v=20260927"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const s = BRAuth.getSession();

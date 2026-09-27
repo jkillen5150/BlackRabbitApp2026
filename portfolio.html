@@ -22,10 +22,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Lawn Care Portfolio | South Sound | Black Rabbit">
   <meta name="twitter:description" content="Before &amp; after lawn care and landscaping across the South Sound.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="preload" href="/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css?v=20260927">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -51,33 +49,31 @@
 
   <footer class="site-footer">
     <nav class="footer-nav" aria-label="Footer">
-      <a href="index.html">Home</a>
-      <a href="testimonials.html">Testimonials</a>
-      <a href="portfolio.html">Portfolio</a>
-      <a href="service-area.html">Service Map</a>
-      <a href="assistant.html">Ask AI</a>
+      <a href="/">Home</a>
+      <a href="/cut-my-grass">Cut My Grass</a>
+      <a href="/fall-winter-services">Fall &amp; Winter</a>
+      <a href="/testimonials">Testimonials</a>
+      <a href="/portfolio">Portfolio</a>
+      <a href="/service-area">Service Map</a>
+      <a href="/assistant">Ask AI</a>
+      <a href="/ai-for-small-business">AI Lessons</a>
       <a href="/#service-form">Get a Quote</a>
+      <a href="/genuine-need">Know somebody in need?</a>
+      <a href="/now-hiring">Now Hiring</a>
       <a href="https://www.facebook.com/profile.php?id=61591537527292" target="_blank" rel="noopener noreferrer">Facebook</a>
     </nav>
     <p class="footer-cities">
-      <a href="/lawn-care-yelm/">Yelm</a> ·
-      <a href="/lawn-care-rainier/">Rainier</a> ·
-      <a href="/lawn-care-lacey/">Lacey</a> ·
-      <a href="/lawn-care-roy/">Roy</a> ·
-      <a href="/lawn-care-olympia/">Olympia</a> ·
-      <a href="/lawn-care-tenino/">Tenino</a>
+      <a href="/lawn-care-olympia">Olympia</a> · <a href="/lawn-care-lacey">Lacey</a> · <a href="/lawn-care-tumwater">Tumwater</a> · <a href="/lawn-care-yelm">Yelm</a> · <a href="/lawn-care-rainier">Rainier</a> · <a href="/lawn-care-tenino">Tenino</a> · <a href="/lawn-care-roy">Roy</a>
     </p>
     <p class="footer-services">
-      <a href="/lawn-mowing/">Lawn mowing</a> ·
-      <a href="/yard-cleanup/">Yard cleanup</a> ·
-      <a href="/fall-leaf-cleanup/">Fall leaf cleanup</a>
+      <a href="/lawn-mowing">Lawn mowing</a> · <a href="/yard-cleanup">Yard cleanup</a> · <a href="/fall-leaf-cleanup">Fall leaf cleanup</a> · <a href="/storm-cleanup">Storm cleanup</a> · <a href="/hedge-trimming">Hedge trimming</a> · <a href="/gutter-cleaning-roof-moss">Gutters &amp; roof moss</a> · <a href="/pressure-washing">Pressure washing</a> · <a href="/holiday-lights">Holiday lights</a> · <a href="/commercial-hoa-property-maintenance">Commercial &amp; HOA</a> · <a href="/fall-winter-services">Fall &amp; winter services</a>
     </p>
     <p class="footer-trust">Licensed WA BLACKRL740MU · Bonded · Insured</p>
-    <p class="footer-nap">Black Rabbit Landscaping · Yelm, WA 98597 · <a href="tel:+14079511663">(407) 951-1663</a></p>
+    <p class="footer-nap">Black Rabbit Landscaping · Rainier, WA 98576 · <a href="tel:+14079511663">(407) 951-1663</a></p>
   </footer>
 
-  <script src="js/content-store.js"></script>
-  <script src="js/site-common.js"></script>
+  <script src="/js/content-store.js?v=20260927"></script>
+  <script src="/js/site-common.js?v=20260927"></script>
   <script>
     async function render() {
       const data = await BRContent.load();
@@ -87,11 +83,19 @@
         grid.innerHTML = '<div class="empty-state">No portfolio photos yet. Upload them in Admin.</div>';
         return;
       }
+      // Known repo photos that also ship as smaller WebP copies (same pixel size).
+      const WEBP = { 'IMG_9650.jpeg': [1024, 1008], 'IMG_9642.jpeg': [1024, 1008] };
       grid.innerHTML = list.map((p) => {
         const src = BRContent.resolveImageUrl ? BRContent.resolveImageUrl(p.image) : p.image;
+        const key = String(p.image || '').replace(/^\//, '');
+        const known = WEBP[key];
+        const alt = BRContent.escapeAttr(p.title || 'Job photo');
+        const img = known
+          ? `<picture><source srcset="/${key.replace(/\.jpe?g$/i, '.webp')}" type="image/webp"><img src="${BRContent.escapeAttr(src)}" alt="${alt}" width="${known[0]}" height="${known[1]}" loading="lazy"></picture>`
+          : `<img src="${BRContent.escapeAttr(src)}" alt="${alt}" loading="lazy">`;
         return `
         <article class="portfolio-card">
-          <img src="${BRContent.escapeAttr(src)}" alt="${BRContent.escapeAttr(p.title || 'Job photo')}" loading="lazy">
+          ${img}
           <div class="body">
             <h3>${BRContent.escapeHtml(p.title || 'Project')}</h3>
             <div class="loc">${BRContent.escapeHtml(p.location || '')}${p.date ? ' · ' + BRContent.escapeHtml(BRContent.formatDate(p.date)) : ''}</div>

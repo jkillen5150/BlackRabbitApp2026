@@ -17,10 +17,8 @@
   <meta property="og:url" content="https://www.blackrabbitlawn.com/genuine-need">
   <meta property="og:image" content="https://www.blackrabbitlawn.com/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="preload" href="/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css?v=20260927">
 </head>
 <body data-page="genuine-need">
   <div id="site-nav-mount"></div>
@@ -35,7 +33,7 @@
     <article class="city-prose">
       <p>Black Rabbit Landscaping believes in good stewardship of our treasure. One of the most valuable treasures we have is our time. If you know somebody who is in genuine need, we may be able to help.</p>
       <p>Please submit their information here, or yours, and let's talk about it.</p>
-      <p>Shopping for a regular cut at our usual rates? That's great too — use the <a href="/#service-form">quote form</a> or <a href="/cut-my-grass/">Cut My Grass</a>.</p>
+      <p>Shopping for a regular cut at our usual rates? That's great too — use the <a href="/#service-form">quote form</a> or <a href="/cut-my-grass">Cut My Grass</a>.</p>
     </article>
 
     <section id="genuine-need-looks-like" class="city-why" aria-labelledby="need-def-heading">
@@ -56,7 +54,7 @@
       <form action="https://api.web3forms.com/submit" method="POST">
         <input type="hidden" name="access_key" value="6467d992-e261-48c0-ae1e-2bc4b6cc557d">
         <input type="hidden" name="subject" value="Genuine need referral — Black Rabbit">
-        <input type="hidden" name="_next" value="/thankyou.html">
+        <input type="hidden" name="redirect" value="https://www.blackrabbitlawn.com/thankyou">
         <input type="hidden" name="from_page" value="genuine-need">
 
         <div class="form-group">
@@ -98,16 +96,28 @@
   <footer class="site-footer">
     <nav class="footer-nav" aria-label="Footer">
       <a href="/">Home</a>
-      <a href="/testimonials.html">Testimonials</a>
-      <a href="/portfolio.html">Portfolio</a>
-      <a href="/service-area.html">Service Map</a>
+      <a href="/cut-my-grass">Cut My Grass</a>
+      <a href="/fall-winter-services">Fall &amp; Winter</a>
+      <a href="/testimonials">Testimonials</a>
+      <a href="/portfolio">Portfolio</a>
+      <a href="/service-area">Service Map</a>
+      <a href="/assistant">Ask AI</a>
+      <a href="/ai-for-small-business">AI Lessons</a>
       <a href="/#service-form">Get a Quote</a>
       <a href="/genuine-need">Know somebody in need?</a>
+      <a href="/now-hiring">Now Hiring</a>
+      <a href="https://www.facebook.com/profile.php?id=61591537527292" target="_blank" rel="noopener noreferrer">Facebook</a>
     </nav>
+    <p class="footer-cities">
+      <a href="/lawn-care-olympia">Olympia</a> · <a href="/lawn-care-lacey">Lacey</a> · <a href="/lawn-care-tumwater">Tumwater</a> · <a href="/lawn-care-yelm">Yelm</a> · <a href="/lawn-care-rainier">Rainier</a> · <a href="/lawn-care-tenino">Tenino</a> · <a href="/lawn-care-roy">Roy</a>
+    </p>
+    <p class="footer-services">
+      <a href="/lawn-mowing">Lawn mowing</a> · <a href="/yard-cleanup">Yard cleanup</a> · <a href="/fall-leaf-cleanup">Fall leaf cleanup</a> · <a href="/storm-cleanup">Storm cleanup</a> · <a href="/hedge-trimming">Hedge trimming</a> · <a href="/gutter-cleaning-roof-moss">Gutters &amp; roof moss</a> · <a href="/pressure-washing">Pressure washing</a> · <a href="/holiday-lights">Holiday lights</a> · <a href="/commercial-hoa-property-maintenance">Commercial &amp; HOA</a> · <a href="/fall-winter-services">Fall &amp; winter services</a>
+    </p>
     <p class="footer-trust">Licensed WA BLACKRL740MU · Bonded · Insured</p>
-    <p class="footer-nap">Black Rabbit Landscaping · Yelm, WA 98597 · <a href="tel:+14079511663">(407) 951-1663</a></p>
+    <p class="footer-nap">Black Rabbit Landscaping · Rainier, WA 98576 · <a href="tel:+14079511663">(407) 951-1663</a></p>
   </footer>
 
-  <script src="js/site-common.js"></script>
+  <script src="/js/site-common.js?v=20260927"></script>
 </body>
 </html>

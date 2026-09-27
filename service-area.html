@@ -22,11 +22,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Lawn Care Service Area | South Sound WA">
   <meta name="twitter:description" content="Map of towns we serve across the South Sound — Yelm, Rainier, Lacey, Roy, Olympia &amp; more.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="preload" href="/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css?v=20260927">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -51,16 +49,17 @@
     <div class="map-legend" id="map-legend"></div>
 
     <h2 class="section-title" style="margin-top:36px;">Towns we serve</h2>
-    <p class="section-sub">Yelm, Rainier, Lacey, Roy, Olympia, Tenino &amp; greater Thurston County, Washington.</p>
+    <p class="section-sub">Olympia, Lacey, Tumwater, Yelm, Rainier, Tenino, Roy &amp; greater Thurston County, Washington.</p>
     <div class="city-chip-row" style="margin-bottom:22px;">
-      <a class="city-chip" href="/lawn-care-yelm/">Lawn care Yelm</a>
-      <a class="city-chip" href="/lawn-care-rainier/">Lawn care Rainier</a>
-      <a class="city-chip" href="/lawn-care-lacey/">Lawn care Lacey</a>
-      <a class="city-chip" href="/lawn-care-roy/">Lawn care Roy</a>
-      <a class="city-chip" href="/lawn-care-olympia/">Lawn care Olympia</a>
-      <a class="city-chip" href="/lawn-care-tenino/">Lawn care Tenino</a>
-      <a class="city-chip" href="/lawn-mowing/">Lawn mowing</a>
-      <a class="city-chip" href="/yard-cleanup/">Yard cleanup</a>
+      <a class="city-chip" href="/lawn-care-yelm">Lawn care Yelm</a>
+      <a class="city-chip" href="/lawn-care-rainier">Lawn care Rainier</a>
+      <a class="city-chip" href="/lawn-care-lacey">Lawn care Lacey</a>
+      <a class="city-chip" href="/lawn-care-roy">Lawn care Roy</a>
+      <a class="city-chip" href="/lawn-care-olympia">Lawn care Olympia</a>
+      <a class="city-chip" href="/lawn-care-tumwater">Lawn care Tumwater</a>
+      <a class="city-chip" href="/lawn-care-tenino">Lawn care Tenino</a>
+      <a class="city-chip" href="/lawn-mowing">Lawn mowing</a>
+      <a class="city-chip" href="/yard-cleanup">Yard cleanup</a>
     </div>
 
     <h2 class="section-title" style="margin-top:40px;">Secured places by city (approximate)</h2>
@@ -70,34 +69,32 @@
 
   <footer class="site-footer">
     <nav class="footer-nav" aria-label="Footer">
-      <a href="index.html">Home</a>
-      <a href="testimonials.html">Testimonials</a>
-      <a href="portfolio.html">Portfolio</a>
-      <a href="service-area.html">Service Map</a>
-      <a href="assistant.html">Ask AI</a>
+      <a href="/">Home</a>
+      <a href="/cut-my-grass">Cut My Grass</a>
+      <a href="/fall-winter-services">Fall &amp; Winter</a>
+      <a href="/testimonials">Testimonials</a>
+      <a href="/portfolio">Portfolio</a>
+      <a href="/service-area">Service Map</a>
+      <a href="/assistant">Ask AI</a>
+      <a href="/ai-for-small-business">AI Lessons</a>
       <a href="/#service-form">Get a Quote</a>
+      <a href="/genuine-need">Know somebody in need?</a>
+      <a href="/now-hiring">Now Hiring</a>
       <a href="https://www.facebook.com/profile.php?id=61591537527292" target="_blank" rel="noopener noreferrer">Facebook</a>
     </nav>
     <p class="footer-cities">
-      <a href="/lawn-care-yelm/">Yelm</a> ·
-      <a href="/lawn-care-rainier/">Rainier</a> ·
-      <a href="/lawn-care-lacey/">Lacey</a> ·
-      <a href="/lawn-care-roy/">Roy</a> ·
-      <a href="/lawn-care-olympia/">Olympia</a> ·
-      <a href="/lawn-care-tenino/">Tenino</a>
+      <a href="/lawn-care-olympia">Olympia</a> · <a href="/lawn-care-lacey">Lacey</a> · <a href="/lawn-care-tumwater">Tumwater</a> · <a href="/lawn-care-yelm">Yelm</a> · <a href="/lawn-care-rainier">Rainier</a> · <a href="/lawn-care-tenino">Tenino</a> · <a href="/lawn-care-roy">Roy</a>
     </p>
-        <p class="footer-services">
-      <a href="/lawn-mowing/">Lawn mowing</a> ·
-      <a href="/yard-cleanup/">Yard cleanup</a> ·
-        <a href="/fall-leaf-cleanup/">Fall leaf cleanup</a>
+    <p class="footer-services">
+      <a href="/lawn-mowing">Lawn mowing</a> · <a href="/yard-cleanup">Yard cleanup</a> · <a href="/fall-leaf-cleanup">Fall leaf cleanup</a> · <a href="/storm-cleanup">Storm cleanup</a> · <a href="/hedge-trimming">Hedge trimming</a> · <a href="/gutter-cleaning-roof-moss">Gutters &amp; roof moss</a> · <a href="/pressure-washing">Pressure washing</a> · <a href="/holiday-lights">Holiday lights</a> · <a href="/commercial-hoa-property-maintenance">Commercial &amp; HOA</a> · <a href="/fall-winter-services">Fall &amp; winter services</a>
     </p>
     <p class="footer-trust">Licensed WA BLACKRL740MU · Bonded · Insured</p>
-    <p class="footer-nap">Black Rabbit Landscaping · Yelm, WA 98597 · <a href="tel:+14079511663">(407) 951-1663</a></p>
+    <p class="footer-nap">Black Rabbit Landscaping · Rainier, WA 98576 · <a href="tel:+14079511663">(407) 951-1663</a></p>
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/content-store.js"></script>
-  <script src="js/site-common.js"></script>
+  <script src="/js/content-store.js?v=20260927"></script>
+  <script src="/js/site-common.js?v=20260927"></script>
   <script src="js/map-page.js"></script>
 </body>
 </html>

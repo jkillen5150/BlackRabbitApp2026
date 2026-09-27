@@ -54,7 +54,11 @@ async function fetchOk(path, opts) {
     const res = await fetch(url, {
       method,
       redirect: (opts && opts.redirect) || 'manual',
-      headers: { 'user-agent': 'BlackRabbitSmoke/1.0' },
+      headers: {
+        'user-agent': 'BlackRabbitSmoke/1.0',
+        // Optional: Vercel "Protection Bypass for Automation" secret for protected preview URLs
+        ...(process.env.SMOKE_BYPASS ? { 'x-vercel-protection-bypass': process.env.SMOKE_BYPASS } : {})
+      },
       signal: ac.signal
     });
     const text = opts && opts.body === false ? '' : await res.text().catch(() => '');
@@ -145,7 +149,8 @@ includes('thankyou.html', 'data-google-review-link', 'thank-you write-review CTA
 includes('track/index.html', 'track-review-cta', 'track review CTA after done');
 includes('js/content-store.js', 'refreshPublicReviewStats', 'content-store live counts');
 includes('api/reviews.js', 'GOOGLE_PLACES_API_KEY', 'reviews API Places key');
-includes('service-area.html', 'Amber pins are past jobs', 'service-area copy is job pins, not city pins');
+// Pins are colored by city now (commit cf9fe2f), so check the "approximate areas" wording instead of "Amber".
+includes('service-area.html', 'approximate areas only', 'service-area copy is job pins, not city pins');
 {
   const cmg = read('cut-my-grass/index.html');
   if (/\$25|card deposit/i.test(cmg)) {
@@ -167,6 +172,117 @@ includes('service-area.html', 'Amber pins are past jobs', 'service-area copy is 
   } else {
     pass('map-page no city overlays');
   }
+}
+
+// —— SEO pages (2026-09 fall pages + city rewrite) ——
+const SEO_PAGES = [
+  ['/', 'index.html'],
+  ['/testimonials', 'testimonials.html'],
+  ['/lawn-mowing', 'lawn-mowing/index.html'],
+  ['/yard-cleanup', 'yard-cleanup/index.html'],
+  ['/fall-leaf-cleanup', 'fall-leaf-cleanup/index.html'],
+  ['/storm-cleanup', 'storm-cleanup/index.html'],
+  ['/lawn-care-olympia', 'lawn-care-olympia/index.html'],
+  ['/lawn-care-lacey', 'lawn-care-lacey/index.html'],
+  ['/lawn-care-tumwater', 'lawn-care-tumwater/index.html'],
+  ['/lawn-care-yelm', 'lawn-care-yelm/index.html'],
+  ['/lawn-care-rainier', 'lawn-care-rainier/index.html'],
+  ['/lawn-care-tenino', 'lawn-care-tenino/index.html'],
+  ['/lawn-care-roy', 'lawn-care-roy/index.html'],
+  ['/fall-winter-services', 'fall-winter-services/index.html'],
+  ['/gutter-cleaning-roof-moss', 'gutter-cleaning-roof-moss/index.html'],
+  ['/pressure-washing', 'pressure-washing/index.html'],
+  ['/holiday-lights', 'holiday-lights/index.html'],
+  ['/commercial-hoa-property-maintenance', 'commercial-hoa-property-maintenance/index.html'],
+  ['/hedge-trimming', 'hedge-trimming/index.html'],
+  ['/ai-for-small-business', 'ai-for-small-business/index.html']
+];
+const REVIEW_URL = 'https://g.page/r/Cd-1M_ymvQphEAE/review';
+const sitemapXml = read('sitemap.xml');
+const knowledgeTxt = read('data/ai-knowledge.json');
+const titles = new Map();
+for (const [route, rel] of SEO_PAGES) {
+  if (!existsSync(join(ROOT, rel))) {
+    fail('seo page ' + route, 'missing ' + rel);
+    continue;
+  }
+  const html = read(rel);
+  const h1s = (html.match(/<h1[\s>]/g) || []).length;
+  if (h1s === 1) pass('one h1 ' + route);
+  else fail('one h1 ' + route, h1s + ' h1 tags');
+  const title = (html.match(/<title>([^<]+)<\/title>/) || [])[1];
+  if (!title) fail('title ' + route, 'missing');
+  else if (titles.has(title)) fail('unique title ' + route, 'same as ' + titles.get(title));
+  else titles.set(title, route);
+  if (/<meta name="description" content="[^"]{50,}"/.test(html)) pass('meta description ' + route);
+  else fail('meta description ' + route, 'missing or short');
+  const canon = 'https://www.blackrabbitlawn.com' + route;
+  if (html.includes('<link rel="canonical" href="' + canon + '">')) pass('canonical ' + route);
+  else fail('canonical ' + route, 'expected ' + canon);
+  if (html.includes('og:title') && html.includes('og:description')) pass('og tags ' + route);
+  else fail('og tags ' + route, 'missing');
+  const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  let ldOk = blocks.length > 0;
+  for (const b of blocks) {
+    try {
+      JSON.parse(b[1]);
+    } catch (e) {
+      ldOk = false;
+      fail('json-ld parses ' + route, e.message);
+    }
+  }
+  if (ldOk) pass('json-ld parses ' + route, blocks.length + ' block(s)');
+  if (/aggregateRating/.test(html)) fail('no aggregateRating ' + route, 'hard-coded rating markup');
+  if (/fonts\.googleapis\.com/.test(html)) fail('self-hosted font ' + route, 'Google Fonts link still present');
+  if (route !== '/' && !sitemapXml.includes('<loc>' + canon + '</loc>')) fail('sitemap ' + route, 'not in sitemap.xml');
+  if (route !== '/' && !knowledgeTxt.includes(canon) && route.startsWith('/lawn-care')) fail('ai-knowledge ' + route, 'city page not in ai-knowledge.json');
+}
+{
+  const newPages = ['/fall-winter-services', '/gutter-cleaning-roof-moss', '/pressure-washing', '/holiday-lights', '/commercial-hoa-property-maintenance', '/hedge-trimming', '/ai-for-small-business', '/lawn-care-tumwater'];
+  const missing = newPages.filter((r) => !knowledgeTxt.includes('https://www.blackrabbitlawn.com' + r));
+  if (!missing.length) pass('ai-knowledge lists new pages');
+  else fail('ai-knowledge lists new pages', missing.join(', '));
+}
+{
+  const { execSync } = await import('node:child_process');
+  const files = execSync('git ls-files "*.html" "js/*.js" "api/*.js"', { cwd: ROOT, encoding: 'utf8' })
+    .split('\n')
+    .filter((f) => f && !f.startsWith('docs/'))
+    .concat(SEO_PAGES.map((p) => p[1]))
+    .filter((f, i, a) => a.indexOf(f) === i && existsSync(join(ROOT, f)));
+  const oldNap = files.filter((f) => /Yelm, WA 98597|"postalCode":\s*"98597"/.test(read(f)));
+  if (!oldNap.length) pass('NAP is Rainier, WA 98576 everywhere');
+  else fail('NAP is Rainier, WA 98576 everywhere', oldNap.join(', '));
+  const lastName = files.filter((f) => /killen/i.test(read(f).replace(/j\.killenmanagement@gmail\.com|jkillen5150/g, '')));
+  if (!lastName.length) pass('no owner last name in site files');
+  else fail('no owner last name in site files', lastName.join(', '));
+  const fiveStar = files.filter((f) => /\d+ five-star Google/i.test(read(f)));
+  if (!fiveStar.length) pass('no hard-coded five-star count');
+  else fail('no hard-coded five-star count', fiveStar.join(', '));
+  const searchFallback = files.filter((f) => /google\.com\/search\?q=Black\+Rabbit/.test(read(f)));
+  if (!searchFallback.length) pass('no Google-search review fallback');
+  else fail('no Google-search review fallback', searchFallback.join(', '));
+}
+includes('js/site-common.js', REVIEW_URL, 'site-common direct review link');
+includes('js/content-store.js', REVIEW_URL, 'content-store direct review link');
+includes('api/reviews.js', REVIEW_URL, 'reviews API direct review link');
+includes('thankyou.html', REVIEW_URL, 'thank-you review link is g.page');
+includes('fall-winter-services/index.html', 'tel:+14079511663', 'fall/winter call button');
+includes('fall-winter-services/index.html', 'sms:+14079511663', 'fall/winter text link');
+includes('fall-winter-services/index.html', 'api.web3forms.com/submit', 'fall/winter quote form');
+includes('ai-for-small-business/index.html', '$199', 'AI page pricing');
+{
+  const ai = read('ai-for-small-business/index.html');
+  if (/senior|in-home|in your home/i.test(ai)) fail('AI page wording', 'mentions seniors or in-home lessons');
+  else pass('AI page wording');
+  const vj = JSON.parse(read('vercel.json'));
+  const r = (vj.redirects || []).find((x) => x.source === '/ai');
+  if (r && r.destination === '/ai-for-small-business') pass('vercel /ai redirect');
+  else fail('vercel /ai redirect', JSON.stringify(vj.redirects || null));
+  if (existsSync(join(ROOT, 'fonts/montserrat-latin.woff2'))) pass('self-hosted Montserrat woff2');
+  else fail('self-hosted Montserrat woff2', 'missing fonts/montserrat-latin.woff2');
+  if (existsSync(join(ROOT, 'junk-yard-debris-hauling'))) fail('junk hauling page on hold', 'page exists');
+  else pass('junk hauling page on hold');
 }
 
 const jsFiles = [
@@ -245,7 +361,23 @@ if (LIVE) {
     ['service-area', '/service-area', ['Yelm']],
     ['login', '/login', ['Admin']],
     ['robots', '/robots.txt', ['Sitemap']],
-    ['sitemap', '/sitemap.xml', ['blackrabbitlawn.com']]
+    ['sitemap', '/sitemap.xml', ['blackrabbitlawn.com']],
+    ['fall-winter', '/fall-winter-services', ['Fall &amp; Winter', 'api.web3forms.com']],
+    ['gutters-moss', '/gutter-cleaning-roof-moss', ['Roof Moss']],
+    ['pressure-washing', '/pressure-washing', ['Pressure Washing']],
+    ['holiday-lights', '/holiday-lights', ['Holiday Light']],
+    ['commercial-hoa', '/commercial-hoa-property-maintenance', ['HOA']],
+    ['hedge-trimming', '/hedge-trimming', ['Hedge']],
+    ['ai-lessons', '/ai-for-small-business', ['$199']],
+    ['tumwater', '/lawn-care-tumwater', ['Tumwater']],
+    ['olympia', '/lawn-care-olympia', ['Olympia']],
+    ['lacey', '/lawn-care-lacey', ['Lacey']],
+    ['yelm', '/lawn-care-yelm', ['Yelm']],
+    ['rainier', '/lawn-care-rainier', ['Rainier']],
+    ['tenino', '/lawn-care-tenino', ['Tenino']],
+    ['roy', '/lawn-care-roy', ['Roy']],
+    ['now-hiring', '/now-hiring', ['og:title']],
+    ['font', '/fonts/montserrat-latin.woff2', []]
   ];
 
   for (const [name, path, needles] of pages) {
@@ -256,6 +388,17 @@ if (LIVE) {
     } catch (e) {
       fail('live ' + name, e.message);
     }
+  }
+
+  try {
+    const got = await fetchOk('/ai', { redirect: 'manual', body: false });
+    if ([301, 308].includes(got.status) && /\/ai-for-small-business$/.test(got.location || '')) {
+      pass('live /ai redirect', got.status + ' → ' + got.location);
+    } else {
+      fail('live /ai redirect', 'HTTP ' + got.status + ' loc=' + (got.location || ''));
+    }
+  } catch (e) {
+    fail('live /ai redirect', e.message);
   }
 
   const apis = [

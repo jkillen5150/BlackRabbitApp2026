@@ -1,6 +1,16 @@
 {
   "reviews": [
     {
+      "id": "rev-samuel-brown",
+      "name": "Samuel Brown",
+      "location": "",
+      "rating": 5,
+      "text": "Jerry helped me quickly with a quick freshen up on a property I was selling. Super easy to work with, understands the mission and delivers. Highly recommended if you need landscaping or property cleanup.",
+      "source": "Google",
+      "date": "2026-09-27",
+      "featured": true
+    },
+    {
       "id": "rev-barbara-anderson",
       "name": "Barbara Anderson",
       "location": "",

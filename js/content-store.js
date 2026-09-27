@@ -458,8 +458,8 @@
     `;
   }
 
-  const DEFAULT_WRITE_REVIEW_URL =
-    'https://www.google.com/search?q=Black+Rabbit+Landscaping+Yelm+WA';
+  /** Direct Google "write a review" link for the Business Profile. */
+  const DEFAULT_WRITE_REVIEW_URL = 'https://g.page/r/Cd-1M_ymvQphEAE/review';
 
   function fiveStarReviews(list) {
     return (Array.isArray(list) ? list : []).filter((r) => Number(r.rating) === 5);
@@ -483,12 +483,13 @@
 
   function reviewHeadline(stats) {
     const s = stats || {};
-    const n = Number(s.userRatingCount != null ? s.userRatingCount : s.fiveStar || s.count || 0);
-    const word = n === 1 ? 'review' : 'reviews';
+    // Only show a number when it comes live from Google (rating + count). Never a hard-coded
+    // or self-counted "five-star" claim, so the site can't drift from the Business Profile.
     if (s.userRatingCount != null && s.rating) {
-      return n + ' Google ' + word;
+      const n = Number(s.userRatingCount);
+      return s.rating + '★ from ' + n + ' Google ' + (n === 1 ? 'review' : 'reviews');
     }
-    return n + ' five-star Google ' + word;
+    return 'Real Google reviews';
   }
 
   function applyWriteReviewLinks(url) {
@@ -510,7 +511,7 @@
         s.userRatingCount != null ? s.userRatingCount : s.count || 0
       );
     });
-    if (s.writeReviewUrl) applyWriteReviewLinks(s.writeReviewUrl);
+    applyWriteReviewLinks(DEFAULT_WRITE_REVIEW_URL);
 
     document.querySelectorAll('script[type="application/ld+json"]').forEach((script) => {
       try {
@@ -551,7 +552,7 @@
         rating: remote.rating || local.rating,
         userRatingCount:
           remote.userRatingCount != null ? remote.userRatingCount : undefined,
-        writeReviewUrl: remote.writeReviewUrl || DEFAULT_WRITE_REVIEW_URL
+        writeReviewUrl: DEFAULT_WRITE_REVIEW_URL
       });
     } catch {
       /* offline / API not deployed yet */

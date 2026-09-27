@@ -4,7 +4,7 @@
  *
  * Env:
  *   GOOGLE_PLACES_API_KEY  — Places API key (legacy Place Details)
- *   GOOGLE_PLACE_ID        — optional; otherwise Find Place from text
+ *   GOOGLE_PLACE_ID        — optional; only used to look up rating/count (review link is fixed)
  *   GOOGLE_PLACE_QUERY     — default "Black Rabbit Landscaping"
  *   LEAD_ADMIN_TOKEN       — required on POST when set (same as Admin)
  *   GITHUB_TOKEN           — required for sync write
@@ -26,8 +26,11 @@ const DEFAULT_PLACE_ID_GUESSES = [
   'ChIJIUPDWiI93gNhCr2m_DO13w',
   'ChIJYQq9pvwztd8hQ8NaIj3eAw'
 ];
-const DEFAULT_SEARCH_URL =
-  'https://www.google.com/search?q=Black+Rabbit+Landscaping';
+/** Direct "write a review" link from the Google Business Profile (Ask for reviews → share link). */
+const GOOGLE_REVIEW_URL = 'https://g.page/r/Cd-1M_ymvQphEAE/review';
+/** Business Profile on Google Maps (fallback when no Place ID is known). */
+const GOOGLE_MAPS_URL =
+  'https://www.google.com/maps/place/Black+Rabbit+Landscaping/data=!4m2!3m1!1s0x2143c35a223dde03:0x610abda6fc33b5df';
 const CACHE_MS = 6 * 60 * 60 * 1000;
 
 let placeCache = { at: 0, data: null };
@@ -46,11 +49,10 @@ function placeQuery() {
   return String(process.env.GOOGLE_PLACE_QUERY || DEFAULT_QUERY).trim();
 }
 
-function writeReviewUrl(placeId) {
-  if (placeId) {
-    return 'https://search.google.com/local/writereview?placeid=' + encodeURIComponent(placeId);
-  }
-  return DEFAULT_SEARCH_URL;
+// The review link no longer depends on GOOGLE_PLACE_ID or the Places API: always use the
+// direct g.page link so "Leave a review" works even when Places billing is off.
+function writeReviewUrl() {
+  return GOOGLE_REVIEW_URL;
 }
 
 function mapsUrl(placeId) {
@@ -58,7 +60,7 @@ function mapsUrl(placeId) {
     return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(placeQuery()) +
       '&query_place_id=' + encodeURIComponent(placeId);
   }
-  return DEFAULT_SEARCH_URL;
+  return GOOGLE_MAPS_URL;
 }
 
 function requireAdmin(req, res) {
