@@ -2,7 +2,7 @@
  * Shared nav, FABs, NAP footer, urgency form helpers
  */
 (function () {
-  const FACEBOOK_URL = 'https://www.facebook.com/profile.php?id=61591537527292';
+  const GBP_URL = 'https://www.google.com/maps/place/Black+Rabbit+Landscaping/data=!4m2!3m1!1s0x2143c35a223dde03:0x610abda6fc33b5df';
   const PHONE_TEL = '+14079511663';
   const PHONE_DISPLAY = '(407) 951-1663';
   const NAP_LINE = 'Black Rabbit Landscaping · Rainier, WA 98576 · ';
@@ -59,7 +59,7 @@
         <a href="/#service-form">Get a Quote</a>
         <a href="/genuine-need">Know somebody in need?</a>
         <a href="/now-hiring">Now Hiring</a>
-        <a href="${FACEBOOK_URL}" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="${GBP_URL}" target="_blank" rel="noopener noreferrer">Google Business Profile</a>
       </nav>
       <p class="footer-cities">
         <a href="/lawn-care-olympia">Olympia</a> · <a href="/lawn-care-lacey">Lacey</a> · <a href="/lawn-care-tumwater">Tumwater</a> · <a href="/lawn-care-yelm">Yelm</a> · <a href="/lawn-care-rainier">Rainier</a> · <a href="/lawn-care-tenino">Tenino</a> · <a href="/lawn-care-roy">Roy</a>

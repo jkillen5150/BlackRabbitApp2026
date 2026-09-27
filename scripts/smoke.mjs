@@ -257,6 +257,12 @@ for (const [route, rel] of SEO_PAGES) {
   const lastName = files.filter((f) => /killen/i.test(read(f).replace(/j\.killenmanagement@gmail\.com|jkillen5150/g, '')));
   if (!lastName.length) pass('no owner last name in site files');
   else fail('no owner last name in site files', lastName.join(', '));
+  const social = files.filter((f) => /(facebook|instagram|nextdoor)\.com|fb\.(com|me)\//i.test(read(f)));
+  if (!social.length) pass('no Facebook/Instagram/Nextdoor links (GBP only)');
+  else fail('no Facebook/Instagram/Nextdoor links (GBP only)', social.join(', '));
+  const weakCta = files.filter((f) => /^lawn-care-/.test(f) && /class="btn btn-solid" href="#quote"/.test(read(f)));
+  if (!weakCta.length) pass('city hero Free quote uses high-contrast btn-primary');
+  else fail('city hero Free quote uses high-contrast btn-primary', weakCta.join(', '));
   const fiveStar = files.filter((f) => /\d+ five-star Google/i.test(read(f)));
   if (!fiveStar.length) pass('no hard-coded five-star count');
   else fail('no hard-coded five-star count', fiveStar.join(', '));
