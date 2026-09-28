@@ -1,4 +1,30 @@
 /* Black Rabbit Landscaping — shared site styles */
+/* Self-hosted Montserrat (variable, latin + latin-ext). Replaces the Google Fonts link. */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/montserrat-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/montserrat-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Metric-matched fallback so the swap to Montserrat doesn't shift the layout (CLS). */
+@font-face {
+  font-family: 'Montserrat Fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Helvetica');
+  size-adjust: 112.8%;
+  ascent-override: 85.8%;
+  descent-override: 22.3%;
+  line-gap-override: 0%;
+}
 :root {
   --green: #2e5a2e;
   --green-dark: #1e3d1e;
@@ -21,7 +47,7 @@
 
 body {
   margin: 0;
-  font-family: 'Montserrat', system-ui, sans-serif;
+  font-family: 'Montserrat', 'Montserrat Fallback', system-ui, sans-serif;
   background:
     radial-gradient(ellipse 120% 80% at 50% -20%, rgba(46, 90, 46, 0.07), transparent 55%),
     var(--cream);
@@ -2567,3 +2593,50 @@ body.cmg-page.has-mobile-cta {
     padding-top: 28px;
   }
 }
+
+/* ——— Added 2026-09: form checkboxes/radios, review quote, service page extras ——— */
+.form-fieldset { border: 0; padding: 0; margin: 0 0 24px; }
+.form-fieldset legend { font-weight: 700; margin-bottom: 8px; color: var(--green-dark); }
+.form-fieldset .form-check { display: flex; align-items: center; gap: 10px; font-weight: 500; margin: 6px 0; cursor: pointer; }
+.form-fieldset .form-check input { width: 20px; height: 20px; min-width: 20px; padding: 0; accent-color: var(--green); margin: 0; box-shadow: none; }
+.review-quote {
+  max-width: 720px;
+  margin: 18px auto 22px;
+  background: var(--card);
+  border-left: 5px solid var(--star);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 18px 20px;
+  text-align: left;
+}
+.review-quote blockquote { margin: 0 0 8px; font-size: 1.02rem; line-height: 1.6; }
+.review-quote figcaption { font-weight: 700; color: var(--green-dark); font-size: 0.92rem; }
+.review-quote .review-stars-inline { color: var(--star); letter-spacing: 2px; margin-right: 6px; }
+.review-cta-row { text-align: center; margin: 14px 0 0; }
+.city-steps { counter-reset: step; list-style: none; padding: 0; margin: 12px 0 0; }
+.city-steps li { counter-increment: step; position: relative; padding-left: 44px; margin-bottom: 14px; }
+.city-steps li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: 0;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--green); color: #fff; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.local-note {
+  background: #eef5ee;
+  border: 1px solid #b7d0b7;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin: 24px 0;
+}
+.local-note h2, .local-note h3 { margin-top: 0; color: var(--green-dark); }
+.price-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.price-table th, .price-table td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--cream-deep); }
+.big-call-cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 22px; }
+.big-call-cta .btn { font-size: 1.05rem; padding: 15px 22px; }
+.review-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.review-photos img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; background: #e8e4dc; }
+.review-photos-note { margin: 6px 0 0; font-size: 0.8rem; color: var(--muted); }
+.job-photo { margin: 24px auto; max-width: 560px; }
+.job-photo img { width: 100%; height: auto; border-radius: 14px; box-shadow: var(--shadow-soft); }
+.job-photo figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 6px; text-align: center; }

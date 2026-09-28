@@ -26,15 +26,22 @@
     {
       "source": "/(.*)\\.(js|css)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
+        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=2592000" }
       ]
     },
     {
       "source": "/(.*)\\.(jpg|jpeg|png|webp|svg|gif|ico)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=604800" }
+        { "key": "Cache-Control", "value": "public, max-age=7776000, stale-while-revalidate=2592000" }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)\\.woff2",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
   ],
+  "redirects": [{ "source": "/ai", "destination": "/ai-for-small-business", "permanent": true }],
   "rewrites": [{ "source": "/badge-192.png", "destination": "/api/badge-192" }]
 }

@@ -7,8 +7,8 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <link rel="apple-touch-icon" href="logo.jpg">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="preload" href="/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css?v=20260927">
 </head>
 <body data-page="admin" class="admin-page">
   <div id="site-nav-mount"></div>
@@ -20,7 +20,7 @@
         <p style="margin:4px 0 0;color:#666;">Signed in as <strong id="admin-who">…</strong></p>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;">
-        <a class="btn btn-solid" href="admin-cmg-hq.html" title="Private Cut My Grass launch kit">CMG Launch HQ</a>
+        <a class="btn btn-solid" href="/admin-cmg-hq" title="Private Cut My Grass launch kit">CMG Launch HQ</a>
         <button type="button" class="btn btn-outline" id="btn-export">Export content.json</button>
         <button type="button" class="btn btn-outline" id="btn-reset">Reset to defaults</button>
         <button type="button" class="btn btn-solid" id="btn-logout">Log out</button>
@@ -29,7 +29,7 @@
 
     <div class="note-banner" style="border-color:#1e3d1e;background:#eef5ee;">
       <strong>Cut My Grass Launch HQ (private):</strong>
-      <a href="admin-cmg-hq.html"><strong>Open CMG Launch HQ</strong></a>
+      <a href="/admin-cmg-hq"><strong>Open CMG Launch HQ</strong></a>
       — domain plan, yard-sign copy + sexy mockup, QR, VistaPrint budget, vanity 301, full blueprint, checklists.
       Admin login required · noindex · not in public nav.
     </div>
@@ -38,7 +38,7 @@
       <strong>Portfolio / reviews / pins publish live</strong> when
       <code>GITHUB_TOKEN</code> and <code>LEAD_ADMIN_TOKEN</code> are set on Vercel
       (same token you paste for the lead list below). Photos upload to the repo; the public
-      <a href="portfolio.html">Portfolio</a> page reads <code>/api/content</code> so changes
+      <a href="/portfolio">Portfolio</a> page reads <code>/api/content</code> so changes
       show without a manual export.
       <br><br>
       Photos compress in your browser first (JPEG/PNG best; iPhone HEIC may fail).
@@ -82,16 +82,16 @@
       </p>
       <form id="form-quote" class="admin-row">
         <div class="form-group">
-          <label>Lot sq ft</label>
-          <input name="lotSqft" type="number" min="0" step="1" placeholder="8000" required>
+          <label for="adm-lotSqft-1">Lot sq ft</label>
+          <input id="adm-lotSqft-1" name="lotSqft" type="number" min="0" step="1" placeholder="8000" required>
         </div>
         <div class="form-group">
-          <label>House sq ft</label>
-          <input name="houseSqft" type="number" min="0" step="1" placeholder="1800">
+          <label for="adm-houseSqft-2">House sq ft</label>
+          <input id="adm-houseSqft-2" name="houseSqft" type="number" min="0" step="1" placeholder="1800">
         </div>
         <div class="form-group">
-          <label>Cleanup bags</label>
-          <input name="bags" type="number" min="0" step="1" value="0">
+          <label for="adm-bags-3">Cleanup bags</label>
+          <input id="adm-bags-3" name="bags" type="number" min="0" step="1" value="0">
         </div>
         <div class="form-group" style="display:flex;align-items:flex-end;">
           <button type="submit" class="btn btn-solid">Price it</button>
@@ -124,33 +124,33 @@
         </p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <button type="button" class="btn btn-outline" id="btn-sync-google-reviews">Sync from Google</button>
-          <a class="btn btn-outline" id="link-write-review" data-google-review-link href="https://www.google.com/search?q=Black+Rabbit+Landscaping+Yelm+WA" target="_blank" rel="noopener">Open write-a-review</a>
+          <a class="btn btn-outline" id="link-write-review" data-google-review-link href="https://g.page/r/Cd-1M_ymvQphEAE/review" target="_blank" rel="noopener">Open write-a-review</a>
         </div>
         <p id="google-sync-status" style="font-size:0.85rem;color:#666;margin:8px 0 0;"></p>
       </div>
       <form id="form-review">
         <div class="admin-row">
           <div class="form-group">
-            <label>Name</label>
-            <input name="name" required placeholder="Sarah M.">
+            <label for="adm-name-4">Name</label>
+            <input id="adm-name-4" name="name" required placeholder="Sarah M.">
           </div>
           <div class="form-group">
-            <label>Location</label>
-            <input name="location" placeholder="Yelm, WA">
+            <label for="adm-location-5">Location</label>
+            <input id="adm-location-5" name="location" placeholder="Yelm, WA">
           </div>
         </div>
         <div class="admin-row">
           <div class="form-group">
-            <label>Rating</label>
-            <select name="rating">
+            <label for="adm-rating-6">Rating</label>
+            <select id="adm-rating-6" name="rating">
               <option value="5" selected>5 stars</option>
               <option value="4">4 stars</option>
               <option value="3">3 stars</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Source</label>
-            <select name="source">
+            <label for="adm-source-7">Source</label>
+            <select id="adm-source-7" name="source">
               <option value="Google" selected>Google</option>
               <option value="Customer">Customer</option>
               <option value="Facebook">Facebook</option>
@@ -159,8 +159,8 @@
         </div>
         <div class="admin-row">
           <div class="form-group">
-            <label>Date</label>
-            <input name="date" type="date">
+            <label for="adm-date-8">Date</label>
+            <input id="adm-date-8" name="date" type="date">
           </div>
           <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:8px;">
             <label style="display:flex;gap:8px;align-items:center;font-weight:600;">
@@ -169,8 +169,8 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Review text</label>
-          <textarea name="text" rows="3" required placeholder="Paste the Google review text here…"></textarea>
+          <label for="adm-text-9">Review text</label>
+          <textarea id="adm-text-9" name="text" rows="3" required placeholder="Paste the Google review text here…"></textarea>
         </div>
         <button type="submit" class="btn btn-solid">Add review</button>
       </form>
@@ -188,17 +188,17 @@
       <form id="form-portfolio">
         <div class="admin-row">
           <div class="form-group">
-            <label>Title</label>
-            <input name="title" required placeholder="Spring cleanup — Rainier">
+            <label for="adm-title-10">Title</label>
+            <input id="adm-title-10" name="title" required placeholder="Spring cleanup — Rainier">
           </div>
           <div class="form-group">
-            <label>Location</label>
-            <input name="location" placeholder="Rainier, WA">
+            <label for="adm-location-11">Location</label>
+            <input id="adm-location-11" name="location" placeholder="Rainier, WA">
           </div>
         </div>
         <div class="form-group">
-          <label>Description</label>
-          <textarea name="description" rows="2" placeholder="What you did on this job…"></textarea>
+          <label for="adm-description-12">Description</label>
+          <textarea id="adm-description-12" name="description" rows="2" placeholder="What you did on this job…"></textarea>
         </div>
         <div class="form-group">
           <label for="portfolio-photo">Upload photos</label>
@@ -264,38 +264,38 @@
       <form id="form-pin">
         <div class="admin-row">
           <div class="form-group">
-            <label>Pin type</label>
-            <select name="type">
+            <label for="adm-type-13">Pin type</label>
+            <select id="adm-type-13" name="type">
               <option value="client" selected>Past job (approximate)</option>
               <option value="city">City / service area</option>
             </select>
           </div>
           <div class="form-group">
-            <label>City</label>
-            <input name="city" placeholder="Yelm" required>
+            <label for="adm-city-14">City</label>
+            <input id="adm-city-14" name="city" placeholder="Yelm" required>
           </div>
         </div>
         <div class="form-group">
-          <label>Label (public)</label>
-          <input name="label" placeholder="Past service · Yelm area">
+          <label for="adm-label-15">Label (public)</label>
+          <input id="adm-label-15" name="label" placeholder="Past service · Yelm area">
         </div>
         <div class="form-group">
-          <label>Address (admin only — used to place pin, then discarded for client pins)</label>
-          <input name="address" placeholder="Optional: full address for geocoding only">
+          <label for="adm-address-16">Address (admin only — used to place pin, then discarded for client pins)</label>
+          <input id="adm-address-16" name="address" placeholder="Optional: full address for geocoding only">
         </div>
         <div class="admin-row">
           <div class="form-group">
-            <label>Latitude (optional)</label>
-            <input name="lat" type="number" step="any" placeholder="46.942">
+            <label for="adm-lat-17">Latitude (optional)</label>
+            <input id="adm-lat-17" name="lat" type="number" step="any" placeholder="46.942">
           </div>
           <div class="form-group">
-            <label>Longitude (optional)</label>
-            <input name="lng" type="number" step="any" placeholder="-122.6046">
+            <label for="adm-lng-18">Longitude (optional)</label>
+            <input id="adm-lng-18" name="lng" type="number" step="any" placeholder="-122.6046">
           </div>
         </div>
         <div class="form-group">
-          <label>Note (public — keep vague)</label>
-          <input name="note" placeholder="Lawn care · approximate area">
+          <label for="adm-note-19">Note (public — keep vague)</label>
+          <input id="adm-note-19" name="note" placeholder="Lawn care · approximate area">
         </div>
         <button type="submit" class="btn btn-solid">Add pin</button>
       </form>
@@ -304,10 +304,10 @@
     </section>
   </div>
 
-  <script src="js/content-store.js"></script>
+  <script src="/js/content-store.js?v=20260927"></script>
   <script src="js/pricing.js"></script>
   <script src="js/auth.js"></script>
-  <script src="js/site-common.js"></script>
+  <script src="/js/site-common.js?v=20260927b"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>
