@@ -15,7 +15,7 @@
       "name": "Barbara Anderson",
       "location": "",
       "rating": 5,
-      "text": "Great price\n\nI cannot express enough gratitude for Jerry at Black Rabbit Landscaping. After experiencing a stressful sewer overflow, I needed urgent help clearing out my yard so plumbers could locate and access the septic tanks. My grass was severely overgrown, and bushes were completely covering the area, making it impossible to work.\n\nWhile other companies wouldn’t take on the job, Black Rabbit Landscaping stepped right up. Jerry dedicated so much time and effort to carefully clearing the area and locating the septic tanks so the plumbers could finally get in and fix the issue.\n\nBeyond his incredible work ethic, his kindness meant the world to me during a very distressing time. He was extremely warm, comforting, and reassuring, taking the time to let me know everything was going to be alright.\n\nIf you need a reliable, hard-working, and truly caring landscaper, look no further than Black Rabbit Landscaping. I am so thankful for Jerry’s help and cannot recommend him highly enough!",
+      "text": "Great price\n\nI cannot express enough gratitude for Jerry at Black Rabbit Landscaping. After experiencing a stressful sewer overflow, I needed urgent help clearing out my yard so plumbers could locate and access the septic tanks. My grass was severely overgrown, and bushes were completely covering the area, making it impossible to work.\n\nWhile other companies wouldn\u2019t take on the job, Black Rabbit Landscaping stepped right up. Jerry dedicated so much time and effort to carefully clearing the area and locating the septic tanks so the plumbers could finally get in and fix the issue.\n\nBeyond his incredible work ethic, his kindness meant the world to me during a very distressing time. He was extremely warm, comforting, and reassuring, taking the time to let me know everything was going to be alright.\n\nIf you need a reliable, hard-working, and truly caring landscaper, look no further than Black Rabbit Landscaping. I am so thankful for Jerry\u2019s help and cannot recommend him highly enough!",
       "source": "Google",
       "date": "2026-08-22",
       "featured": true
@@ -35,7 +35,7 @@
       "name": "Darin Shapiro",
       "location": "",
       "rating": 5,
-      "text": "If you’re looking for a trustworthy, well detailed lawn and landscaping service look no further. I highly recommend Jerry, his work is 10 out of 10.",
+      "text": "If you\u2019re looking for a trustworthy, well detailed lawn and landscaping service look no further. I highly recommend Jerry, his work is 10 out of 10.",
       "source": "Google",
       "date": "2026-08-18",
       "featured": true
@@ -191,24 +191,7 @@
       "featured": true
     }
   ],
-  "portfolio": [
-    {
-      "id": "port-001",
-      "title": "Fresh cut & clean edges",
-      "location": "Rainier, WA",
-      "description": "Full mow, edge, and bag \u2014 ready for a Sunday morning reveal.",
-      "image": "IMG_9650.jpeg",
-      "date": "2026-07-11"
-    },
-    {
-      "id": "port-002",
-      "title": "Property curb appeal",
-      "location": "Yelm, WA",
-      "description": "Lawn care and detailing for a clean, sell-ready look.",
-      "image": "IMG_9642.jpeg",
-      "date": "2026-06-01"
-    }
-  ],
+  "portfolio": [],
   "pins": [
     {
       "id": "pin-yelm-hq",
