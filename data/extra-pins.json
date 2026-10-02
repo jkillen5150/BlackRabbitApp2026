@@ -2,31 +2,51 @@
   {
     "id": "pin-client-jeremy-thunell",
     "type": "client",
-    "label": "Secured · Lacey area",
+    "label": "Secured \u00b7 Lacey area",
     "address": "Lacey area",
     "lat": 47.0362,
     "lng": -122.7795,
     "city": "Lacey",
-    "note": "Approximate location — city slot Lacey"
+    "note": "Approximate location \u2014 city slot Lacey"
   },
   {
     "id": "pin-client-sue-olympia",
     "type": "client",
-    "label": "Secured · Olympia area",
+    "label": "Secured \u00b7 Olympia area",
     "address": "Olympia area",
     "lat": 46.9985,
     "lng": -122.8042,
     "city": "Olympia",
-    "note": "Approximate location — city slot Olympia"
+    "note": "Approximate location \u2014 city slot Olympia"
   },
   {
     "id": "pin-client-sam-yelm",
     "type": "client",
-    "label": "Secured · Yelm area",
+    "label": "Secured \u00b7 Yelm area",
     "address": "Yelm area",
-    "lat": 46.9660,
+    "lat": 46.966,
     "lng": -122.5735,
     "city": "Yelm",
-    "note": "Approximate location — city slot Yelm"
+    "note": "Approximate location \u2014 city slot Yelm"
+  },
+  {
+    "id": "pin-client-armour-loop",
+    "type": "client",
+    "label": "Secured \u00b7 Armour Loop area",
+    "address": "Olympia area",
+    "lat": 46.9938,
+    "lng": -122.811,
+    "city": "Olympia",
+    "note": "Approximate \u2014 Armour Loop SE, no house number"
+  },
+  {
+    "id": "pin-client-desperado",
+    "type": "client",
+    "label": "Secured \u00b7 Desperado area",
+    "address": "Tumwater area",
+    "lat": 46.9852,
+    "lng": -122.8722,
+    "city": "Tumwater",
+    "note": "Approximate \u2014 Desperado Dr SE, no house number"
   }
 ]
