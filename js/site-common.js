@@ -21,7 +21,7 @@
       { href: '/ai-for-small-business', id: 'ai-lessons', label: 'AI Lessons' },
       { href: '/#service-form', id: 'quote', label: 'Get a Quote' },
       { href: '/genuine-need', id: 'genuine-need', label: 'Know somebody in need?' },
-      { href: '/now-hiring', id: 'now-hiring', label: 'Now Hiring' },
+      { href: '/holiday-lights', id: 'christmas-lights', label: 'Christmas Lights' },
       { href: '/login', id: 'login', label: 'Login' }
     ];
     return `
@@ -36,7 +36,7 @@
             ${links
               .map(
                 (l) =>
-                  `<a href="${l.href}" class="${[l.id === active ? 'active' : '', l.id === 'now-hiring' ? 'nav-now-hiring' : ''].filter(Boolean).join(' ')}">${l.label}</a>`
+                  `<a href="${l.href}" class="${[l.id === active ? 'active' : '', l.id === 'christmas-lights' ? 'nav-christmas' : ''].filter(Boolean).join(' ')}">${l.label}</a>`
               )
               .join('')}
           </div>
@@ -58,7 +58,7 @@
         <a href="/ai-for-small-business">AI Lessons</a>
         <a href="/#service-form">Get a Quote</a>
         <a href="/genuine-need">Know somebody in need?</a>
-        <a href="/now-hiring">Now Hiring</a>
+        <a href="/holiday-lights">Christmas Lights</a>
         <a href="${GBP_URL}" target="_blank" rel="noopener noreferrer">Google Business Profile</a>
       </nav>
       <p class="footer-cities">

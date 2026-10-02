@@ -152,3 +152,59 @@
   color: var(--green);
   font-size: 1.15rem;
 }
+
+/* ——— Christmas lights CTA (red + green glow, same slot as Now Hiring) ——— */
+.hero-cta.christmas-lights {
+  background: linear-gradient(90deg, #b91c1c 0%, #7f1d1d 42%, #166534 58%, #15803d 100%);
+  color: #fff8e8;
+  border: 2px solid rgba(255, 236, 160, 0.9);
+  text-shadow: 0 0 10px rgba(255, 220, 120, 0.55);
+  box-shadow:
+    0 0 0 3px rgba(220, 38, 38, 0.35),
+    0 0 18px 4px rgba(220, 38, 38, 0.45),
+    0 0 22px 6px rgba(22, 163, 74, 0.45),
+    0 8px 24px rgba(0, 0, 0, 0.22);
+  animation: christmas-lights-pulse 2.2s ease-in-out infinite;
+}
+
+.hero-cta.christmas-lights:hover {
+  transform: translateY(-1px);
+  color: #fff;
+  box-shadow:
+    0 0 0 4px rgba(250, 204, 21, 0.45),
+    0 0 28px 8px rgba(220, 38, 38, 0.6),
+    0 0 28px 10px rgba(22, 163, 74, 0.6),
+    0 12px 28px rgba(0, 0, 0, 0.26);
+}
+
+@keyframes christmas-lights-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px rgba(220, 38, 38, 0.4),
+      0 0 16px 4px rgba(220, 38, 38, 0.5),
+      0 0 18px 5px rgba(22, 163, 74, 0.35),
+      0 8px 24px rgba(0, 0, 0, 0.22);
+  }
+  50% {
+    box-shadow:
+      0 0 0 5px rgba(34, 197, 94, 0.45),
+      0 0 28px 10px rgba(22, 163, 74, 0.6),
+      0 0 26px 8px rgba(220, 38, 38, 0.45),
+      0 8px 24px rgba(0, 0, 0, 0.22);
+  }
+}
+
+.site-nav-links a.nav-christmas {
+  color: #fca5a5;
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.55), 0 0 14px rgba(74, 222, 128, 0.35);
+}
+
+.site-nav-links a.nav-christmas:hover,
+.site-nav-links a.nav-christmas.active {
+  color: #bbf7d0;
+}
+
+.quick-link-card.christmas-lights {
+  border-color: rgba(220, 38, 38, 0.45);
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.25), 0 0 16px rgba(220, 38, 38, 0.25);
+}

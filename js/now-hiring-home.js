@@ -1,5 +1,5 @@
 /**
- * Homepage Now Hiring yellow-glow CTA + hiring-extras.css + quick-link
+ * Homepage Christmas lights glow CTA. Same slot the Now Hiring banner used.
  */
 (function () {
   if ((document.body.dataset.page || '') !== 'home') return;
@@ -12,19 +12,23 @@
     else document.head.appendChild(link);
   }
   const ctas = document.querySelector('.hero-ctas');
-  if (ctas && !ctas.querySelector('a.hero-cta.now-hiring')) {
+  const old = ctas && ctas.querySelector('a.hero-cta.now-hiring');
+  if (old) old.remove();
+  if (ctas && !ctas.querySelector('a.hero-cta.christmas-lights')) {
     const a = document.createElement('a');
-    a.className = 'hero-cta now-hiring';
-    a.href = '/now-hiring';
-    a.textContent = 'Now Hiring';
+    a.className = 'hero-cta christmas-lights';
+    a.href = '/holiday-lights';
+    a.textContent = 'Christmas Lights';
     ctas.appendChild(a);
   }
   const ql = document.querySelector('.quick-links');
-  if (ql && !ql.querySelector('a.quick-link-card[href="/now-hiring"]')) {
+  const oldCard = ql && ql.querySelector('a.quick-link-card[href="/now-hiring"]');
+  if (oldCard) oldCard.remove();
+  if (ql && !ql.querySelector('a.quick-link-card[href="/holiday-lights"]')) {
     const card = document.createElement('a');
-    card.className = 'quick-link-card';
-    card.href = '/now-hiring';
-    card.innerHTML = '<div class="icon">🚪</div><strong>Now Hiring</strong><span>Door knockers — your own schedule</span>';
+    card.className = 'quick-link-card christmas-lights';
+    card.href = '/holiday-lights';
+    card.innerHTML = '<div class="icon">✨</div><strong>Christmas Lights</strong><span>Install and takedown — Olympia, Lacey, Yelm</span>';
     const first = ql.querySelector('a.quick-link-card');
     if (first) ql.insertBefore(card, first.nextSibling);
     else ql.appendChild(card);
