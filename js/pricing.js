@@ -23,7 +23,7 @@
       bags: bagCount,
       cleanup,
       oneTimeWithCleanup: oneTime + cleanup,
-      note: 'Estimate only. Jerry can change this after seeing the yard. Service starts at $45 a cut.'
+      note: 'Estimate only. Jerry can change this after seeing the yard. Pricing depends on the yard — free quote.'
     };
   }
 
