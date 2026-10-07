@@ -192,22 +192,6 @@
     }
   ],
   "portfolio": [
-    {
-      "id": "port-001",
-      "title": "Fresh cut & clean edges",
-      "location": "Rainier, WA",
-      "description": "Full mow, edge, and bag \u2014 ready for a Sunday morning reveal.",
-      "image": "IMG_9650.jpeg",
-      "date": "2026-07-11"
-    },
-    {
-      "id": "port-002",
-      "title": "Property curb appeal",
-      "location": "Yelm, WA",
-      "description": "Lawn care and detailing for a clean, sell-ready look.",
-      "image": "IMG_9642.jpeg",
-      "date": "2026-06-01"
-    }
   ],
   "pins": [
     {
@@ -258,7 +242,7 @@
       "lat": 47.0379,
       "lng": -122.9007,
       "city": "Olympia",
-      "note": "Olympia & greater Thurston County"
+      "note": "Olympia & Thurston County"
     },
     {
       "id": "pin-tenino",

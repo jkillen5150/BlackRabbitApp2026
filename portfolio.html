@@ -80,11 +80,11 @@
       const grid = document.getElementById('portfolio-grid');
       const list = data.portfolio || [];
       if (!list.length) {
-        grid.innerHTML = '<div class="empty-state">No portfolio photos yet. Upload them in Admin.</div>';
+        grid.innerHTML = '<div class="empty-state">Job photos coming soon. Want to see what we can do for your yard? Text or call for a free quote.</div>';
         return;
       }
       // Known repo photos that also ship as smaller WebP copies (same pixel size).
-      const WEBP = { 'IMG_9650.jpeg': [1024, 1008], 'IMG_9642.jpeg': [1024, 1008] };
+      const WEBP = {};
       grid.innerHTML = list.map((p) => {
         const src = BRContent.resolveImageUrl ? BRContent.resolveImageUrl(p.image) : p.image;
         const key = String(p.image || '').replace(/^\//, '');

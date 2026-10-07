@@ -106,7 +106,7 @@ python3 -m http.server 8765
 - Scripts: `js/`
 - Brand: `logo.jpg` (favicon + LocalBusiness image)
 - Social share image: `og-image.jpg`
-- Portfolio/hero photos: `IMG_9642.jpeg`, `IMG_9650.jpeg`
+- Hero photo: `media/jobs/property-freshen-up-1-1024.jpg`
 - SEO: `robots.txt`, `sitemap.xml`, canonical URLs, LocalBusiness + review/FAQ JSON-LD on home and landings
 
 ### Admin drafts vs redeploy
