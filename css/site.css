@@ -2640,3 +2640,11 @@ body.cmg-page.has-mobile-cta {
 .job-photo { margin: 24px auto; max-width: 560px; }
 .job-photo img { width: 100%; height: auto; border-radius: 14px; box-shadow: var(--shadow-soft); }
 .job-photo figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 6px; text-align: center; }
+
+/* Christmas Lights menu link: red + green on every page */
+.site-nav-links a.nav-christmas {
+  color: #fca5a5;
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.55), 0 0 14px rgba(74, 222, 128, 0.35);
+}
+.site-nav-links a.nav-christmas:hover,
+.site-nav-links a.nav-christmas.active { color: #bbf7d0; }
