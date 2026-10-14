@@ -196,8 +196,15 @@ const SEO_PAGES = [
   ['/holiday-lights', 'holiday-lights/index.html'],
   ['/commercial-hoa-property-maintenance', 'commercial-hoa-property-maintenance/index.html'],
   ['/hedge-trimming', 'hedge-trimming/index.html'],
-  ['/ai-for-small-business', 'ai-for-small-business/index.html']
+  ['/ai-for-small-business', 'ai-for-small-business/index.html'],
+  ['/faq', 'faq/index.html'],
+  ['/sprinkler-winterizing', 'sprinkler-winterizing/index.html'],
+  ['/blackberry-clearing', 'blackberry-clearing/index.html'],
+  ['/articles', 'articles/index.html'],
+  ['/articles/gutter-cleaning-lacey', 'articles/gutter-cleaning-lacey/index.html'],
+  ['/articles/roof-moss-thurston-county', 'articles/roof-moss-thurston-county/index.html']
 ];
+mustExist('llms.txt');
 const REVIEW_URL = 'https://g.page/r/Cd-1M_ymvQphEAE/review';
 const sitemapXml = read('sitemap.xml');
 const knowledgeTxt = read('data/ai-knowledge.json');
