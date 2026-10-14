@@ -295,8 +295,8 @@ includes('ai-for-small-business/index.html', '$199', 'AI page pricing');
   else fail('vercel /ai redirect', JSON.stringify(vj.redirects || null));
   if (existsSync(join(ROOT, 'fonts/montserrat-latin.woff2'))) pass('self-hosted Montserrat woff2');
   else fail('self-hosted Montserrat woff2', 'missing fonts/montserrat-latin.woff2');
-  if (existsSync(join(ROOT, 'junk-yard-debris-hauling'))) fail('junk hauling page on hold', 'page exists');
-  else pass('junk hauling page on hold');
+  if (existsSync(join(ROOT, 'junk-yard-debris-hauling'))) pass('junk hauling page live');
+  else fail('junk hauling page live', 'missing');
 }
 
 const jsFiles = [
