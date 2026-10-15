@@ -98,6 +98,8 @@
 
     layerGroup.clearLayers();
 
+    const servedEl = document.getElementById('homes-served');
+    if (servedEl) servedEl.textContent = `${clients.length} homes served around the South Sound, and counting.`;
     const bounds = [];
     const usedCities = new Set();
     clients.forEach((p) => {
