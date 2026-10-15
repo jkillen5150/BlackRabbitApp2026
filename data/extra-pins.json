@@ -30,23 +30,63 @@
     "note": "Approximate location \u2014 city slot Yelm"
   },
   {
-    "id": "pin-client-armour-loop",
+    "id": "pin-client-kierra-lacey",
     "type": "client",
-    "label": "Secured \u00b7 Armour Loop area",
-    "address": "Olympia area",
-    "lat": 46.9938,
-    "lng": -122.811,
-    "city": "Olympia",
-    "note": "Approximate \u2014 Armour Loop SE, no house number"
+    "label": "Secured \u00b7 Lacey area",
+    "address": "Lacey area",
+    "lat": 47.0121,
+    "lng": -122.8071,
+    "city": "Lacey",
+    "note": "Approximate location \u2014 city slot Lacey"
   },
   {
-    "id": "pin-client-desperado",
+    "id": "pin-client-ariana-lacey",
     "type": "client",
-    "label": "Secured \u00b7 Desperado area",
+    "label": "Secured \u00b7 Lacey area",
+    "address": "Lacey area",
+    "lat": 46.9871,
+    "lng": -122.8152,
+    "city": "Lacey",
+    "note": "Approximate location \u2014 city slot Lacey"
+  },
+  {
+    "id": "pin-client-annalisa-yelm",
+    "type": "client",
+    "label": "Secured \u00b7 Yelm area",
+    "address": "Yelm area",
+    "lat": 46.937,
+    "lng": -122.618,
+    "city": "Yelm",
+    "note": "Approximate location \u2014 city slot Yelm"
+  },
+  {
+    "id": "pin-client-sophia-yelm",
+    "type": "client",
+    "label": "Secured \u00b7 Yelm area",
+    "address": "Yelm area",
+    "lat": 46.9438,
+    "lng": -122.589,
+    "city": "Yelm",
+    "note": "Approximate location \u2014 city slot Yelm"
+  },
+  {
+    "id": "pin-client-danielle-yelm",
+    "type": "client",
+    "label": "Secured \u00b7 Yelm area",
+    "address": "Yelm area",
+    "lat": 46.9282,
+    "lng": -122.605,
+    "city": "Yelm",
+    "note": "Approximate location \u2014 city slot Yelm"
+  },
+  {
+    "id": "pin-client-dragana-tumwater",
+    "type": "client",
+    "label": "Secured \u00b7 Tumwater area",
     "address": "Tumwater area",
-    "lat": 46.9852,
-    "lng": -122.8722,
+    "lat": 46.991,
+    "lng": -122.8755,
     "city": "Tumwater",
-    "note": "Approximate \u2014 Desperado Dr SE, no house number"
+    "note": "Approximate location \u2014 city slot Tumwater"
   }
 ]
