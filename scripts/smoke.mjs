@@ -196,7 +196,6 @@ const SEO_PAGES = [
   ['/holiday-lights', 'holiday-lights/index.html'],
   ['/commercial-hoa-property-maintenance', 'commercial-hoa-property-maintenance/index.html'],
   ['/hedge-trimming', 'hedge-trimming/index.html'],
-  ['/ai-for-small-business', 'ai-for-small-business/index.html'],
   ['/faq', 'faq/index.html'],
   ['/sprinkler-winterizing', 'sprinkler-winterizing/index.html'],
   ['/blackberry-clearing', 'blackberry-clearing/index.html'],
@@ -246,7 +245,7 @@ for (const [route, rel] of SEO_PAGES) {
   if (route !== '/' && !knowledgeTxt.includes(canon) && route.startsWith('/lawn-care')) fail('ai-knowledge ' + route, 'city page not in ai-knowledge.json');
 }
 {
-  const newPages = ['/fall-winter-services', '/gutter-cleaning-roof-moss', '/pressure-washing', '/holiday-lights', '/commercial-hoa-property-maintenance', '/hedge-trimming', '/ai-for-small-business', '/lawn-care-tumwater'];
+  const newPages = ['/fall-winter-services', '/gutter-cleaning-roof-moss', '/pressure-washing', '/holiday-lights', '/commercial-hoa-property-maintenance', '/hedge-trimming', '/lawn-care-tumwater'];
   const missing = newPages.filter((r) => !knowledgeTxt.includes('https://www.blackrabbitlawn.com' + r));
   if (!missing.length) pass('ai-knowledge lists new pages');
   else fail('ai-knowledge lists new pages', missing.join(', '));
@@ -284,14 +283,10 @@ includes('thankyou.html', REVIEW_URL, 'thank-you review link is g.page');
 includes('fall-winter-services/index.html', 'tel:+14079511663', 'fall/winter call button');
 includes('fall-winter-services/index.html', 'sms:+14079511663', 'fall/winter text link');
 includes('fall-winter-services/index.html', 'api.web3forms.com/submit', 'fall/winter quote form');
-includes('ai-for-small-business/index.html', '$199', 'AI page pricing');
 {
-  const ai = read('ai-for-small-business/index.html');
-  if (/senior|in-home|in your home/i.test(ai)) fail('AI page wording', 'mentions seniors or in-home lessons');
-  else pass('AI page wording');
   const vj = JSON.parse(read('vercel.json'));
   const r = (vj.redirects || []).find((x) => x.source === '/ai');
-  if (r && r.destination === '/ai-for-small-business') pass('vercel /ai redirect');
+  if (r && r.destination === '/') pass('vercel /ai redirect');
   else fail('vercel /ai redirect', JSON.stringify(vj.redirects || null));
   if (existsSync(join(ROOT, 'fonts/montserrat-latin.woff2'))) pass('self-hosted Montserrat woff2');
   else fail('self-hosted Montserrat woff2', 'missing fonts/montserrat-latin.woff2');
@@ -382,7 +377,6 @@ if (LIVE) {
     ['holiday-lights', '/holiday-lights', ['Holiday Light']],
     ['commercial-hoa', '/commercial-hoa-property-maintenance', ['HOA']],
     ['hedge-trimming', '/hedge-trimming', ['Hedge']],
-    ['ai-lessons', '/ai-for-small-business', ['$199']],
     ['tumwater', '/lawn-care-tumwater', ['Tumwater']],
     ['olympia', '/lawn-care-olympia', ['Olympia']],
     ['lacey', '/lawn-care-lacey', ['Lacey']],
@@ -406,7 +400,7 @@ if (LIVE) {
 
   try {
     const got = await fetchOk('/ai', { redirect: 'manual', body: false });
-    if ([301, 308].includes(got.status) && /\/ai-for-small-business$/.test(got.location || '')) {
+    if ([301, 308].includes(got.status) && /^(https:\/\/www\.blackrabbitlawn\.com)?\/$/.test(got.location || '')) {
       pass('live /ai redirect', got.status + ' → ' + got.location);
     } else {
       fail('live /ai redirect', 'HTTP ' + got.status + ' loc=' + (got.location || ''));

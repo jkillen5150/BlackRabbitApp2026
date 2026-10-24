@@ -84,7 +84,12 @@
   "redirects": [
     {
       "source": "/ai",
-      "destination": "/ai-for-small-business",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/ai-for-small-business",
+      "destination": "/",
       "permanent": true
     },
     {

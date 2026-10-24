@@ -303,10 +303,6 @@
       "a": "Thank you! Here's the direct Google review link: https://g.page/r/Cd-1M_ymvQphEAE/review \u2b50"
     },
     {
-      "q": "Do you teach AI / offer AI lessons for small businesses?",
-      "a": "Yep \u2014 Jerry teaches contractors, cleaners and shop owners how to use AI for estimates, scheduling, ads and books, the same way he runs Black Rabbit. $75/hour or $199 for 3 hours, first 20 minutes free. At a public spot near you (library, coffee shop, bookstore) or over Zoom. Details: blackrabbitlawn.com/ai-for-small-business or text 407-951-1663 \ud83d\udcbb"
-    },
-    {
       "q": "Do you install Christmas lights?",
       "a": "Yes. Christmas light installation and takedown for homes and businesses in Olympia, Lacey, Tumwater, Yelm, Rainier, Tenino and Roy. Text a photo to (407) 951-1663 or use blackrabbitlawn.com/holiday-lights."
     }
@@ -341,10 +337,6 @@
       "about": "Ask AI \u2014 Porch Mode\u2122 chat"
     },
     {
-      "path": "/ai-for-small-business",
-      "about": "AI lessons for small business owners (short link /ai)"
-    },
-    {
       "path": "/login",
       "about": "Customer account + admin login"
     }
@@ -377,18 +369,5 @@
       "name": "Dominique Motta",
       "text": "Reliable and professional monthly cuts plus leaf/debris cleanup at a reasonable price."
     }
-  ],
-  "aiLessons": {
-    "page": "https://www.blackrabbitlawn.com/ai-for-small-business",
-    "shortLink": "https://www.blackrabbitlawn.com/ai",
-    "summary": "Jerry also teaches small business owners (contractors, cleaners, shop owners) how to use AI for estimates, scheduling, ads and books \u2014 the same way he runs his own landscaping company.",
-    "pricing": "$75 per hour, or $199 for a 3-hour block. First 20 minutes free.",
-    "where": "At a public spot near you (library, coffee shop, bookstore) or over Zoom.",
-    "contact": "Call/text 407-951-1663 or use the form on the AI lessons page.",
-    "rules": [
-      "Only mention AI lessons if the user asks about AI help for a business, lessons, or the AI page.",
-      "Use Jerry's first name only.",
-      "Do not describe it as in-home lessons."
-    ]
-  }
+  ]
 }
