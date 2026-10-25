@@ -18,7 +18,6 @@
       { href: '/portfolio', id: 'portfolio', label: 'Portfolio' },
       { href: '/service-area', id: 'map', label: 'Service Map' },
       { href: '/assistant', id: 'assistant', label: 'Ask AI' },
-      { href: '/ai-for-small-business', id: 'ai-lessons', label: 'AI Lessons' },
       { href: '/#service-form', id: 'quote', label: 'Get a Quote' },
       { href: '/genuine-need', id: 'genuine-need', label: 'Know somebody in need?' },
       { href: '/holiday-lights', id: 'christmas-lights', label: 'Christmas Lights' },
@@ -55,7 +54,6 @@
         <a href="/portfolio">Portfolio</a>
         <a href="/service-area">Service Map</a>
         <a href="/assistant">Ask AI</a>
-        <a href="/ai-for-small-business">AI Lessons</a>
         <a href="/#service-form">Get a Quote</a>
         <a href="/genuine-need">Know somebody in need?</a>
         <a href="/holiday-lights">Christmas Lights</a>
